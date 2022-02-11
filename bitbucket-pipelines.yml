@@ -1,5 +1,7 @@
 # This is an example Starter pipeline configuration
 # Use a skeleton to build, test and deploy using manual and parallel steps
+# This is an example Starter pipeline configuration
+# Use a skeleton to build, test and deploy using manual and parallel steps
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
 
@@ -37,6 +39,8 @@ pipelines:
               - pip
         script:
         - pipe: atlassian/heroku-deploy:0.1.1
-       variables:
-          HEROKU_API_KEY: $HEROKU_API_KEY
-          HEROKU_APP_NAME: $HEROKU_APP_NAME
+          variables:
+            HEROKU_API_KEY: $HEROKU_API_KEY
+            HEROKU_APP_NAME: $HEROKU_APP_NAME
+
+
