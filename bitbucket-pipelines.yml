@@ -7,9 +7,7 @@
 
 image: atlassian/default-image:3
 
-clone:
-depth:full
-  
+ 
 pipelines:
   default:
     - parallel:
