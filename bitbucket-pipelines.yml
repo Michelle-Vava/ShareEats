@@ -5,6 +5,8 @@
 
 image: atlassian/default-image:3
 
+
+  
 pipelines:
   default:
     - parallel:
@@ -31,5 +33,10 @@ pipelines:
         name: 'Deployment to Production'
         deployment: production
         trigger: 'manual'
-        script:
-          - echo "Your deployment to production script goes here..."
+        caches:
+- pip
+script:
+- pipe: atlassian/heroku-deploy:0.1.1
+variables:
+HEROKU_API_KEY: $HEROKU_API_KEY
+HEROKU_APP_NAME: $HEROKU_APP_NAME
