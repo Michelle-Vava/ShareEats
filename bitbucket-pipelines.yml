@@ -27,7 +27,7 @@ pipelines:
       - step:
           name: Create artifact
           script: 
-             - git archive --format=tar.gz main -o                   application.tar.gz 
+             - git archive --format=tar.gz master -o sample-app.tar.gz
           artifacts: 
            - application.tar.gz
     # The following deployment steps will be executed for each pipeline run. To configure your steps and conditionally deploy see https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/
