@@ -1,14 +1,10 @@
 # This is an example Starter pipeline configuration
 # Use a skeleton to build, test and deploy using manual and parallel steps
-# This is an example Starter pipeline configuration
-# Use a skeleton to build, test and deploy using manual and parallel steps
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
 
 image: atlassian/default-image:3
 
-
-  
 pipelines:
   default:
     - parallel:
@@ -35,12 +31,17 @@ pipelines:
         name: 'Deployment to Production'
         deployment: production
         trigger: 'manual'
-        caches:
-              - pip
         script:
-        - pipe: atlassian/heroku-deploy:0.1.1
-          variables:
-            HEROKU_API_KEY: $HEROKU_API_KEY
-            HEROKU_APP_NAME: $HEROKU_APP_NAME
+          - echo "Your deployment to production script goes here..."
 
-
+#    - step:
+#        name: 'Deployment to Production'
+#        deployment: production
+#        trigger: 'manual'
+#        caches:
+#              - pip
+#        script:
+#        - pipe: atlassian/heroku-deploy:1.2.1
+#          variables:
+#            HEROKU_API_KEY: $HEROKU_API_KEY
+#            HEROKU_APP_NAME: $HEROKU_APP_NAME
