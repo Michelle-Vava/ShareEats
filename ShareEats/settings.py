@@ -136,4 +136,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 django_heroku.settings(locals())
 
 # user is directed to the dashboard when they successfully log in
-LOGIN_REDIRECT_URL = '/buyer_dashboard'
+LOGIN_REDIRECT_URL = '/buyer_seller_option'
