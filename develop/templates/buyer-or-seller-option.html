@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1349, maximum-scale=1.0" />
+    <link rel="shortcut icon" type="image/png" href="https://animaproject.s3.amazonaws.com/home/favicon.png" />
+    <meta name="og:type" content="website" />
+    <meta name="twitter:card" content="photo" />
+    <link rel="stylesheet" type="text/css" href="../static/css/buyer-or-seller-option.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/styleguide.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/globals.css" />
+  </head>
+  <body style="margin: 0; background: #fffcef">
+    <input type="hidden" id="anPageName" name="page" value="buyer-or-seller-option" />
+    <div class="container-center-horizontal">
+      <div class="buyer-or-seller-option screen">
+        <div class="group-83">
+          <div class="overlap-group3">
+            <img
+              class="buyer-icon"
+              src="../static/img/buyer-icon-1x-png-1x-png-1x-png-1x-png-1x-png-1x-png-1x-png-1x-p-1@1x.png"
+            />
+          </div>
+          <div class="buyer">Buyer</div>
+          <div class="overlap-group2 arial-regular-normal-lightning-yellow-14px">
+            <div class="x-different">Browse different food options</div>
+            <div class="place-an-order">Place an order</div>
+          </div>
+            <button type="button" class="become-a-buyer-button" onclick="location.href='{% url 'sign up' %}'">
+                <div  class="become-a-buyer">Become a Buyer</div>
+            </button>
+        </div>
+        <div class="group-84">
+          <div class="overlap-group1">
+            <img
+              class="seller-icon"
+              src="../static/img/seller-icon-1x-png-1x-png-1x-png-1x-png-1x-png-1x-png-1x-png-1x--2@1x.png"
+            />
+          </div>
+          <div class="seller">Seller</div>
+          <div class="food-container arial-regular-normal-lightning-yellow-14px">
+            <p class="x-different">Prepare foods of different Varieties</p>
+            <p class="list-your-food-for-purchase">List your food for purchase</p>
+          </div>
+          <button type="button" class="become-a-seller-button" onclick="location.href='{% url 'sign up' %}'">
+              <div class="become-a-seller">Become a Seller
+              </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
