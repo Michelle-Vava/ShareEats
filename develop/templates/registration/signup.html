@@ -1,0 +1,15 @@
+<!-- this is how the user will sign up and have authentication -->
+
+
+{% block content %}
+<div class="container">
+<h2>Sign up</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Sign up</button>
+  </form>
+</div>
+     <br>
+                Have an account?<a href='{% url "login" %}'><strong> Login.</strong></a>
+{% endblock %}

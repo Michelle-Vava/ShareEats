@@ -1,0 +1,215 @@
+/* screen - buyer-or-seller-option */
+
+.buyer-or-seller-option {
+  align-items: flex-start;
+  background-color: #fffcef;
+  display: flex;
+  height: 600px;
+  padding: 0 306.5px;
+  width: 1366px;
+}
+
+.buyer-or-seller-option .group-83 {
+  align-items: center;
+  background-color: var(--white);
+  box-shadow: 0px 20px 40px #fbc22633;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  margin-top: 59px;
+  min-height: 482px;
+  padding: 45.0px 0;
+  transition: all 0.2s ease;
+  width: 325px;
+}
+
+.buyer-or-seller-option .group-83:hover {
+  transform: scale(1.1);
+}
+
+.buyer-or-seller-option .overlap-group3 {
+  align-items: flex-end;
+  background-color: var(--lightning-yellow-2);
+  display: flex;
+  height: 191px;
+  justify-content: flex-end;
+  margin-top: 10px;
+  min-width: 325px;
+  padding: 30.0px 97px;
+}
+
+.buyer-or-seller-option .buyer-icon {
+  height: 130px;
+  object-fit: cover;
+  width: 130px;
+}
+
+.buyer-or-seller-option .buyer {
+  color: var(--lightning-yellow);
+  font-family: var(--font-family-georgia-bold);
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 23px;
+  margin-left: 2.0px;
+  margin-top: 42px;
+  min-height: 28px;
+  min-width: 73px;
+  white-space: nowrap;
+}
+
+.buyer-or-seller-option .overlap-group2 {
+  height: 34px;
+  margin-right: 5.0px;
+  margin-top: 16px;
+  position: relative;
+  width: 184px;
+}
+
+.buyer-or-seller-option .x-different {
+  left: 0;
+  letter-spacing: 0;
+  line-height: 14px;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  white-space: nowrap;
+}
+
+.buyer-or-seller-option .place-an-order {
+  left: 47px;
+  letter-spacing: 0;
+  line-height: 14px;
+  position: absolute;
+  text-align: center;
+  top: 16px;
+  white-space: nowrap;
+}
+
+.buyer-or-seller-option .become-a-buyer-button {
+  align-items: flex-end;
+  background-color: var(--lightning-yellow);
+  box-shadow: 0px 10px 20px #fbc22633;
+  cursor: pointer;
+  display: flex;
+  height: 39px;
+  justify-content: flex-end;
+  margin-top: 33px;
+  min-width: 189px;
+  padding: 4.5px 36px;
+  transition: all 0.2s ease;
+}
+
+.buyer-or-seller-option .become-a-buyer-button:hover {
+  transform: scale(0.9); 
+}
+
+.buyer-or-seller-option .become-a-buyer {
+  color: var(--white);
+  font-family: var(--font-family-segoeui-bold);
+  font-size: var(--font-size-xxxl);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 15px;
+  min-height: 22px;
+  min-width: 115px;
+  white-space: nowrap;
+}
+
+.buyer-or-seller-option .group-84 {
+  align-items: center;
+  background-color: var(--white);
+  box-shadow: 0px 20px 40px #fbc22633;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  margin-left: 103px;
+  margin-top: 59px;
+  min-height: 482px;
+  padding: 45.0px 0;
+  transition: all 0.2s ease;
+  width: 325px;
+}
+
+.buyer-or-seller-option .group-84:hover {
+  transform: scale(1.1);
+}
+
+.buyer-or-seller-option .overlap-group1 {
+  align-items: flex-end;
+  background-color: var(--lightning-yellow-2);
+  display: flex;
+  height: 191px;
+  justify-content: flex-end;
+  margin-top: 10px;
+  min-width: 325px;
+  padding: 30.0px 96px;
+}
+
+.buyer-or-seller-option .seller-icon {
+  height: 131px;
+  object-fit: cover;
+  width: 131px;
+}
+
+.buyer-or-seller-option .seller {
+  color: var(--lightning-yellow);
+  font-family: var(--font-family-georgia-bold);
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 23px;
+  margin-left: 2.0px;
+  margin-top: 42px;
+  min-height: 28px;
+  min-width: 71px;
+  white-space: nowrap;
+}
+
+.buyer-or-seller-option .food-container {
+  height: 34px;
+  margin-right: 5.0px;
+  margin-top: 16px;
+  position: relative;
+  width: 218px;
+}
+
+.buyer-or-seller-option .list-your-food-for-purchase {
+  left: 26px;
+  letter-spacing: 0;
+  line-height: 14px;
+  position: absolute;
+  text-align: center;
+  top: 16px;
+  white-space: nowrap;
+}
+
+.buyer-or-seller-option .become-a-seller-button {
+  align-items: flex-end;
+  background-color: var(--lightning-yellow);
+  box-shadow: 0px 10px 20px #fbc22633;
+  cursor: pointer;
+  display: flex;
+  height: 39px;
+  margin-left: 2.0px;
+  margin-top: 33px;
+  min-width: 189px;
+  padding: 5.5px 38.0px;
+  transition: all 0.2s ease;
+}
+
+.buyer-or-seller-option .become-a-seller-button:hover {
+  transform: scale(0.9); 
+}
+
+.buyer-or-seller-option .become-a-seller {
+  color: var(--white);
+  font-family: var(--font-family-segoeui-bold);
+  font-size: var(--font-size-xxxl);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 15px;
+  min-height: 22px;
+  min-width: 113px;
+  white-space: nowrap;
+}
