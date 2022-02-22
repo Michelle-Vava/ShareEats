@@ -15,7 +15,7 @@ from django.db import models
 
 # TODO: Seller Table : Vijay and Shubham
 # Please NOTE : make sure to add migrations
-
+#  Add Something
 
 
 
