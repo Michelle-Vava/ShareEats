@@ -6,42 +6,42 @@ from django.shortcuts import render
 """
 """
 
-
+# added this line for pushing pratice
 # Create your views here.
 
 # home view
 # renders the view for the home page
 # landing page which is our login
 def home(request):
-    return render(request, 'registration/login.html')
+    return render(request, "registration/login.html")
 
 
 def buyer_seller_option(request):
-    return render(request, 'buyer-or-seller-option.html')
+    return render(request, "buyer-or-seller-option.html")
 
 
 # log out view
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect("/")
 
 
 # sign up view
 # sign up for authentication
 def sign_up(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return HttpResponseRedirect('option')
+            return HttpResponseRedirect("option")
         else:
             for msg in form.error_messages:
                 print(form.error_messages[msg])
-            return render(request, 'registration/signup.html', {'form': form})
+            return render(request, "registration/signup.html", {"form": form})
     else:
         form = UserCreationForm
-        return render(request, 'registration/signup.html', {'form': form})
+        return render(request, "registration/signup.html", {"form": form})
 
 
 # # sign up view for buyer
@@ -53,16 +53,20 @@ def sign_up(request):
 # def buyer_signin(request):
 #     return render(request, 'buyer-sign-in.html')
 
+
 def buyer_dashboard(request):
-    return render(request, 'buyer_dashboard.html')
+    return render(request, "buyer_dashboard.html")
+
 
 # add more : Shubham and Vijay
 def seller_form(request):
-    return render(request, 'seller_form.html')
+    return render(request, "seller_form.html")
+
 
 # add more : Kweku and Vineeth
 def buyer_form(request):
-    return render(request, 'buyer_form.html')
+    return render(request, "buyer_form.html")
+
 
 # def buyer_dashboard(request):
 #     if request.method == 'POST':
