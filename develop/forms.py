@@ -4,12 +4,18 @@
 # from develop.models import SellerInfo
 #
 #
-# class SellerInfo(forms.ModelForm):
-#     class Meta:
-#         model = SellerInfo
-#         fields = ['firstname', 'lastname']
-# TODO: Buyer Form : Kweku and Vineeth
-# Please NOTE : make sure to add migrations
+from django import forms
+
+from develop.models import SellerInfo, BuyerInfo
 
 
-# TODO: Seller Form : Vijay and Shubham
+class SellerInfo(forms.ModelForm):
+    class Meta:
+        model = SellerInfo
+        fields = ['businessname', 'phone', 'address', 'description', 'cardnumber', 'Cvv', 'ExpiryDate']
+
+
+class BuyerInfo(forms.ModelForm):
+    class Meta:
+        model = BuyerInfo
+        fields = ['firstname', 'lastname', 'phone']
