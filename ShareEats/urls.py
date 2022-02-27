@@ -19,21 +19,20 @@ from develop import views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
     # buyer or seller option page
-    path('buyer_seller_option', views.buyer_seller_option, name='option'),
-    path('buyer_dashboard', views.buyer_dashboard, name='buyer dashboard'),
-    path('accounts/', include('django.contrib.auth.urls')),
+    path("buyer_seller_option", views.buyer_seller_option, name="option"),
+    path("buyer_dashboard", views.buyer_dashboard, name="buyer dashboard"),
+    path("accounts/", include("django.contrib.auth.urls")),
     # login for authentication
-    path('', auth_views.LoginView.as_view(), name='login'),
+    path("", auth_views.LoginView.as_view(), name="login"),
     # logout for authentication
-    path('logout', views.logout_view, name='logout'),
+    path("logout", views.logout_view, name="logout"),
     # signing up for authentication
-    path('sign_up', views.sign_up, name="sign up"),
-    path('selleradditonalinformation', views.seller_form, name='seller info'),
-    path('buyeradditonalinformation', views.buyer_form, name='buyer info'),
+    path("sign_up", views.sign_up, name="sign up"),
+    path("selleradditonalinformation", views.seller_form, name="seller info"),
+    path("buyeradditonalinformation", views.buyer_form, name="buyer info"),
     # path('buyersign_up', views.buyer_signup, name="sign up"),
     # path('buyersign_in', views.buyer_signin, name='buyersign in'),
-
     # Added test comment
 ]

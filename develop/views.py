@@ -2,6 +2,7 @@ from django.contrib.auth import logout, login
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from forms import BuyerSignUpForm
 
 """
 """
@@ -65,6 +66,7 @@ def seller_form(request):
 
 # add more : Kweku and Vineeth
 def buyer_form(request):
+
     return render(request, "buyer_form.html")
 
 
