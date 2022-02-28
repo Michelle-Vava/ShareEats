@@ -2,7 +2,7 @@ from django.contrib.auth import logout, login
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-
+from .forms import SellerInfo
 """
 """
 
@@ -12,6 +12,7 @@ from django.shortcuts import render
 # home view
 # renders the view for the home page
 # landing page which is our login
+
 def home(request):
     return render(request, 'registration/login.html')
 
@@ -58,25 +59,40 @@ def buyer_dashboard(request):
 
 # add more : Shubham and Vijay
 def seller_form(request):
-    return render(request, 'seller_form.html')
+    if request.method == 'POST':
+        filled_form = SellerInfo(request.POST)
+        print(filled_form)
+        # filled_form.user = request.business_name
+        if filled_form.is_valid():
+            note = 'Thanks for creating a seller profile %s.You can proceed to the dashboard' % (
+                filled_form.cleaned_data['business_name'])
+            # note = 'Thanks for creating a seller profile. You can proceed to the dashboard' #filled_form.cleaned_data['firstname'],
+            filled_form.save()
+            new_form = SellerInfo()
+            return render(request, 'seller_form.html', {'form': new_form, 'note': note})
+
+    else:
+        form = SellerInfo()
+        return render(request, 'seller_form.html', {'form': form})
+
 
 # add more : Kweku and Vineeth
 def buyer_form(request):
     return render(request, 'buyer_form.html')
 
-# def buyer_dashboard(request):
-#     if request.method == 'POST':
-#         filled_form = SellerInfo(request.POST)
-#         # filled_form.user = request.username
-#         if filled_form.is_valid():
-#             note = 'Thanks for creating a seller profile %s.You can proceed to the dashboard' % (
-#                 filled_form.cleaned_data['firstname'],)
-#             filled_form.save()
-#             new_form = SellerInfo()
-#             return render(request, 'buyer_dashboard.html', {'sellerform': new_form, 'note': note})
-#
-#     else:
-#         form = SellerInfo()
-#     return render(request, 'buyer_dashboard.html', {'sellerform': form})
+def buyer_dashboard(request):
+    if request.method == 'POST':
+        filled_form = SellerInfo(request.POST)
+        filled_form.user = request.username
+        if filled_form.is_valid():
+            note = 'Thanks for creating a seller profile %s.You can proceed to the dashboard' % (
+                filled_form.cleaned_data['firstname'],)
+            filled_form.save()
+            new_form = SellerInfo()
+            return render(request, 'buyer_dashboard.html', {'sellerform': new_form, 'note': note})
+
+    else:
+        form = SellerInfo()
+    return render(request, 'buyer_dashboard.html', {'sellerform': form})
 
 # TODO : To add all the remain views

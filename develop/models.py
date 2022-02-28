@@ -21,7 +21,7 @@ from django.db import models
 # need more information here
 class SellerInfo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    buisnessName = models.CharField(max_length=128)
+    business_name = models.CharField(max_length=128)
     seller_email = models.EmailField()
     seller_address = models.CharField(max_length=128)
     seller_phone = models.IntegerField(max_length=10)
@@ -33,7 +33,7 @@ class SellerInfo(models.Model):
     
 #
     def __str__(self):
-        return self.buisnessName
+        return self.business_name
 #
 #
 # class DishInfo(models.Model):

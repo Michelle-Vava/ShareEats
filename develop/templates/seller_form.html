@@ -4,16 +4,15 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-{## TODO: Seller Additional form : Vijay and Shubham#}
-{#User then should be directed to the dashboard#}
-{#<form action="{% url 'buyer dashboard' %}" method="post" >#}
-{#    {% csrf_token %}#}
-{#    {{ sellerform }}#}
-{#   #}
-{#    <input type="submit" value="Create Seller Profile">#}
-{#</form>#}
+<!-- TODO: Seller Additional form : Vijay and Shubham
+User then should be directed to the dashboard -->
+<form action="{% url 'seller info' %}" method="post" >
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Create Seller Profile">
+</form>
 <body>
-this is the page for additional seller information!
-{#testing branch merge#}
+<!-- this is the page for additional seller information!
+{#testing branch merge#} -->
 </body>
 </html>
