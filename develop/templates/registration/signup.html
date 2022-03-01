@@ -1,13 +1,13 @@
-<!-- this is how the user will sign up and have authentication -->
-
-
+{% extends "base.html" %}
 {% block content %}
+      <div class="d-flex justify-content-center">
+<h2>Sign Up</h2>
+</div>
 <div class="container">
-<h2>Sign up</h2>
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Sign up</button>
+    <button class="btn btn-primary mb-2" type="submit">Sign up</button>
   </form>
 </div>
      <br>
