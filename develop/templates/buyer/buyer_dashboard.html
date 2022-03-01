@@ -1,0 +1,52 @@
+{%  extends 'buyer_dashboard_base.html' %}
+{% block content %}
+    <br>
+<ul class="nav justify-content-center">
+    <li class="nav-item">
+    <a class="nav-link active" href="#">All</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Lunch</a>
+  </li>
+ <li class="nav-item">
+     <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search by Name" aria-label="Search">
+         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </li>
+</ul>
+    <br>
+<ul class="nav justify-content-end">
+     <li class="nav-item">
+    <div class="card border-secondary" style="max-width: 18rem;">
+  <div class="card-header" href='{% url "buyer dashboard" %}' >{{ userdetails.firstname }}, {{ userdetails.lastname }}</div>
+  <div class="card-body text-secondary">
+    <h5 class="card-title">Joined</h5>
+    <p class="card-text">2 weeks ago.</p>
+  </div>
+</div>
+  </li>
+</ul>
+    <br>
+     <div class="container-fluid border ">
+<br>
+         {% for item in dishes %}
+             <div class="card-deck">
+        <div class="card border-primary mb-3" style="max-width: 18rem;">
+            <img class="card-img-top" src="../media/{{ item.image }}" alt="Card image cap">
+            <div class="card-body">
+            <h5 class="card-title">{{ item.item }}</h5>
+                <p class="card-text-warning">$ {{ item.price }}</p>
+                <p class="card-text">Quantity : {{ item.quantity}}</p>
+                <p class="card-text">Category : {{ item.category }}</p>
+                <a href="#" class="btn btn-success">Buy</a>
+            </div>
+        </div>
+
+
+         {% endfor %}
+
+         </div>
+
+    </div>
+{% endblock %}

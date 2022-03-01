@@ -1,26 +1,41 @@
-# class SellerInfo(forms.Form):
+# class SellerInfoForm(forms.Form):
 #     firstname = forms.CharField(max_length=20)
 #     lastname = forms.CharField(max_length=20)
-
+# from develop.models import SellerInfoForm
+#
+#
 from django import forms
-from develop.models import SellerInfo
+from django.forms import TextInput
+from phonenumber_field.formfields import PhoneNumberField
+
+from develop.models import SellerInfo, BuyerInfo, DishInfo
 
 
-class SellerInfo(forms.ModelForm):
+class SellerInfoForm(forms.ModelForm):
     class Meta:
         model = SellerInfo
-        fields = ['business_name',
-         'seller_email',
-         'seller_address',
-         'seller_phone',
-         'company_desc',
-         'card_number',
-         'exp_month',
-         'exp_year',
-         'cvv']
+        fields = ['businessname', 'phone', 'address', 'description', 'cardnumber', 'Cvv', 'ExpiryDate']
+        widgets = {
+            'name': TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: 300px;',
+                'placeholder': 'BusinessName'
+            }),
+            'email': TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: 300px;',
+                'placeholder': 'Phone'
+            })
+        }
 
-# TODO: Buyer Form : Kweku and Vineeth
-# Please NOTE : make sure to add migrations
+
+class BuyerInfoForm(forms.ModelForm):
+    class Meta:
+        model = BuyerInfo
+        fields = ['firstname', 'lastname', 'phone']
 
 
-# TODO: Seller Form : Vijay and Shubham
+class DishInfoForm(forms.ModelForm):
+    class Meta:
+        model = DishInfo
+        fields = ['item', 'price', 'quantity', 'category', 'image']
