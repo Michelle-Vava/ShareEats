@@ -38,13 +38,6 @@ pipelines:
         name: 'Deployment to Production'
         deployment: production
         trigger: 'manual'
-        script:
-          - echo "Your deployment to production script goes here..."
-
-    - step:
-        name: 'Deployment to Production'
-        deployment: production
-        trigger: 'manual'
         caches:
               - pip
         script:
