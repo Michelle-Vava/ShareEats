@@ -2,18 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Seller Profile</title>
 </head>
-{## TODO: Seller Additional form : Vijay and Shubham#}
-{#User then should be directed to the dashboard#}
-{#<form action="{% url 'buyer dashboard' %}" method="post" >#}
-{#    {% csrf_token %}#}
-{#    {{ sellerform }}#}
-{#   #}
-{#    <input type="submit" value="Create Seller Profile">#}
-{#</form>#}
-<body>
+<body style="margin: 0; background: #fffcef">
 this is the page for additional seller information!
-{#testing branch merge#}
+<div class="container">
+<form action="{% url 'seller info' %}" method="post" >
+    {% csrf_token %}
+    {{ sellerform }}
+
+    <input type="submit" value="Create Seller Profile">
+</form>
+</div>
 </body>
 </html>

@@ -8,32 +8,33 @@ from django.db import models
 # python manage.py migrate
 # python  manage.py makemigrations
 
-# Create your models here.
-# TODO: Buyer Table : Kweku and Vineeth
-# Please NOTE : make sure to add migrations
+
+class SellerInfo(models.Model):
+    businessname = models.CharField(max_length=20)
+    phone = models.IntegerField()
+    address = models.CharField(max_length=30)
+    description = models.CharField(max_length=100)
+    cardnumber = models.IntegerField()
+    Cvv = models.IntegerField()
+    ExpiryDate = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.businessname
 
 
-# TODO: Seller Table : Vijay and Shubham
-# Please NOTE : make sure to add migrations
+class BuyerInfo(models.Model):
+    firstname = models.CharField(max_length=20)
+    lastname = models.CharField(max_length=20)
+    phone = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.firstname
 
 
-
-
-
-
-# need more information here
-# class SellerInfo(models.Model):
-#     firstname = models.CharField(max_length=20)
-#     lastname = models.CharField(max_length=20)
-#
-#     # user = models.ForeignKey(User, on_delete=models.CASCADE)
-#
-#     def __str__(self):
-#         return self.firstname
-#
-#
-# class DishInfo(models.Model):
-#     price = models.IntegerField()
-#     quantity = models.IntegerField()
-#     category = models.CharField(max_length=20)
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+class DishInfo(models.Model):
+    price = models.IntegerField()
+    quantity = models.IntegerField()
+    category = models.CharField(max_length=20)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
