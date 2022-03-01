@@ -10,10 +10,10 @@ pipelines:
   default:
     - parallel:
       - step:
-            caches:
-              - pip
+#            caches:
+#             - pip
             script:
-              - pip install -r requirements.txt
+#              - pip install -r requirements.txt
               - python manage.py test
       - step:
           name: 'Build and Test'
