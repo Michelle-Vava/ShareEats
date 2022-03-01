@@ -3,7 +3,9 @@ from django.core.validators import RegexValidator
 from django.db import models
 
 #  this is where we will add the tables for our database
+"""
 
+"""
 # commands to remember :
 # python manage.py migrate
 # python  manage.py makemigrations
