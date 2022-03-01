@@ -9,12 +9,12 @@ clone:
 pipelines:
   default:
     - parallel:
-      - step:
-#            caches:
-#             - pip
-            script:
-#              - pip install -r requirements.txt
-              - python manage.py test
+#      - step:
+##            caches:
+##             - pip
+#            script:
+##              - pip install -r requirements.txt
+#              - python manage.py test
       - step:
           name: 'Build and Test'
           script:
