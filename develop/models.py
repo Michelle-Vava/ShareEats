@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
-from django.db import models
 from django.core.validators import RegexValidator
-
+from django.db import models
 
 #  this is where we will add the tables for our database
 
@@ -9,42 +8,35 @@ from django.core.validators import RegexValidator
 # python manage.py migrate
 # python  manage.py makemigrations
 
-# Create your models here.
-# TODO: Buyer Table : Kweku and Vineeth
-# Please NOTE : make sure to add migrations
+
+class SellerInfo(models.Model):
+    businessname = models.CharField(max_length=20)
+    phoneNumberRegex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
+    phone = models.CharField(validators=[phoneNumberRegex], max_length=16, unique=True)
+    address = models.CharField(max_length=30)
+    description = models.CharField(max_length=100)
+    cardnumber = models.CharField(max_length=16, unique=True)
+    Cvv = models.CharField(max_length=3, unique=True)
+    ExpiryDate = models.CharField(max_length=4, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    membership = models.BooleanField(default=False)
 
 
-class buyersignup(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    phone_regex = RegexValidator(
-        regex=r"^\+?1?\d{9,15}$",
-        message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.",
-    )
-    phone_number = models.CharField(
-        validators=[phone_regex], max_length=17, blank=True
-    )  # validators should be a list
-    user_name = models.CharField(max_length=100)
+class BuyerInfo(models.Model):
+    firstname = models.CharField(max_length=20)
+    lastname = models.CharField(max_length=20)
+    phoneNumberRegex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
+    phone = models.CharField(validators=[phoneNumberRegex], max_length=16, unique=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    membership = models.BooleanField(default=False)
 
 
-# TODO: Seller Table : Vijay and Shubham
-# Please NOTE : make sure to add migrations
-# Hi I was here : Michelle Vava
-
-
-# need more information here
-# class SellerInfo(models.Model):
-#     firstname = models.CharField(max_length=20)
-#     lastname = models.CharField(max_length=20)
-#
-#     # user = models.ForeignKey(User, on_delete=models.CASCADE)
-#
-#     def __str__(self):
-#         return self.firstname
-#
-#
-# class DishInfo(models.Model):
-#     price = models.IntegerField()
-#     quantity = models.IntegerField()
-#     category = models.CharField(max_length=20)
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+class DishInfo(models.Model):
+    item = models.CharField(max_length=30)
+    price = models.CharField(max_length=5)
+    quantity = models.IntegerField()
+    category = models.CharField(max_length=20)
+    # file will be uploaded to MEDIA_ROOT / uploads
+    image = models.ImageField(upload_to='uploads/')
+    seller_id = models.ForeignKey(SellerInfo, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

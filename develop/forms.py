@@ -1,25 +1,41 @@
-from django import forms
-
-# class SellerInfo(forms.Form):
+# class SellerInfoForm(forms.Form):
 #     firstname = forms.CharField(max_length=20)
 #     lastname = forms.CharField(max_length=20)
-# from develop.models import SellerInfo
+# from develop.models import SellerInfoForm
 #
 #
-# class SellerInfo(forms.ModelForm):
-#     class Meta:
-#         model = SellerInfo
-#         fields = ['firstname', 'lastname']
-# TODO: Buyer Form : Kweku and Vineeth
-# Please NOTE : make sure to add migrations
-class BuyerSignUpForm(forms.Form):
-    first_name = forms.CharField(max_length=100)
-    last_name = forms.CharField(max_length=100)
-    phone_number = forms.CharField(
-        max_length=17, blank=True
-    )  # validators should be a list
-    user_name = forms.CharField(max_length=100)
+from django import forms
+from django.forms import TextInput
+from phonenumber_field.formfields import PhoneNumberField
+
+from develop.models import SellerInfo, BuyerInfo, DishInfo
 
 
-# TODO: Seller Form : Vijay and Shubham
-# Hi i was also here, Kweku
+class SellerInfoForm(forms.ModelForm):
+    class Meta:
+        model = SellerInfo
+        fields = ['businessname', 'phone', 'address', 'description', 'cardnumber', 'Cvv', 'ExpiryDate']
+        widgets = {
+            'name': TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: 300px;',
+                'placeholder': 'BusinessName'
+            }),
+            'email': TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: 300px;',
+                'placeholder': 'Phone'
+            })
+        }
+
+
+class BuyerInfoForm(forms.ModelForm):
+    class Meta:
+        model = BuyerInfo
+        fields = ['firstname', 'lastname', 'phone']
+
+
+class DishInfoForm(forms.ModelForm):
+    class Meta:
+        model = DishInfo
+        fields = ['item', 'price', 'quantity', 'category', 'image']

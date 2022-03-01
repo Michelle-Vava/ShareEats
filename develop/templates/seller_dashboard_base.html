@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- The sidebar -->
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1349, maximum-scale=1.0" />
+    <link rel="shortcut icon" type="image/png" href="https://animaproject.s3.amazonaws.com/home/favicon.png" />
+    <meta name="og:type" content="website" />
+    <meta name="twitter:card" content="photo" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="../static/css/sidebar.css" />
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title></title>
+</head>
+<div  id="mySidebar"  class="sidebar">
+
+    <a>Share Eats</a>
+    <a  onclick="location.href='{% url 'seller dashboard' %}'"><i class="fa fa-home"></i> Dashboard</a>
+  <a onclick="location.href='{% url 'edit menu' %}'"><i class="fa fa-bars"></i> Edit Menu</a>
+  <a onclick="location.href='{% url 'report' %}'"><i class="fa fa-pie-chart"></i> Reports </a>
+  <a onclick="location.href='{% url 'seller settings' %}'"><i class="fa fa-wrench"></i>  Settings</a>
+</div>
+<body style="margin: 0; background: #fffcef">
+
+
+<!-- Page content -->
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarText">
+
+    <ul class="navbar-nav mr-auto">
+
+     <a class="navbar-brand" href='{% url "seller dashboard" %}'>  Hello,{{ userdetails.businessname }} </a>
+
+    </ul>
+    <span  class="navbar-item">
+    <a class="nav-link" href='{% url 'buyer info' %}'>Switch to Buyer Account</a>
+
+    </span>
+
+  </div>
+</nav>
+
+<br>
+
+<div  class="content">
+<br>
+   {% block content %}
+     {% endblock %}
+</div>
+</body>
+</html>

@@ -2,87 +2,162 @@ from django.contrib.auth import logout, login
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from forms import BuyerSignUpForm
+
+from develop.forms import SellerInfoForm, BuyerInfoForm, DishInfoForm
+from develop.models import BuyerInfo, SellerInfo, DishInfo
 
 """
 """
 
-# added this line for pushing pratice
+
 # Create your views here.
 
 # home view
 # renders the view for the home page
 # landing page which is our login
 def home(request):
-    return render(request, "registration/login.html")
+    return render(request, 'registration/login.html')
 
 
 def buyer_seller_option(request):
-    return render(request, "buyer-or-seller-option.html")
+    return render(request, 'buyer-or-seller-option.html')
 
 
 # log out view
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect("/")
+    return HttpResponseRedirect('/')
 
 
 # sign up view
 # sign up for authentication
 def sign_up(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return HttpResponseRedirect("option")
+            return HttpResponseRedirect('option')
         else:
             for msg in form.error_messages:
                 print(form.error_messages[msg])
-            return render(request, "registration/signup.html", {"form": form})
+            return render(request, 'registration/signup.html', {'form': form})
     else:
         form = UserCreationForm
-        return render(request, "registration/signup.html", {"form": form})
-
-
-# # sign up view for buyer
-# def buyer_signup(request):
-#     return render(request, 'buyer-sign-up.html')
-#
-#
-# # sign in for buyer
-# def buyer_signin(request):
-#     return render(request, 'buyer-sign-in.html')
+        return render(request, 'registration/signup.html', {'form': form})
 
 
 def buyer_dashboard(request):
-    return render(request, "buyer_dashboard.html")
+    dishes = DishInfo.objects.all()
+    userdetails = BuyerInfo.objects.get(user=request.user)
+    context = {'dishes': dishes, 'userdetails': userdetails}
+    return render(request, 'buyer/buyer_dashboard.html', context)
 
 
-# add more : Shubham and Vijay
-def seller_form(request):
-    return render(request, "seller_form.html")
+def seller_dashboard(request):
+    userdetails = SellerInfo.objects.get(user=request.user)
+    context = {'userdetails': userdetails}
+    return render(request, 'seller/seller_dashboard.html', context)
 
 
-# add more : Kweku and Vineeth
+def reports(request):
+    return render(request, 'seller/report.html')
+
+
+def editmenu(request):
+    dishes = DishInfo.objects.filter(user=request.user).order_by('item')
+
+    form = DishInfoForm
+    context = {'dishes': dishes, 'addform': form}
+    return render(request, 'seller/editmenu.html', context)
+
+
+def buyer_settings(request):
+    return render(request, 'buyer/buyer_settings.html')
+
+
+def seller_settings(request):
+    return render(request, 'seller/seller_settings.html')
+
+
+def order(request):
+    return render(request, 'buyer/order.html')
+
+
+def favourites(request):
+    return render(request, 'buyer/favourites.html')
+
+
+def checkout(request):
+    return render(request, 'buyer/checkout.html')
+
+
 def buyer_form(request):
+    if BuyerInfo.objects.filter(user=request.user, membership=True).exists():
+        return HttpResponseRedirect('/buyer/dashboard')
+    else:
+        if request.method == 'POST':
+            filled_form = BuyerInfoForm(request.POST)
+            if filled_form.is_valid():
+                buyer = BuyerInfo()
+                buyer.user = request.user
+                buyer.firstname = filled_form.cleaned_data['firstname']
+                buyer.lastname = filled_form.cleaned_data['lastname']
+                buyer.membership = True
+                buyer.save()
+                return HttpResponseRedirect('dashboard')
+            else:
+                for msg in filled_form.error_messages:
+                    print(filled_form.error_messages[msg])
+                return render(request, 'buyer/buyer_form.html', {'form': filled_form})
+        else:
+            form = BuyerInfoForm
+            return render(request, 'buyer/buyer_form.html', {'buyerform': form})
 
-    return render(request, "buyer_form.html")
+
+def seller_form(request):
+    if SellerInfo.objects.filter(user=request.user, membership=True).exists():
+        return HttpResponseRedirect('/seller/dashboard')
+    else:
+        if request.method == 'POST':
+            filled_form = SellerInfoForm(request.POST)
+            if filled_form.is_valid():
+                seller = SellerInfo()
+                seller.user = request.user
+                seller.businessname = filled_form.cleaned_data['businessname']
+                seller.phone = filled_form.cleaned_data['phone']
+                seller.address = filled_form.cleaned_data['address']
+                seller.description = filled_form.cleaned_data['description']
+                seller.cardnumber = filled_form.cleaned_data['cardnumber']
+                seller.Cvv = filled_form.cleaned_data['Cvv']
+                seller.ExpiryDate = filled_form.cleaned_data['ExpiryDate']
+                seller.membership = True
+                seller.save()
+                return HttpResponseRedirect('/seller/dashboard')
+
+            else:
+                for msg in filled_form.error_messages:
+                    print(filled_form.error_messages[msg])
+                return render(request, 'seller/seller_form.html', {'form': filled_form})
+        else:
+            form = SellerInfoForm
+            return render(request, 'seller/seller_form.html', {'sellerform': form})
 
 
-# def buyer_dashboard(request):
-#     if request.method == 'POST':
-#         filled_form = SellerInfo(request.POST)
-#         # filled_form.user = request.username
-#         if filled_form.is_valid():
-#             note = 'Thanks for creating a seller profile %s.You can proceed to the dashboard' % (
-#                 filled_form.cleaned_data['firstname'],)
-#             filled_form.save()
-#             new_form = SellerInfo()
-#             return render(request, 'buyer_dashboard.html', {'sellerform': new_form, 'note': note})
-#
-#     else:
-#         form = SellerInfo()
-#     return render(request, 'buyer_dashboard.html', {'sellerform': form})
-
-# TODO : To add all the remain views
+def add_item(request):
+    if request.method == 'POST':
+        filled_form = DishInfoForm(request.POST, request.FILES)
+        if filled_form.is_valid():
+            dish = DishInfo()
+            dish.user = request.user
+            dish.price = filled_form.cleaned_data['price']
+            dish.item = filled_form.cleaned_data['item']
+            dish.seller_id = SellerInfo.objects.get(user=request.user)
+            dish.image = filled_form.cleaned_data['image']
+            dish.quantity = filled_form.cleaned_data['quantity']
+            dish.category = filled_form.cleaned_data['category']
+            dish.save()
+            return HttpResponseRedirect('/seller/editmenu')
+        else:
+            for msg in filled_form.error_messages:
+                print(filled_form.error_messages[msg])
