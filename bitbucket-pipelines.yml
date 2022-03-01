@@ -4,10 +4,17 @@
 # You can specify a custom docker image from Docker Hub as your build environment.
 
 image: atlassian/default-image:3
-
+clone:
+  depth: full
 pipelines:
   default:
     - parallel:
+      - step:
+            caches:
+              - pip
+            script:
+              - pip install -r requirements.txt
+              - python manage.py test
       - step:
           name: 'Build and Test'
           script:
@@ -34,14 +41,16 @@ pipelines:
         script:
           - echo "Your deployment to production script goes here..."
 
-#    - step:
-#        name: 'Deployment to Production'
-#        deployment: production
-#        trigger: 'manual'
-#        caches:
-#              - pip
-#        script:
-#        - pipe: atlassian/heroku-deploy:1.2.1
-#          variables:
-#            HEROKU_API_KEY: $HEROKU_API_KEY
-#            HEROKU_APP_NAME: $HEROKU_APP_NAME
+    - step:
+        name: 'Deployment to Production'
+        deployment: production
+        trigger: 'manual'
+        caches:
+              - pip
+        script:
+        - pip install -r requirements.txt
+        - git push origin main
+        - pipe: atlassian/heroku-deploy:1.2.1
+          variables:
+            HEROKU_API_KEY: $HEROKU_API_KEY
+            HEROKU_APP_NAME: $HEROKU_APP_NAME
