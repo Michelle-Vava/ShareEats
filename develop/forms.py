@@ -6,7 +6,6 @@
 #
 from django import forms
 from django.forms import TextInput
-from phonenumber_field.formfields import PhoneNumberField
 
 from develop.models import SellerInfo, BuyerInfo, DishInfo
 
