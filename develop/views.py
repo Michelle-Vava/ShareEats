@@ -1,9 +1,11 @@
+from urllib import request
+from wsgiref.util import request_uri
 from django.contrib.auth import logout, login
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
-from develop.forms import SellerInfoForm, BuyerInfoForm, DishInfoForm
+from develop.forms import BuyerSettings, SellerInfoForm, BuyerInfoForm, DishInfoForm
 from develop.models import BuyerInfo, SellerInfo, DishInfo
 
 """
@@ -161,3 +163,28 @@ def add_item(request):
         else:
             for msg in filled_form.error_messages:
                 print(filled_form.error_messages[msg])
+
+
+def buyer_settings(request):
+    
+    if request.method == "POST":
+        filled_form = BuyerSettings(request.Post)
+        return render(request, 'buyer/buyer_settings.html',{'settings': filled_form})
+    else:
+        user_details = BuyerInfo.objects.get(user=request.user)        
+        filled_form = BuyerSettings
+        filled_form.firstname = user_details.firstname
+        filled_form.lastname = user_details.lastname
+        filled_form.phone = user_details.phone
+        return render(request, 'buyer/buyer_settings.html',{'settings': filled_form})
+    # if filled_form.is_valid():
+    #     buyer = BuyerInfo()
+    #     buyer.firstname = BuyerInfo.firstname.objects.get(user=request.user)
+    #     buyer.lastname = BuyerInfo.lastname.objects.get(user=request.user)
+    #     buyer.phone = BuyerInfo.phone.objects.get(user=request_user)
+    #     return HttpResponseRedirect('/buyer/settings')
+
+        
+        
+
+        

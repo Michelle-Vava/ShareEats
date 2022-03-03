@@ -1,7 +1,29 @@
 {%  extends 'buyer_dashboard_base.html' %}
 {% block content %}
      <div class="container border py-3 my-3">
-        <h1>This is a heading</h1>
-        <p>This is a paragraph of text.</p>
+     <form class='form-control 'action="{% url 'buyer settings' %}" method="post" >
+   {% csrf_token %}
+       {{ settings.non_field_errors }}
+<div class="fieldWrapper">
+    {{ settings.firstname.errors }}
+    <label for="{{ settings.firstname.id_for_label }}">First Name:</label>
+    {{ settings.firstname }}
+</div>
+<div class="fieldWrapper">
+    {{ settings.lastname.errors }}
+    <label for="{{ settings.lastname.id_for_label }}">Last Name:</label>
+    {{ settings.lastname }}
+</div>
+<div class="fieldWrapper">
+    {{ settings.phone.errors }}
+    <label for="{{ settings.phone.id_for_label }}">Phone:</label>
+    
+    {{ settings.phone }}
+</div>
+    <input type="submit" value="Update">
+    <input type="submit" value="Cancel">
+</form>
+        
+
     </div>
 {% endblock %}

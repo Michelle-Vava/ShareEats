@@ -38,3 +38,10 @@ class DishInfoForm(forms.ModelForm):
     class Meta:
         model = DishInfo
         fields = ['item', 'price', 'quantity', 'category', 'image']
+
+
+class BuyerSettings(forms.ModelForm):
+    class Meta:
+        model = BuyerInfo
+        fields = ['firstname', 'lastname', 'phone']
+   
