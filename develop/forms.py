@@ -44,4 +44,15 @@ class BuyerSettings(forms.ModelForm):
     class Meta:
         model = BuyerInfo
         fields = ['firstname', 'lastname', 'phone']
+        widgets = {
+            'firstname': TextInput(attrs={
+                'placeholder': 'firstname'
+            }),
+            'lastname': TextInput(attrs={
+                'placeholder': 'lastname'
+            }),
+            'phone': TextInput(attrs={
+                'placeholder': 'phone'
+            }),
+        }
    

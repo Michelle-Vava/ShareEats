@@ -166,9 +166,16 @@ def add_item(request):
 
 
 def buyer_settings(request):
-    
     if request.method == "POST":
-        filled_form = BuyerSettings(request.Post)
+        if filled_form.is_valid():
+            filled_form = BuyerSettings(request.Post)
+            buyer = BuyerSettings()
+            buyer.firstname = filled_form.cleaned_data['firstname']
+            buyer.lastname = filled_form.cleaned_data['lastname']
+            buyer.phone = filled_form.cleaned_data['phone']
+            buyer.id = request.user.id
+            buyer.save()
+            return HttpResponseRedirect('dashboard')            
         return render(request, 'buyer/buyer_settings.html',{'settings': filled_form})
     else:
         user_details = BuyerInfo.objects.get(user=request.user)        
