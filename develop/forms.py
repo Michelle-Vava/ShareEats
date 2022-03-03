@@ -7,7 +7,6 @@
 from django import forms
 from django.forms import TextInput
 
-
 from develop.models import SellerInfo, BuyerInfo, DishInfo
 
 
