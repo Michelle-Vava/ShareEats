@@ -6,8 +6,7 @@
 # remove phone number_fields
 from django import forms
 from django.forms import TextInput
-from phonenumber_field.formfields import PhoneNumberField
-
+# KWEKU WAS HERE
 from develop.models import SellerInfo, BuyerInfo, DishInfo
 
 
