@@ -3,10 +3,10 @@
 #     lastname = forms.CharField(max_length=20)
 # from develop.models import SellerInfoForm
 #
-#
+# remove phone number_fields
 from django import forms
 from django.forms import TextInput
-
+# KWEKU WAS HERE
 from develop.models import SellerInfo, BuyerInfo, DishInfo
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column
@@ -57,4 +57,13 @@ class BuyerSettings(forms.ModelForm):
                 'placeholder': 'phone'
             }),
         }
-   
+        
+        def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                self.helper = FormHelper()
+                self.helper.form_id = 'id-exampleForm'
+                self.helper.form_class = 'blueForms'
+                self.helper.form_method = 'post'
+                self.helper.form_action = 'submit_survey'
+
+                self.helper.add_input(Submit('submit', 'Submit'))
