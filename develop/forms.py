@@ -4,6 +4,7 @@
 # from develop.models import SellerInfoForm
 #
 # remove phone number_fields
+from tkinter import Button
 from django import forms
 from django.forms import TextInput
 # KWEKU WAS HERE
@@ -25,7 +26,7 @@ class SellerInfoForm(forms.ModelForm):
             'email': TextInput(attrs={
                 'class': "form-control",
                 'style': 'max-width: 300px;',
-                'placeholder': 'Phone'
+                'placeholder': 'Email'
             })
         }
 
@@ -47,23 +48,22 @@ class BuyerSettings(forms.ModelForm):
         model = BuyerInfo
         fields = ['firstname', 'lastname', 'phone']
         widgets = {
-            'firstname': TextInput(attrs={
-                'placeholder': 'firstname'
+            'firstname': TextInput(attrs={ 
+                'placeholder': 'firstname',
+                  'label': 'First Name',
+                'class':'form-control'
             }),
             'lastname': TextInput(attrs={
-                'placeholder': 'lastname'
+                'placeholder': 'lastname',
+                'class':'form-control',
+                'title': 'Last Name',
+                'style':{"color": "14px"}
             }),
             'phone': TextInput(attrs={
-                'placeholder': 'phone'
-            }),
+                'placeholder': 'phone',
+                  'title': ' Phone',
+                'class':'form-control'
+            })
         }
-        
-        def __init__(self, *args, **kwargs):
-                super().__init__(*args, **kwargs)
-                self.helper = FormHelper()
-                self.helper.form_id = 'id-exampleForm'
-                self.helper.form_class = 'blueForms'
-                self.helper.form_method = 'post'
-                self.helper.form_action = 'submit_survey'
 
-                self.helper.add_input(Submit('submit', 'Submit'))
+     

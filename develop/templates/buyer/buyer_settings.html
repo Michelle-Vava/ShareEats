@@ -3,6 +3,28 @@
 
 {% load crispy_forms_tags %}
 {% block content %}
+ <div class="container border py-3 my-3">
+    <div class="form-row align-items-center">
+        <div class="col-auto">
+            <form action="{% url 'buyer settings' %}" method="post" >
+                {% csrf_token %}
+                {{settings | crispy }}
+                <link rel="stylesheet" type="text/css" href="../static/css/button.css" />
+                <input id = "save" type="submit" value="Update">
+            
+                <a id="cancel" href="dashboard"> Cancel </a>
+            </form>
+        </div>
+      
+    </div>
+    </div>
+{% endblock %}
+
+{% comment %} {%  extends 'buyer_dashboard_base.html' %}
+{% load crispy_forms_filters %}
+
+{% load crispy_forms_tags %}
+{% block content %}
 
      <div class="container border py-3 my-3">
      <form class='form-control 'action="{% url 'buyer settings' %}" method="post" >
@@ -33,4 +55,6 @@
         
 
     </div>
-{% endblock %}
+{% endblock %} {% endcomment %}
+
+
