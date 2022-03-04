@@ -3,7 +3,7 @@
 #     lastname = forms.CharField(max_length=20)
 # from develop.models import SellerInfoForm
 #
-#
+# remove phone number_fields
 from django import forms
 from django.forms import TextInput
 # KWEKU WAS HERE
