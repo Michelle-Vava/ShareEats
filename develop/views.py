@@ -74,8 +74,6 @@ def editmenu(request):
     return render(request, 'seller/editmenu.html', context)
 
 
-def buyer_settings(request):
-    return render(request, 'buyer/buyer_settings.html')
 
 
 def seller_settings(request):
@@ -107,7 +105,7 @@ def buyer_form(request):
                 buyer.lastname = filled_form.cleaned_data['lastname']
                 buyer.membership = True
                 buyer.save()
-                return HttpResponseRedirect('dashboard')
+                return HttpResponseRedirect('buyer/buyer_dashboard.html')
             else:
                 for msg in filled_form.error_messages:
                     print(filled_form.error_messages[msg])
@@ -167,19 +165,22 @@ def add_item(request):
 
 def buyer_settings(request):
     if request.method == "POST":
+        filled_form = BuyerSettings(request.POST, request.FILES)
         if filled_form.is_valid():
-            filled_form = BuyerSettings(request.Post)
-            buyer = BuyerSettings()
+            
+            buyer = BuyerInfo()
+            buyer.user = request.user
+            buyer.id = request.user.pk
             buyer.firstname = filled_form.cleaned_data['firstname']
             buyer.lastname = filled_form.cleaned_data['lastname']
-            buyer.phone = filled_form.cleaned_data['phone']
-            buyer.id = request.user.id
+            buyer.membership = True
             buyer.save()
+            
             return HttpResponseRedirect('dashboard')            
-        return render(request, 'buyer/buyer_settings.html',{'settings': filled_form})
+    
     else:
         user_details = BuyerInfo.objects.get(user=request.user)        
-        filled_form = BuyerSettings
+        filled_form = BuyerSettings()
         filled_form.firstname = user_details.firstname
         filled_form.lastname = user_details.lastname
         filled_form.phone = user_details.phone

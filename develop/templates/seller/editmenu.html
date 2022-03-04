@@ -1,5 +1,6 @@
 {%  extends 'seller_dashboard_base.html' %}
 {% block content %}
+{% load crispy_forms_tags %}
     <br>
     <div class="card" style="width: 10rem;">
   <img class="card-img-top" src="../static/img/add_item.png" alt="Card image cap">
@@ -24,7 +25,7 @@
                 action="{% url 'add item' %}"
                 method="post">
               {% csrf_token %}
-              {{ addform.as_p }}
+              {{ addform | crispy  }}
 
               <input class="btn btn-warning" type="submit" value="Add">
           </form>

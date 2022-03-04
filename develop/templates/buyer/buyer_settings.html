@@ -10,17 +10,17 @@
 <div class="fieldWrapper">
     {{ settings.firstname.errors }}
 
-    <label for="{{ settings.firstname.id_for_label }}">First Name:</label>
+    <label for="{{ settings.firstname.id_for_label }}"></label>
     {{ settings.firstname | as_crispy_field   }}
 </div>
 <div class="fieldWrapper">
     {{ settings.lastname.errors }}
-    <label for="{{ settings.lastname.id_for_label }}">Last Name:</label>
+    <label for="{{ settings.lastname.id_for_label }}"></label>
     {{ settings.lastname | as_crispy_field}}
 </div>
 <div class="fieldWrapper">
     {{ settings.phone.errors }}
-    <label for="{{ settings.phone.id_for_label }}">Phone:</label>
+    <label for="{{ settings.phone.id_for_label }}"></label>
     
     {{ settings.phone | as_crispy_field }}
 </div>
