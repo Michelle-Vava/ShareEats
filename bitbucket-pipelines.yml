@@ -23,7 +23,7 @@ pipelines:
               name: 'Create Artifact'
               script:
                 - echo "Your build and test goes here..."
-                - git archive --format=tar.gz staging -o shareeats.tar.gz
+                - git archive --format=tar.gz main -o shareeats.tar.gz
               artifacts:
                 - shareeats.tar.gz
         - step:
