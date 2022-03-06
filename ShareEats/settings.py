@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'develop',
+    'crispy_forms',
 
 ]
 
@@ -143,5 +144,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGGING = {}
 # user is directed to the dashboard when they successfully log in
 LOGIN_REDIRECT_URL = '/option'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 django_heroku.settings(locals())

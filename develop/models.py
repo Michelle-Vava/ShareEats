@@ -18,8 +18,8 @@ class SellerInfo(models.Model):
     address = models.CharField(max_length=30)
     description = models.CharField(max_length=100)
     cardnumber = models.CharField(max_length=16, unique=True)
-    Cvv = models.CharField(max_length=3, unique=True)
-    ExpiryDate = models.CharField(max_length=4, unique=True)
+    cvv = models.CharField(max_length=3, unique=True)
+    expiry_date = models.CharField(max_length=4, unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     membership = models.BooleanField(default=False)
 
