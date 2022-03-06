@@ -23,7 +23,7 @@ pipelines:
               name: 'Create Artifact'
               script:
                 - echo "Your build and test goes here..."
-                - git archive --format=tar.gz GROUPF-38-refactor-pipeline-to-deploy-to -o shareeats.tar.gz
+                - git archive --format=tar.gz GROUPF/main -o shareeats.tar.gz
               artifacts:
                 - shareeats.tar.gz
         - step:
