@@ -4,9 +4,7 @@
 # from develop.models import SellerInfoForm
 #
 # remove phone number_fields
-from logging import PlaceHolder
-from tkinter import Button
-from typing import Text
+
 from django import forms
 from django.forms import TextInput
 
