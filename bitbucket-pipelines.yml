@@ -19,13 +19,13 @@ pipelines:
 ##              - pip install -r requirements.txt
 #              - python manage.py test
 
-        - step:
-              name: 'Create Artifact'
-              script:
-                - echo "Your build and test goes here..."
-                - git archive --format=tar.gz GROUPF/main -o shareeats.tar.gz
-              artifacts:
-                - shareeats.tar.gz
+#        - step:
+#              name: 'Create Artifact'
+#              script:
+#                - echo "Your build and test goes here..."
+#                - git archive --format=tar.gz GROUPF/main -o shareeats.tar.gz
+#              artifacts:
+#                - shareeats.tar.gz
         - step:
               name: 'Lint'
               script:
@@ -49,8 +49,11 @@ pipelines:
             caches:
                   - pip
             script:
+              - git archive --format=tar.gz GROUPF/main -o shareeats.tar.gz
     #        - pip install -r requirements.txt
     #        - git push origin main
+             artifacts:
+              - shareeats.tar.gz
             - pipe: atlassian/heroku-deploy:1.2.1
               variables:
                 HEROKU_API_KEY: $HEROKU_API_KEY
