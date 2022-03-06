@@ -7,11 +7,11 @@ clone:
   depth: full
 pipelines:
   default:
-        - step:
-              name: Test
-              script:
-                - pip install -r requirements.txt
-                - python manage.py test
+#        - step:
+#              name: Test
+#              script:
+#                - pip install -r requirements.txt
+#                - python manage.py test
 #      - step:
 ##            caches:
 ##             - pip
@@ -46,8 +46,8 @@ pipelines:
             caches:
                   - pip
             script:
-    #        - pip install -r requirements.txt
-    #        - git push origin main
+            - pip install -r requirements.txt
+            - git push origin main
             - pipe: atlassian/heroku-deploy:1.2.1
               variables:
                 HEROKU_API_KEY: $HEROKU_API_KEY

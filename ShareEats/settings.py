@@ -77,27 +77,27 @@ WSGI_APPLICATION = 'ShareEats.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 #
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'shareeats',
-        'USER': 'postgres',
-        'PASSWORD': '123123',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
-#
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'd7v8j1gf1115uk',
-#         'USER': 'cauikhfxvaggth',
-#         'PASSWORD': '3442684880261bc35b6f69efe8337896b0d9437b8f892f4349ef427e3b3b3be1',
-#         'HOST': 'ec2-34-230-110-100.compute-1.amazonaws.com',
+#         'NAME': 'shareeats',
+#         'USER': 'postgres',
+#         'PASSWORD': '123123',
+#         'HOST': 'localhost',
 #         'PORT': '5432',
 #     }
 # }
+#
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd7v8j1gf1115uk',
+        'USER': 'cauikhfxvaggth',
+        'PASSWORD': '3442684880261bc35b6f69efe8337896b0d9437b8f892f4349ef427e3b3b3be1',
+        'HOST': 'ec2-34-230-110-100.compute-1.amazonaws.com',
+        'PORT': '5432',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
