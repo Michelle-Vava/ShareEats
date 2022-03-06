@@ -32,7 +32,7 @@ class BuyerInfo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     membership = models.BooleanField(default=False)
 
-
+# git using pycharm
 class DishInfo(models.Model):
     item = models.CharField(max_length=30)
     price = models.CharField(max_length=5)
