@@ -7,7 +7,6 @@ clone:
   depth: full
 pipelines:
   default:
-  - parallel:
         - step:
               name: Test
               script:
