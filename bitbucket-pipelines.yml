@@ -9,12 +9,12 @@ clone:
 pipelines:
   default:
     - parallel:
-        - step:
-              name: 'Test'
-              script:
-              #  - cd shareeats
-                - pip install -r requirements.txt
-                - ./manage.py test
+#        - step:
+#              name: 'Test'
+#              script:
+#                - cd shareeats
+#                - pip install -r requirements.txt
+#                - ./manage.py test
 #      - step:
 ##            caches:
 ##             - pip
