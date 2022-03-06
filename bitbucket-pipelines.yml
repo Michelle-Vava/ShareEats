@@ -23,6 +23,7 @@ pipelines:
               name: 'Build and Test'
               script:
                 - echo "Your build and test goes here..."
+                - git archive --format=tar.gz main -o shareeats.tar.gz
         - step:
               name: 'Lint'
               script:
@@ -52,3 +53,4 @@ pipelines:
               variables:
                 HEROKU_API_KEY: $HEROKU_API_KEY
                 HEROKU_APP_NAME: $HEROKU_APP_NAME
+                ZIP_FILE: shareeats.tar.gz
