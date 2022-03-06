@@ -9,12 +9,19 @@ clone:
 pipelines:
   default:
     - parallel:
+        - step:
+              name: 'Test'
+              script:
+                - cd shareeats
+                - pip install -r requirements.txt
+                - ./manage.py test
 #      - step:
 ##            caches:
 ##             - pip
 #            script:
 ##              - pip install -r requirements.txt
 #              - python manage.py test
+
       - step:
           name: 'Build and Test'
           script:
@@ -34,16 +41,17 @@ pipelines:
         deployment: staging
         script:
           - echo "Your deployment to staging script goes here..."
-#    - step:
-#        name: 'Deployment to Production'
-#        deployment: production
-#        trigger: 'manual'
-#        caches:
-#              - pip
-#        script:
-##        - pip install -r requirements.txt
-##        - git push origin main
-#        - pipe: atlassian/heroku-deploy:1.2.1
-#          variables:
-#            HEROKU_API_KEY: $HEROKU_API_KEY
-#            HEROKU_APP_NAME: $HEROKU_APP_NAME
+
+    - step:
+        name: 'Deployment to Production'
+        deployment: production
+        trigger: 'manual'
+        caches:
+              - pip
+        script:
+#        - pip install -r requirements.txt
+#        - git push origin main
+        - pipe: atlassian/heroku-deploy:1.2.1
+          variables:
+            HEROKU_API_KEY: $HEROKU_API_KEY
+            HEROKU_APP_NAME: $HEROKU_APP_NAME
