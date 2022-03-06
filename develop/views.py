@@ -1,5 +1,3 @@
-from urllib import request
-from wsgiref.util import request_uri
 from django.contrib.auth import logout, login
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
@@ -63,42 +61,30 @@ def buyer_dashboard(request):
 
 
 def seller_dashboard(request):
-    userdetails = SellerInfo.objects.get(user=request.user)
-    context = {"userdetails": userdetails}
+    user_details = SellerInfo.objects.get(user=request.user)
+    context = {"userdetails": user_details}
     return render(request, "seller/seller_dashboard.html", context)
 
 
 def reports(request):
-    return render(request, "seller/report.html")
+    user_details = SellerInfo.objects.get(user=request.user)
+    context = {"userdetails": user_details}
+    return render(request, "seller/report.html", context)
 
 
 def editmenu(request):
+    user_details = SellerInfo.objects.get(user=request.user)
     dishes = DishInfo.objects.filter(user=request.user).order_by("item")
 
     form = DishInfoForm
-    context = {"dishes": dishes, "addform": form}
+    context = {"dishes": dishes, "addform": form, "userdetails": user_details}
     return render(request, "seller/editmenu.html", context)
 
 
 def seller_settings(request):
+    user_details = SellerInfo.objects.get(user=request.user)
 
-    if request.method == "POST":
-        filled_form = SellerSettings(request.POST, request.FILES)
-        if filled_form.is_valid():
-            seller = SellerInfo()
-            seller.user = request.user
-            seller.id = SellerInfo.objects.get(user=request.user).id
-            seller.businessname = filled_form.cleaned_data["businessname"]
-            seller.phone = filled_form.cleaned_data["phone"]
-            seller.address = filled_form.cleaned_data["address"]
-            seller.description = filled_form.cleaned_data["description"]
-            seller.cardnumber = filled_form.cleaned_data["cardnumber"]
-            seller.cvv = filled_form.cleaned_data["cvv"]
-            seller.expiry_date = filled_form.cleaned_data["expiry_date"]
-            seller.membership = True
-            seller.save()
-            return HttpResponseRedirect("/seller/dashboard")
-    else:
+    if request.method != "POST":
         seller = SellerInfo.objects.get(user=request.user)
         businessname = seller.businessname
         phone = seller.phone
@@ -114,23 +100,52 @@ def seller_settings(request):
             "description": description,
             "cardnumber": cardnumber,
             "cvv": cvv,
-            "expiry_date": expiry_date,
+            "expiry_date": expiry_date, "userdetails": user_details
         }
 
         form = SellerSettings(initial=context)
-        return render(request, "seller/seller_settings.html", {"form": form})
+        context = {"userdetails": user_details, "form": form}
+        return render(request, "seller/seller_settings.html", context)
+
+
+    else:
+        filled_form = SellerSettings(request.POST)
+        if filled_form.is_valid():
+            seller = SellerInfo()
+            seller.user = request.user
+            seller.id = SellerInfo.objects.get(user=request.user).id
+            seller.businessname = filled_form.cleaned_data["businessname"]
+            seller.phone = filled_form.cleaned_data["phone"]
+            seller.address = filled_form.cleaned_data["address"]
+            seller.description = filled_form.cleaned_data["description"]
+            seller.cardnumber = filled_form.cleaned_data["cardnumber"]
+            seller.cvv = filled_form.cleaned_data["cvv"]
+            seller.expiry_date = filled_form.cleaned_data["expiry_date"]
+            seller.membership = True
+            seller.save()
+
+            return HttpResponseRedirect("/seller/dashboard")
+        else:
+            context = {"userdetails": user_details, "form": filled_form}
+            return render(request, "seller/seller_settings.html",context)
 
 
 def order(request):
-    return render(request, "buyer/order.html")
+    userdetails = BuyerInfo.objects.get(user=request.user)
+    context = {"userdetails": userdetails}
+    return render(request, "buyer/order.html", context)
 
 
 def favourites(request):
-    return render(request, "buyer/favourites.html")
+    userdetails = BuyerInfo.objects.get(user=request.user)
+    context = {"userdetails": userdetails}
+    return render(request, "buyer/favourites.html", context)
 
 
 def checkout(request):
-    return render(request, "buyer/checkout.html")
+    userdetails = BuyerInfo.objects.get(user=request.user)
+    context = {"userdetails": userdetails}
+    return render(request, "buyer/checkout.html", context)
 
 
 def buyer_form(request):
@@ -146,7 +161,7 @@ def buyer_form(request):
                 buyer.lastname = filled_form.cleaned_data["lastname"]
                 buyer.membership = True
                 buyer.save()
-                return HttpResponseRedirect("buyer/buyer_dashboard.html")
+                return HttpResponseRedirect("/buyer/dashboard")
             else:
                 for msg in filled_form.error_messages:
                     print(filled_form.error_messages[msg])
@@ -205,23 +220,32 @@ def add_item(request):
 
 
 def buyer_settings(request):
-    if request.method == "POST":
-        filled_form = BuyerSettings(request.POST, request.FILES)
-        if filled_form.is_valid():
-            buyer = BuyerInfo()
-            buyer.user = BuyerInfo.objects.get(user=request.user)
-            buyer.id = BuyerInfo.objects.get(user=request.user).id
-            buyer.firstname = filled_form.cleaned_data["firstname"]
-            buyer.lastname = filled_form.cleaned_data["lastname"]
-            buyer.membership = True
-            buyer.save()
-            return HttpResponseRedirect("dashboard")
+    userdetails = BuyerInfo.objects.get(user=request.user)
 
-    else:
+    if request.method != "POST":
         user_details = BuyerInfo.objects.get(user=request.user)
         firstname = user_details.firstname
         lastname = user_details.lastname
         phone = user_details.phone
         initial = {"firstname": firstname, "lastname": lastname, "phone": phone}
         filled_form = BuyerSettings(initial=initial)
-        return render(request, "buyer/buyer_settings.html", {"settings": filled_form})
+        context = {"userdetails": userdetails,"settings": filled_form}
+        return render(request, "buyer/buyer_settings.html", context)
+
+    else:
+        filled_form = BuyerSettings(request.POST)
+        if filled_form.is_valid():
+            buyer = BuyerInfo()
+            buyer.user = request.user
+            buyer.id = BuyerInfo.objects.get(user=request.user).id
+            buyer.firstname = filled_form.cleaned_data["firstname"]
+            buyer.lastname = filled_form.cleaned_data["lastname"]
+            buyer.phone = filled_form.cleaned_data["phone"]
+            buyer.membership = True
+            buyer.save()
+            return HttpResponseRedirect("dashboard")
+        else:
+            for msg in filled_form.error_messages:
+                print(filled_form.error_messages[msg])
+                context = {"userdetails": userdetails, "settings": filled_form}
+                return render(request, "buyer/buyer_settings.html", context)

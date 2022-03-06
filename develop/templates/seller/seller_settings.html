@@ -9,6 +9,7 @@
             <form action="{% url 'seller settings' %}" method="post" >
                 {% csrf_token %}
                 {{form | crispy }}
+
                 <link rel="stylesheet" type="text/css" href="../static/css/button.css" />
                 <input id = "save" type="submit" value="Update">
             
