@@ -2,7 +2,6 @@
 # Use a skeleton to build, test and deploy using manual and parallel steps
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
-
 image: atlassian/default-image:3
 clone:
   depth: full
@@ -21,10 +20,10 @@ pipelines:
 ##              - pip install -r requirements.txt
 #              - python manage.py test
 
-#    - step:
-#          name: 'Build and Test'
-#          script:
-#            - echo "Your build and test goes here..."
+        - step:
+              name: 'Build and Test'
+              script:
+                - echo "Your build and test goes here..."
         - step:
               name: 'Lint'
               script:
