@@ -44,7 +44,7 @@ urlpatterns = [
     path('seller/selleradditonalinformation', views.seller_form, name='seller info'),
     path('buyer/buyeradditonalinformation', views.buyer_form, name='buyer info'),
     path('seller/report', views.reports, name='report'),
-    path('buyer/restaurants', views.buyer_dashboard, name='buyer restaurants'),
+    path('buyer/restaurants', views.restaurants, name='buyer restaurants'),
 
 ]
 # add this lines

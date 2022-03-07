@@ -252,4 +252,4 @@ def buyer_settings(request):
 def restaurants(request):
     if request.method!="POST":
         context = {""}
-        return render(request, "buyer/restuarants.html", context)
+        return render(request, "buyer/restaurants.html", context)
