@@ -249,3 +249,7 @@ def buyer_settings(request):
                 print(filled_form.error_messages[msg])
                 context = {"userdetails": userdetails, "settings": filled_form}
                 return render(request, "buyer/buyer_settings.html", context)
+def restaurants(request):
+    if request.method!="POST":
+        context = {""}
+        return render(request, "buyer/restuarants.html", context)
