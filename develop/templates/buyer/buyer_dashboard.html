@@ -1,6 +1,15 @@
 {%  extends 'buyer_dashboard_base.html' %}
 {% block content %}
     <br>
+     <h1>Buyer Dashboard</h1>
+<br>
+     <div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>Page currently in Progress!</strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+    <br>
 <ul class="nav justify-content-center">
     <li class="nav-item">
     <a class="nav-link active" href="#">All</a>
@@ -19,6 +28,7 @@
 <ul class="nav justify-content-end">
      <li class="nav-item">
     <div class="card border-secondary" style="max-width: 18rem;">
+        <img class="card-img-top" src="../static/img/219969-1x-png@1x.png" alt="Card image">
   <div class="card-header" href='{% url "buyer dashboard" %}' >{{ userdetails.firstname }}, {{ userdetails.lastname }}</div>
   <div class="card-body text-secondary">
     <h5 class="card-title">Joined</h5>

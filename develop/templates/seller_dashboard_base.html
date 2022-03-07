@@ -18,7 +18,7 @@
 <div  id="mySidebar"  class="sidebar">
 
     <a>Share Eats</a>
-    <a  data-toggle="modal" data-target="#exampleModal"><i class="fa fa-home"></i> Dashboard</a>
+    <a   onclick="location.href='{% url 'seller dashboard' %}'"><i class="fa fa-home"></i> Dashboard</a>
   <a onclick="location.href='{% url 'edit menu' %}'"><i class="fa fa-bars"></i> Edit Menu</a>
   <a data-toggle="modal" data-target="#exampleModal"><i class="fa fa-pie-chart"></i> Reports </a>
   <a onclick="location.href='{% url 'seller settings' %}'"><i class="fa fa-wrench"></i>  Settings</a>
@@ -80,6 +80,7 @@
 
 <div  class="content">
 <br>
+
    {% block content %}
      {% endblock %}
 </div>
