@@ -52,6 +52,7 @@ pipelines:
         - step:
             name: 'Deployment to Production'
             deployment: production
+            trigger: 'manual'
             script:
               - echo "Your deployment to staging script goes here..."
          # Deploy the master branch to our app whenever it is updated
