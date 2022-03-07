@@ -192,8 +192,8 @@ def seller_form(request):
                 return HttpResponseRedirect("/seller/dashboard")
 
             else:
-                for msg in filled_form.error_messages:
-                    print(filled_form.error_messages[msg])
+                for msg in filled_form.errors:
+                    print(filled_form.errors[msg])
                 return render(request, "seller/seller_form.html", {"form": filled_form})
         else:
             form = SellerInfoForm
