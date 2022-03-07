@@ -8,9 +8,9 @@ from develop.forms import (
     SellerInfoForm,
     BuyerInfoForm,
     DishInfoForm,
-    SellerSettings,
+    SellerSettings, OrderInfoForm,
 )
-from develop.models import BuyerInfo, SellerInfo, DishInfo
+from develop.models import BuyerInfo, SellerInfo, DishInfo, OrderInfo
 
 """
 """
@@ -55,8 +55,9 @@ def sign_up(request):
 
 def buyer_dashboard(request):
     dishes = DishInfo.objects.all()
+    form = OrderInfoForm
     userdetails = BuyerInfo.objects.get(user=request.user)
-    context = {"dishes": dishes, "userdetails": userdetails}
+    context = {"dishes": dishes, "userdetails": userdetails, "addOrderForm": form}
     return render(request, "buyer/buyer_dashboard.html", context)
 
 
@@ -127,7 +128,7 @@ def seller_settings(request):
             return HttpResponseRedirect("/seller/dashboard")
         else:
             context = {"userdetails": user_details, "form": filled_form}
-            return render(request, "seller/seller_settings.html",context)
+            return render(request, "seller/seller_settings.html", context)
 
 
 def order(request):
@@ -219,6 +220,14 @@ def add_item(request):
                 print(filled_form.errors[msg])
 
 
+def add_dish(request):
+    return HttpResponseRedirect("/buyer/checkout")
+
+
+def edit_item(request):
+    return HttpResponseRedirect("/seller/editmenu")
+
+
 def buyer_settings(request):
     userdetails = BuyerInfo.objects.get(user=request.user)
 
@@ -229,7 +238,7 @@ def buyer_settings(request):
         phone = user_details.phone
         initial = {"firstname": firstname, "lastname": lastname, "phone": phone}
         filled_form = BuyerSettings(initial=initial)
-        context = {"userdetails": userdetails,"settings": filled_form}
+        context = {"userdetails": userdetails, "settings": filled_form}
         return render(request, "buyer/buyer_settings.html", context)
 
     else:
@@ -254,4 +263,4 @@ def buyer_settings(request):
 def restaurants(request):
     user_details = SellerInfo.objects.all()
     context = {"userdetails": user_details}
-    return render(request, "buyer/restaurants.html",context)
+    return render(request, "buyer/restaurants.html", context)

@@ -9,7 +9,7 @@ from django import forms
 from django.forms import TextInput
 
 # KWEKU WAS HERE
-from develop.models import SellerInfo, BuyerInfo, DishInfo
+from develop.models import SellerInfo, BuyerInfo, DishInfo, OrderInfo
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column
 
@@ -56,6 +56,12 @@ class DishInfoForm(forms.ModelForm):
         fields = ["item", "price", "quantity", "category", "image"]
 
 
+class OrderInfoForm(forms.ModelForm):
+    class Meta:
+        model = OrderInfo
+        fields = ["quantity"]
+
+
 class BuyerSettings(forms.ModelForm):
     firstname = forms.CharField(
         label="First Name",
@@ -91,8 +97,8 @@ class BuyerSettings(forms.ModelForm):
     class Meta:
         model = BuyerInfo
         fields = ["firstname", "lastname", "phone"]
-        
-        
+
+
 class SellerSettings(forms.ModelForm):
     businessname = forms.CharField(
         label="Buisness Name",
