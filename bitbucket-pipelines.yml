@@ -15,7 +15,7 @@ herokuAppDeployment: &herokuAppDeployment
 pipelines:
   default:
         - step:
-              name: Test
+              name: Testing
               script:
                 - pip install -r requirements.txt
                 - python manage.py test
@@ -49,8 +49,11 @@ pipelines:
             script:
               - echo "Your deployment to staging script goes here..."
 
-
-
+        - step:
+            name: 'Deployment to Production'
+            deployment: production
+            script:
+              - echo "Your deployment to staging script goes here..."
          # Deploy the master branch to our app whenever it is updated
             branches:
               main:
