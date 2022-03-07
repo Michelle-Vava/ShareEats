@@ -2,16 +2,25 @@
 {% block content %}
 {% load crispy_forms_tags %}
     <br>
+     <h1>Edit Menu</h1>
+<br>
+     <div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>Page currently in Progress!</strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+    <br>
     <div class="card" style="width: 10rem;">
   <img class="card-img-top" src="../static/img/add_item.png" alt="Card image cap">
   <div class="card-body">
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#exampleModal">
+<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#additem">
   Add Food Item
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="additem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -43,13 +52,13 @@
 
     </div>
     <br>
-    <div class="container border py-3 my-3">
+    <div class="container-fluid border">
 
 
          {% for item in dishes %}
     <div class="card-deck">
         <div class="card border-primary mb-3" style="max-width: 18rem;">
-        <img class="card-img-top" src="../media/{{ item.image }}" alt="Card image cap">
+        <img class="card-img-top" src="{{ item.image.url }}" alt="Card image cap">
         <div class="card-body">
         <h5 class="card-title">{{ item.item }}</h5>
         <p class="card-text">Price : $ {{ item.price }}</p>

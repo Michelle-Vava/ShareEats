@@ -45,8 +45,8 @@ def sign_up(request):
             login(request, user)
             return HttpResponseRedirect("option")
         else:
-            for msg in form.error_messages:
-                print(form.error_messages[msg])
+            for msg in form.errors:
+                print(form.errors[msg])
             return render(request, "registration/signup.html", {"form": form})
     else:
         form = UserCreationForm
@@ -163,8 +163,8 @@ def buyer_form(request):
                 buyer.save()
                 return HttpResponseRedirect("/buyer/dashboard")
             else:
-                for msg in filled_form.error_messages:
-                    print(filled_form.error_messages[msg])
+                for msg in filled_form.errors:
+                    print(filled_form.errors[msg])
                 return render(request, "buyer/buyer_form.html", {"form": filled_form})
         else:
             form = BuyerInfoForm
@@ -192,8 +192,8 @@ def seller_form(request):
                 return HttpResponseRedirect("/seller/dashboard")
 
             else:
-                for msg in filled_form.error_messages:
-                    print(filled_form.error_messages[msg])
+                for msg in filled_form.errors:
+                    print(filled_form.errors[msg])
                 return render(request, "seller/seller_form.html", {"form": filled_form})
         else:
             form = SellerInfoForm
@@ -215,8 +215,8 @@ def add_item(request):
             dish.save()
             return HttpResponseRedirect("/seller/editmenu")
         else:
-            for msg in filled_form.error_messages:
-                print(filled_form.error_messages[msg])
+            for msg in filled_form.errors:
+                print(filled_form.errors[msg])
 
 
 def buyer_settings(request):
@@ -245,7 +245,13 @@ def buyer_settings(request):
             buyer.save()
             return HttpResponseRedirect("dashboard")
         else:
-            for msg in filled_form.error_messages:
-                print(filled_form.error_messages[msg])
+            for msg in filled_form.errors:
+                print(filled_form.errors[msg])
                 context = {"userdetails": userdetails, "settings": filled_form}
                 return render(request, "buyer/buyer_settings.html", context)
+
+
+def restaurants(request):
+    user_details = SellerInfo.objects.all()
+    context = {"userdetails": user_details}
+    return render(request, "buyer/restaurants.html",context)
