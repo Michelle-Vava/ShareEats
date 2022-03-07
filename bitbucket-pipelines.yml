@@ -49,13 +49,12 @@ pipelines:
             script:
               - echo "Your deployment to staging script goes here..."
 
-        - step:
-                    name: 'Deployment to Production'
-                    deployment: production
-                      # Deploy the master branch to our app whenever it is updated
-                    branches:
-                      master:
-                          - step: *herokuAppDeployment
+
+
+         # Deploy the master branch to our app whenever it is updated
+            branches:
+              main:
+              - step: *herokuAppDeployment
 
 
             #                    trigger: 'manual'
