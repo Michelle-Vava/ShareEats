@@ -252,6 +252,6 @@ def buyer_settings(request):
 
 
 def restaurants(request):
-    if request.method != "POST":
-
-        return render(request, "buyer/restaurants.html")
+    user_details = SellerInfo.objects.all()
+    context = {"userdetails": user_details}
+    return render(request, "buyer/restaurants.html",context)

@@ -40,10 +40,11 @@
   </li>
 </ul>
     <br>
-     <div class="container-fluid border ">
+     <div class="container border ">
 <br>
+      <div class="row mt-5 justify-content-center">
          {% for item in dishes %}
-             <div class="card-deck">
+             <div class="card-deck mx-2 mb-3">
         <div class="card border-primary mb-3" style="max-width: 18rem;">
             <img class="card-img-top" src="{{ item.image.url }}" alt="Card image cap">
             <div class="card-body">
@@ -53,7 +54,8 @@
                 <p class="card-text">Category : {{ item.category }}</p>
                 <a href="#" class="btn btn-success">Buy</a>
             </div>
-        </div>
+            </div>
+             </div>
 
 
          {% endfor %}
