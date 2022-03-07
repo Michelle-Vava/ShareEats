@@ -41,21 +41,25 @@ pipelines:
             deployment: staging
             script:
               - echo "Your deployment to staging script goes here..."
-
         - step:
-            name: 'Deployment to Production'
-            deployment: production
-            trigger: 'manual'
-            caches:
-                  - pip
-            script:
-              - git archive --format=tar.gz GROUPF/main -o shareeats.tar.gz
-    #        - pip install -r requirements.txt
-    #        - git push origin main
-             artifacts:
-              - shareeats.tar.gz
-            - pipe: atlassian/heroku-deploy:1.2.1
-              variables:
-                HEROKU_API_KEY: $HEROKU_API_KEY
-                HEROKU_APP_NAME: $HEROKU_APP_NAME
-                ZIP_FILE: shareeats.tar.gz
+                    name: 'Deployment to Production'
+                    deployment: production
+                    trigger: 'manual'
+                    caches:
+                          - pip
+                    script:
+                    - pip install -r requirements.txt
+                    - git push origin main
+                    #- git archive --format=tar.gz main -o shareeats.tar.gz
+                    - pipe: atlassian/heroku-deploy:1.2.1
+                      variables:
+                        HEROKU_API_KEY: $HEROKU_API_KEY
+                        HEROKU_APP_NAME: $HEROKU_APP_NAME
+
+
+            #            script:
+#              - git archive --format=tar.gz GROUPF/main -o shareeats.tar.gz
+#    #        - pip install -r requirements.txt
+#    #        - git push origin main
+#             artifacts:
+#              - shareeats.tar.gz
