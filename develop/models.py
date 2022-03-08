@@ -30,12 +30,11 @@ class BuyerInfo(models.Model):
     firstname = models.CharField(max_length=20)
     lastname = models.CharField(max_length=20)
     phoneNumberRegex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
-    phone = models.CharField(validators=[phoneNumberRegex], max_length=16, unique=False)
+    phone = models.CharField(validators=[phoneNumberRegex], max_length=16)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     membership = models.BooleanField(default=False)
 
 
-# git using pycharm
 class DishInfo(models.Model):
     item = models.CharField(max_length=30)
     price = models.CharField(max_length=5)
@@ -43,5 +42,14 @@ class DishInfo(models.Model):
     category = models.CharField(max_length=20)
     # file will be uploaded to MEDIA_ROOT / uploads
     image = models.ImageField(upload_to='images')
+    seller_id = models.ForeignKey(SellerInfo, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class OrderInfo(models.Model):
+    itemSelected = models.CharField(max_length=30)
+    price = models.CharField(max_length=5)
+    quantity = models.IntegerField()
+    total = models.CharField(max_length=10)
     seller_id = models.ForeignKey(SellerInfo, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
