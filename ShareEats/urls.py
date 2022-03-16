@@ -20,6 +20,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from develop import views
+from develop.views import SuccessView, CancelView, CreateCheckoutSessionView, ProductLandingPageView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,11 +30,11 @@ urlpatterns = [
     path('seller/dashboard', views.seller_dashboard, name='seller dashboard'),
     path('seller/editmenu', views.editmenu, name='edit menu'),
     path('seller/settings', views.seller_settings, name='seller settings'),
-    path('seller/additem', views.add_item, name='add item'),
-    path('seller/edititem', views.edit_item, name='edit item'),
+    path('seller/additem', views.add_item, name='add product'),
+    path('seller/edititem', views.edit_item, name='edit product'),
     path('buyer/settings', views.buyer_settings, name='buyer settings'),
     path('buyer/orders', views.order, name='order'),
-    path('buyer/adddishitem', views.add_item, name='adddish item'),
+    path('buyer/adddishitem', views.add_item, name='adddish product'),
     path('buyer/favourites', views.favourites, name='favourites'),
     path('buyer/checkout', views.checkout, name='checkout'),
     path('accounts/', include('django.contrib.auth.urls')),
@@ -47,6 +48,21 @@ urlpatterns = [
     path('buyer/buyeradditonalinformation', views.buyer_form, name='buyer info'),
     path('seller/report', views.reports, name='report'),
     path('buyer/restaurants', views.restaurants, name='buyer restaurants'),
+    path('cancel/', CancelView.as_view(), name='cancel'),
+    path('success/', SuccessView.as_view(), name='success'),
+    path('create-checkout-session/', CreateCheckoutSessionView.as_view(), name='create-checkout-session'),
+    # testing
+    path('landing/', ProductLandingPageView.as_view(), name='landing'),
+    path('loginverification', views.login_verify_code, name='verify_login'),
+    # 2fa authentication
+    path('verify/', views.verify_code, name='verify'),
+   # path("item/", views.view_item),
+    path("add-cart/", views.add_cart),
+    path("delete-cart/", views.delete_cart),
+    path("modify-item/", views.modify_cart),
+    path("item-purchase/", views.get_all_cart_item),
+
+
 
 ]
 # add this lines

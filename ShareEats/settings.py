@@ -78,45 +78,45 @@ WSGI_APPLICATION = 'ShareEats.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 #
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'shareeats',
-#         'USER': 'postgres',
-#         'PASSWORD': '123123',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'shareeats',
+        'USER': 'postgres',
+        'PASSWORD': '123123',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+
+# if 'test' in sys.argv:
+#     # config for testing
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#             'NAME': 'd34ha0e6ht7p1u',
+#             'USER': 'ddxtulbyilnnvs',
+#             'PASSWORD': '39bcd63cceebe99e93924eb0098206ed701f19e540af3abcc7ee082ff904f011',
+#             'HOST': 'ec2-52-71-161-140.compute-1.amazonaws.com',
+#             'PORT': '5432'
+#             ,
+#             'TEST': {
+#                 'NAME': 'd34ha0e6ht7p1u',  # This is an important entry
+#             }
+#         }
 #     }
-# }
-#
-if 'test' in sys.argv:
-    # config for testing
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'd34ha0e6ht7p1u',
-            'USER': 'ddxtulbyilnnvs',
-            'PASSWORD': '39bcd63cceebe99e93924eb0098206ed701f19e540af3abcc7ee082ff904f011',
-            'HOST': 'ec2-52-71-161-140.compute-1.amazonaws.com',
-            'PORT': '5432'
-            ,
-            'TEST': {
-                'NAME': 'd34ha0e6ht7p1u',  # This is an important entry
-            }
-        }
-    }
-else:
-    # Default configuration
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'd7v8j1gf1115uk',
-            'USER': 'cauikhfxvaggth',
-            'PASSWORD': '3442684880261bc35b6f69efe8337896b0d9437b8f892f4349ef427e3b3b3be1',
-            'HOST': 'ec2-34-230-110-100.compute-1.amazonaws.com',
-            'PORT': '5432',
-        }
-    }
+# else:
+#     # Default configuration
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#             'NAME': 'd7v8j1gf1115uk',
+#             'USER': 'cauikhfxvaggth',
+#             'PASSWORD': '3442684880261bc35b6f69efe8337896b0d9437b8f892f4349ef427e3b3b3be1',
+#             'HOST': 'ec2-34-230-110-100.compute-1.amazonaws.com',
+#             'PORT': '5432',
+#         }
+#     }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -156,13 +156,18 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# stripe
+STRIPE_PUBLIC_KEY = 'pk_test_51KLzyLC6KJdG6nXQ5xuYYYKndAYSYW9mSc9SFDTglJaxbJfizQ8xG1m3n2jT9VaiXKFOI8FpuseEFvdyLAphuFS600UjVEBK4b'
+STRIPE_SECRET_KEY ='sk_test_51KLzyLC6KJdG6nXQ5nPCdw37zF1BY7YzzQsDLsOjKTSVT0DtkXg3FSX3L9UGeQfMTbLxsIxjcBHoZs1N8ZN5N3tD00wVwOEHRE'
+STRIPE_WEBHOOK_SECRET = ''
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGGING = {}
 # user is directed to the dashboard when they successfully log in
-LOGIN_REDIRECT_URL = '/option'
+LOGIN_REDIRECT_URL = '/loginverification'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
+AUTH_USER_MODEL = 'develop.User'
 django_heroku.settings(locals())
