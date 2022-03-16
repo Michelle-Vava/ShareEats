@@ -50,11 +50,11 @@
         <div class="card border-primary mb-3" style="max-width: 18rem;">
             <img class="card-img-top" src="{{ item.image.url }}" alt="Card image cap">
             <div class="card-body">
-            <h5 id="product" class="card-title">{{ item.product }}</h5>
+            <h5  class="card-title">{{ item.product }}</h5>
                 <p class="card-text-warning">$ {{ item.price }}</p>
                 <p class="card-text" id="quantity" >Quantity : {{ item.quantity}}</p>
                 <p class="card-text">Category : {{ item.category }}</p>
-                <a data-toggle="modal" id="buy"  data-target="#DishModal" class="btn btn-success">Buy</a>
+                <a  id="buy" data-product="{{ item.product }}" data-action="add"  data-quantity="{{ item.quantity }}" class="btn btn-success update-cart">Add to Cart</a>
             </div>
             </div>
              </div>
@@ -90,14 +90,50 @@
 </div>
 
     <script>
+   var updateBtns = document.getElementsByClassName('update-cart')
+   var user = '{{ request.user }}'
+   for (var i=0; i< updateBtns.length;i++)
+   {
+       updateBtns[i].addEventListener('click',function(){
+           var productname = this.dataset.product
+           var action = this.dataset.action
+           var quantity = this.dataset.quantity
+           console.log('product:',productname,'Action',action,'quantity:',quantity)
+           console.log('USER', user)
+           if (user === 'AnonymousUser') {
+               console.log("User is not authenticated")
+
+           } else{
+               console.log("user is authenticated,sending data..")
+               updateUserOrder(productname,quantity)
+           }
+
+       })
+   }
+   function updateUserOrder(productId,quantity){
+        var url = '/add-cart/'
+      fetch(url, {
+        method: "POST",
+
+        credentials: "same-origin",
+        body: JSON.stringify({product: productId, quantity: quantity})
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+          location.reload()
+      })
+   }
+
 
     var pastQuantity = 1;
-    document.getElementById("buy").onclick = () => {
+    document.getElementById("cart").onclick = () => {
         var quantity ="{{ dishes.first.quantity }}"
         var product=  "{{ dishes.first.product }}"
         console.log(JSON.stringify({product: product, quantity: quantity}))
 
-      fetch("http://127.0.0.1:7000/add-cart/", {
+        var url = '/add-cart/'
+      fetch(url, {
         method: "POST",
 
         credentials: "same-origin",

@@ -40,13 +40,18 @@
     </ul>
     <span  class="navbar-item">
     <a class="nav-link" href='{% url 'seller info' %}'>Switch to Seller Account</a>
+    </span>
 </div>
 
 
     </span>
-      <span  class="navbar-item">
+        <span class="navbar-item">
+            <a href="{% url 'cart' %}"> <p id="cart-total">{{ cartItems }}</p></a>
+        </span>
 
-         <button class="btn" onclick="location.href='{% url 'checkout' %}'" ><i class="fa fa-shopping-cart"></i></button>
+      <span  class="navbar-item">
+         <button class="btn" onclick="location.href='{% url 'cart' %}'" ><i class="fa fa-shopping-cart"></i>
+                </button>
 
     </span>
          <span  class="navbar-item">

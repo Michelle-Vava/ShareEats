@@ -18,7 +18,7 @@ from develop.forms import (
     DishInfoForm,
     SellerSettings, VerifyForm, UserCreationForm
 )
-from develop.models import BuyerInfo, SellerInfo, DishInfo, Price, User, CartItem, Order, OrderItem
+from develop.models import BuyerInfo, SellerInfo, Product, User, Order, OrderItem
 
 """
 """
@@ -31,7 +31,7 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class CreateCheckoutSessionView(View):
     def post(self, request, *args, **kwargs):
-        price = Price.objects.get(user_id=request.user)
+        price = Product.objects.get(user_id=request.user)
         YOUR_DOMAIN = "http://127.0.0.1:7000"  # change in production
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
@@ -62,13 +62,13 @@ class ProductLandingPageView(TemplateView):
     template_name = "landing.html"
 
     def get_context_data(self, **kwargs):
-        product = DishInfo.objects.get(product="Test Product", user_id=1)
-        prices = Price.objects.filter(product=product)
+        product = Product.objects.get(product="Test Product", user_id=1)
+
         context = super(ProductLandingPageView,
                         self).get_context_data(**kwargs)
         context.update({
             "product": product,
-            "prices": prices,
+            "prices": product.price,
 
         })
         return context
@@ -134,7 +134,7 @@ def verify_code(request):
 
 
 def buyer_dashboard(request):
-    dishes = DishInfo.objects.all()
+    dishes = Product.objects.all()
     userdetails = BuyerInfo.objects.get(user=request.user)
     context = {"dishes": dishes, "userdetails": userdetails}
     return render(request, "buyer/buyer_dashboard.html", context)
@@ -154,7 +154,7 @@ def reports(request):
 
 def editmenu(request):
     user_details = SellerInfo.objects.get(user=request.user)
-    dishes = DishInfo.objects.filter(user=request.user).order_by("product")
+    dishes = Product.objects.filter(user=request.user).order_by("product")
 
     form = DishInfoForm
     context = {"dishes": dishes, "addform": form, "userdetails": user_details}
@@ -217,12 +217,12 @@ def favourites(request):
 def checkout(request):
     userdetails = BuyerInfo.objects.get(user=request.user)
     data = []
-    products = CartItem.objects.filter(user_id=request.user)
+    products = OrderItem.objects.filter(user_id=request.user)
     price = 0
 
     for i in products:
-        item = DishInfo.objects.get(product=i.product)
-        # pic = DishInfo.objects.filter(.id)[0]
+        item = Product.objects.get(product=i.product)
+        # pic = Product.objects.filter(.id)[0]
         data.append([item, i])
         print(i.quantity)
         # item.price
@@ -286,11 +286,11 @@ def add_item(request):
     if request.method == "POST":
         filled_form = DishInfoForm(request.POST, request.FILES)
         if filled_form.is_valid():
-            dish = DishInfo()
-            price_model = Price()
+            dish = Product()
+
             # TODO : add price from Price Table
             dish.user = request.user
-            price_model.price = 4  # filled_form.cleaned_data["price"]
+            dish.price = filled_form.cleaned_data["price"]
 
             dish.product = filled_form.cleaned_data["product"]
             dish.seller = SellerInfo.objects.get(user=request.user)
@@ -300,19 +300,12 @@ def add_item(request):
             product = stripe.Product.create(name=dish.product)
             dish.stripe_product_id = product.id
             stripe_price = stripe.Price.create(
-                unit_amount=price_model.price,
+                unit_amount=dish.price,
                 currency="cad",
-                recurring={"interval": "month"},
                 product=product.id,
             )
-
+            dish.stripe_price_id = stripe_price.id
             dish.save()
-            price_model.stripe_price_id = stripe_price.id
-            price_model.seller = SellerInfo.objects.get(user=request.user)
-            price_model.user = request.user
-            price_model.product = dish
-            price_model.save()
-            # add item to stripe
 
             return HttpResponseRedirect("/seller/editmenu")
         else:
@@ -373,9 +366,16 @@ def add_cart(request):
 
     item = post_data["product"]
     quantity = post_data["quantity"]
-    user_id = request.user
-    buyerdetails = BuyerInfo.objects.get(user=request.user)
-    CartItem(product=item, user=user_id, quantity=quantity, buyer=buyerdetails).save()
+    # action = post_data["action"]
+    productname = Product.objects.get(product=item)
+
+    orderdetails, created = Order.objects.get_or_create(user=request.user, buyer=BuyerInfo.objects.get(user=request.user),
+                                                 complete=False)
+    orderItem, created = OrderItem.objects.get_or_create(user=request.user, order=orderdetails, product=productname,
+                                                     buyer=BuyerInfo.objects.get(user=request.user), quantity=quantity
+                                                     )
+    orderItem.save()
+    # OrderItem(product=item, user=user_id, quantity=quantity, buyer=buyerdetails).save()
 
     return JsonResponse({"code": 200})
 
@@ -389,7 +389,7 @@ def delete_cart(request):
     user_id = request.user
     # buyerdetails = BuyerInfo.objects.get(user=request.user)
 
-    CartItem.objects.get(item_id=item_id, user_id=user_id).delete()
+    OrderItem.objects.get(item_id=item_id, user_id=user_id).delete()
 
     return JsonResponse({"code": 200})
 
@@ -401,35 +401,28 @@ def modify_cart(request):
     user_id = request.user.id
     quantity = post_data["quantity"]
 
-    c = CartItem.objects.get(user_id=user_id, item_id=item_id)
+    c = OrderItem.objects.get(user_id=user_id, item_id=item_id)
     c.quantity = quantity
     c.save()
 
     return JsonResponse({"code": 200})
 
 
-def calculate_order_amount(items):
-    """
-        items: [["item-id", quantity]]
-    """
-    price = 0
-    items = list(items)
-
-    for i in items:
-        item = DishInfo.objects.get(id=i[0])
-        price += float(item.price) * float(i[1])
-
-    return int(price * 100)
 
 
-def get_all_cart_item(request):
-    if request.GET.get("item_id") == '' or request.GET.get("item_id") is None:
-        items = CartItem.objects.filter(user_id=request.user.id)
-        data = [[i.item_id, i.quantity] for i in items]
 
+
+
+def cart(request):
+    if request.user.is_authenticated:
+        customer = request.user
+        order, created = Order.objects.get_or_create(user=customer, buyer=BuyerInfo.objects.get(user=request.user),
+                                                     complete=False)
+        items = order.orderitem_set.all()
     else:
-        item_id = request.GET["item_id"]
-        quantity = request.GET["quantity"]
-        data = [[item_id, quantity]]
+        # Create empty cart for now for non-logged in user
+        items = []
+        order = {'get_cart_total': 0, 'get_cart_items': 0}
 
-    return JsonResponse({"purchase": data})
+    context = {'items': items, 'order': order}
+    return render(request, 'cart.html', context)

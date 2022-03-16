@@ -56,13 +56,11 @@ urlpatterns = [
     path('loginverification', views.login_verify_code, name='verify_login'),
     # 2fa authentication
     path('verify/', views.verify_code, name='verify'),
-   # path("item/", views.view_item),
+    # path("item/", views.view_item),
     path("add-cart/", views.add_cart),
     path("delete-cart/", views.delete_cart),
     path("modify-item/", views.modify_cart),
-    path("item-purchase/", views.get_all_cart_item),
-
-
+    path("cart/", views.cart, name='cart'),
 
 ]
 # add this lines

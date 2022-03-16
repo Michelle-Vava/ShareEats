@@ -35,10 +35,12 @@ class BuyerInfo(models.Model):
     membership = models.BooleanField(default=False)
 
 
-class DishInfo(models.Model):
+class Product(models.Model):
     product = models.CharField(max_length=30)
     stripe_product_id = models.CharField(max_length=100)
     quantity = models.IntegerField()
+    stripe_price_id = models.CharField(max_length=100)
+    price = models.CharField(max_length=5)
     category = models.CharField(max_length=20)
     # file will be uploaded to MEDIA_ROOT / uploads
     image = models.ImageField(upload_to='images')
@@ -46,33 +48,34 @@ class DishInfo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
-class Price(models.Model):
-    product = models.ForeignKey(DishInfo, on_delete=models.CASCADE)
-    stripe_price_id = models.CharField(max_length=100)
-    price = models.IntegerField(default=0)  # cents
-    seller = models.ForeignKey(SellerInfo, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    def get_display_price(self):
-        return "{0:.2f}".format(self.price / 100)
-
-
-class CartItem(models.Model):
-    product = models.CharField(max_length=20)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    buyer = models.ForeignKey(BuyerInfo, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
-
-
 class Order(models.Model):
-    payment_id = models.CharField(max_length=100)
+    payment_id = models.CharField(max_length=100, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     buyer = models.ForeignKey(BuyerInfo, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
+    complete = models.BooleanField(default=False)
+
+    @property
+    def get_cart_total(self):
+        orderitems = self.orderitem_set.all()
+        total = sum([item.get_total for item in orderitems])
+        return total
+
+    @property
+    def get_cart_items(self):
+        orderitems = self.orderitem_set.all()
+        total = sum([item.quantity for item in orderitems])
+        return total
 
 
 class OrderItem(models.Model):
-    product = models.CharField(max_length=20)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField()
+    buyer = models.ForeignKey(BuyerInfo, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    payment = models.ForeignKey(Price, on_delete=models.CASCADE)
+
+    @property
+    def get_total(self):
+        total = int(self.product.price) * self.quantity
+        return total

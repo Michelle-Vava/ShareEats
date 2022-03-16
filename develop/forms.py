@@ -3,7 +3,7 @@ from .models import User
 from django import forms
 from django.forms import TextInput
 
-from develop.models import SellerInfo, BuyerInfo, DishInfo
+from develop.models import SellerInfo, BuyerInfo, Product
 
 
 class UserCreationForm(BaseUserCreationForm):
@@ -53,8 +53,8 @@ class BuyerInfoForm(forms.ModelForm):
 
 class DishInfoForm(forms.ModelForm):
     class Meta:
-        model = DishInfo
-        fields = ["product", "quantity", "category", "image"]
+        model = Product
+        fields = ["product", "quantity","price", "category", "image"]
 
 
 class BuyerSettings(forms.ModelForm):
