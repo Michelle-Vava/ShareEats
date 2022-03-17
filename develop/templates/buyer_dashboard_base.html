@@ -18,8 +18,8 @@
 
     <a>Share Eats</a>
     <a  onclick="location.href='{% url 'buyer dashboard' %}'"><i class="fa fa-home"></i> Dashboard</a>
-  <a onclick="location.href='{% url 'favourites' %}'"><i class="fa fa-star"></i> Favourites</a>
-  <a onclick="location.href='{% url 'order' %}'"><i class="fa fa-bars"></i> Order</a>
+  <a data-toggle="modal" data-target="#exampleModal"><i class="fa fa-star"></i> Favourites</a>
+  <a data-toggle="modal" data-target="#exampleModal"><i class="fa fa-bars"></i> Order</a>
   <a onclick="location.href='{% url 'buyer settings' %}'"><i class="fa fa-wrench"></i>  Settings</a>
 </div>
 <body style="margin: 0; background: #fffcef">
@@ -40,18 +40,34 @@
     </ul>
     <span  class="navbar-item">
     <a class="nav-link" href='{% url 'seller info' %}'>Switch to Seller Account</a>
+    </span>
+</div>
+
 
     </span>
+        <span class="navbar-item">
+            <a href="{% url 'cart' %}"> <p id="cart-total">{{ cartItems }}</p></a>
+        </span>
+
       <span  class="navbar-item">
-         <button onclick="location.href='{% url 'checkout' %}'" class="btn"><i class="fa fa-shopping-cart"></i></button>
+         <button class="btn" onclick="location.href='{% url 'cart' %}'" ><i class="fa fa-shopping-cart"></i>
+                </button>
+
+    </span>
+         <span  class="navbar-item">
+
+         <button class="btn" onclick="location.href='{% url 'logout' %}'" ><i class="fa fa-sign-out"></i>Logout</button>
+
     </span>
   </div>
+
 </nav>
 
 <br>
 
 <div  class="content">
 <br>
+
    {% block content %}
      {% endblock %}
 </div>

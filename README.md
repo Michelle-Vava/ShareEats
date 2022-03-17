@@ -1,45 +1,90 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
+{% if False %}
 
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
+# Introduction
 
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
+The goal of this project is to provide minimalistic django project template that everyone can use, which _just works_ out of the box and has the basic setup you can expand on. 
 
----
+Template is written with django 1.11 and python 3 in mind.
 
-## Edit a file
+![Default Home View](__screenshots/img.png?raw=true "Title")
 
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
+### Main features
 
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: 
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
+* Separated dev and production settings
 
----
+* Example app with custom user model
 
-## Create a file
+* Bootstrap static files included
 
-Next, you’ll add a new file to this repository.
+* User registration and logging in as demo
 
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
+* Procfile for easy deployments
 
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
+* Separated requirements files
 
----
+* SQLite by default if no env variable is set
 
-## Clone a repository
+# Usage
 
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
+To use this template to start your own project:
 
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
+### Existing virtualenv
 
-Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+If your project is already in an existing python3 virtualenv first install django by running
+
+    $ pip install django
+    
+And then run the `django-admin.py` command to start the new project:
+
+    $ django-admin.py startproject \
+      --template=https://github.com/nikola-k/django-template/zipball/master \
+      --extension=py,md \
+      <project_name>
+      
+### No virtualenv
+
+This assumes that `python3` is linked to valid installation of python 3 and that `pip` is installed and `pip3`is valid
+for installing python 3 packages.
+
+Installing inside virtualenv is recommended, however you can start your project without virtualenv too.
+
+If you don't have django installed for python 3 then run:
+
+    $ pip3 install django
+    
+And then:
+
+    $ python3 -m django startproject \
+      --template=https://github.com/nikola-k/django-template/zipball/master \
+      --extension=py,md \
+      <project_name>
+      
+      
+After that just install the local dependencies, run migrations, and start the server.
+
+{% endif %}
+
+# {{ project_name|title }}
+
+# Getting Started
+
+First clone the repository from Github and switch to the new directory:
+
+    $ git clone git@github.com/USERNAME/{{ project_name }}.git
+    $ cd {{ project_name }}
+    
+Activate the virtualenv for your project.
+    
+Install project dependencies:
+
+    $ pip install -r requirements/local.txt
+    
+    
+Then simply apply the migrations:
+
+    $ python manage.py migrate
+    
+
+You can now run the development server:
+
+    $ python manage.py runserver
