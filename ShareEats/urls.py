@@ -20,6 +20,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from develop import views
+from develop.views import CancelView, CreateCheckoutSessionView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,13 +30,12 @@ urlpatterns = [
     path('seller/dashboard', views.seller_dashboard, name='seller dashboard'),
     path('seller/editmenu', views.editmenu, name='edit menu'),
     path('seller/settings', views.seller_settings, name='seller settings'),
-    path('seller/additem', views.add_item, name='add item'),
-    path('seller/edititem', views.edit_item, name='edit item'),
+    path('seller/additem', views.add_item, name='add product'),
+    path('seller/edititem', views.edit_item, name='edit product'),
     path('buyer/settings', views.buyer_settings, name='buyer settings'),
     path('buyer/orders', views.order, name='order'),
-    path('buyer/adddishitem', views.add_item, name='adddish item'),
+    path('buyer/adddishitem', views.add_item, name='adddish product'),
     path('buyer/favourites', views.favourites, name='favourites'),
-    path('buyer/checkout', views.checkout, name='checkout'),
     path('accounts/', include('django.contrib.auth.urls')),
     # login for authentication
     path('', auth_views.LoginView.as_view(), name='login'),
@@ -47,6 +47,15 @@ urlpatterns = [
     path('buyer/buyeradditonalinformation', views.buyer_form, name='buyer info'),
     path('seller/report', views.reports, name='report'),
     path('buyer/restaurants', views.restaurants, name='buyer restaurants'),
+    path('cancel/', CancelView.as_view(), name='cancel'),
+    path('create-checkout-session/', views.CreateCheckoutSessionView, name='create-checkout-session'),
+    path('loginverification', views.login_verify_code, name='verify_login'),
+    # 2fa authentication
+    path('verify/', views.verify_code, name='verify'),
+    path("add-cart/", views.add_cart),
+    path("delete-cart/", views.delete_cart),
+    path("modify-item/", views.modify_cart),
+    path("cart/", views.cart, name='cart'),
 
 ]
 # add this lines

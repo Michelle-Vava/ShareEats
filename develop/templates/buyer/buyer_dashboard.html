@@ -50,11 +50,11 @@
         <div class="card border-primary mb-3" style="max-width: 18rem;">
             <img class="card-img-top" src="{{ item.image.url }}" alt="Card image cap">
             <div class="card-body">
-            <h5 class="card-title">{{ item.item }}</h5>
+            <h5  class="card-title">{{ item.product }}</h5>
                 <p class="card-text-warning">$ {{ item.price }}</p>
-                <p class="card-text">Quantity : {{ item.quantity}}</p>
+                <p class="card-text" id="quantity" >Quantity : {{ item.quantity}}</p>
                 <p class="card-text">Category : {{ item.category }}</p>
-                <a data-toggle="modal" data-target="#DishModal" class="btn btn-success">Buy</a>
+                <a  id="buy" data-product="{{ item.product }}" data-action="add"  data-quantity="{{ item.quantity }}" class="btn btn-success update-cart">Add to Cart</a>
             </div>
             </div>
              </div>
@@ -76,17 +76,10 @@
         </button>
       </div>
       <div class="modal-body">
-          <div class="container-fluid">
-               <div class="row">
-      <div class="col-md-3 ms-auto">
-           </div>
-          <div class="card" style="width: 18rem;">
-         <img class="card-img-top" src="../static/img/share-eats-logo@1x.png" alt="Card image cap">
-             This feature  is under construction and coming soon....
-        </div>
-
-      </div>
-          </div>
+<p> The value of the option selected is:
+        <span class="output"></span>
+    </p>
+                  <button type="button" class="btn btn-primary" id="cart">Add to Cart</button>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -95,4 +88,65 @@
     </div>
   </div>
 </div>
+
+    <script>
+   var updateBtns = document.getElementsByClassName('update-cart')
+   var user = '{{ request.user }}'
+   for (var i=0; i< updateBtns.length;i++)
+   {
+       updateBtns[i].addEventListener('click',function(){
+           var productname = this.dataset.product
+           var action = this.dataset.action
+           var quantity = this.dataset.quantity
+           console.log('product:',productname,'Action',action,'quantity:',quantity)
+           console.log('USER', user)
+           if (user === 'AnonymousUser') {
+               console.log("User is not authenticated")
+
+           } else{
+               console.log("user is authenticated,sending data..")
+               updateUserOrder(productname,quantity)
+           }
+
+       })
+   }
+   function updateUserOrder(productId,quantity){
+        var url = '/add-cart/'
+      fetch(url, {
+        method: "POST",
+
+        credentials: "same-origin",
+        body: JSON.stringify({product: productId, quantity: quantity})
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+          location.reload()
+      })
+   }
+
+
+    var pastQuantity = 1;
+    document.getElementById("cart").onclick = () => {
+        var quantity ="{{ dishes.first.quantity }}"
+        var product=  "{{ dishes.first.product }}"
+        console.log(JSON.stringify({product: product, quantity: quantity}))
+
+        var url = '/add-cart/'
+      fetch(url, {
+        method: "POST",
+
+        credentials: "same-origin",
+        body: JSON.stringify({product: product, quantity: quantity})
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+      })
+
+      window.location.assign("http://127.0.0.1:7000/buyer/checkout")
+    }
+
+  </script>
+
 {% endblock %}
