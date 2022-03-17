@@ -1,7 +1,54 @@
 {%  extends 'buyer_dashboard_base.html' %}
 {% block content %}
-     <div class="container border py-3 my-3">
-        <h1>This is a heading</h1>
-        <p>This is a paragraph of text.</p>
+    <br>
+<ul class="nav justify-content-center">
+    <li class="nav-item">
+    <a class="nav-link active" href="#">Today</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Tomorrow</a>
+  </li>
+ <li class="nav-item">
+    <a class="nav-link" href="#">All</a>
+  </li>
+</ul>
+<table class="table">
+  <thead>
+      <tr>
+          {% for i in header_list %}
+          <th>{{k}}</th>
+          {% endfor %}
+      </tr>
+  </thead>
+  <tbody>
+      {% for items in dishes %}
+          <tr>
+              <td>{{items.name}}</td>
+              <td>{{items.order_date}}</td>
+              <td>{{items.quantity}}</td>
+              <td>{{items.total_price}}</td>
+          </tr>
+      {% endfor %}
+  </tbody>
+</table>
+    <br>
+     <div class="container-fluid border ">
+<br>
+         {% for item in dishes %}
+             <div class="card-deck">
+                
+        <div class="card border-primary mb-3" style="max-width: 18rem;">
+            <img class="card-img-top" src="../media/{{ item.image }}" alt="Card image cap">
+            <div class="card-body">
+            <h5 class="card-title">{{ item.item }}</h5>
+                <p class="card-text-warning">$ {{ item.price }}</p>
+                <p class="card-text">Quantity : {{ item.quantity}}</p>
+                <p class="card-text">Category : {{ item.category }}</p>
+                <a href="#" class="btn btn-success">Buy</a>
+            </div>
+        </div>
+         {% endfor %}
+         </div>
     </div>
+
 {% endblock %}

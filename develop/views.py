@@ -132,6 +132,7 @@ def seller_settings(request):
 
 def order(request):
     userdetails = BuyerInfo.objects.get(user=request.user)
+    orderinfo = DishInfo()
     context = {"userdetails": userdetails}
     return render(request, "buyer/order.html", context)
 
