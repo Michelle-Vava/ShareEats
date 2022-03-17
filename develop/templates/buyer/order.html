@@ -15,7 +15,7 @@
 <table class="table">
   <thead>
       <tr>
-          {% for i in header_list %}
+          {% for i in header%}
           <th>{{k}}</th>
           {% endfor %}
       </tr>
@@ -24,9 +24,8 @@
       {% for items in dishes %}
           <tr>
               <td>{{items.name}}</td>
-              <td>{{items.order_date}}</td>
               <td>{{items.quantity}}</td>
-              <td>{{items.total_price}}</td>
+              <td>{{items.price}}</td>
           </tr>
       {% endfor %}
   </tbody>

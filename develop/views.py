@@ -132,8 +132,10 @@ def seller_settings(request):
 
 def order(request):
     userdetails = BuyerInfo.objects.get(user=request.user)
-    orderinfo = DishInfo()
-    context = {"userdetails": userdetails}
+    dishes = DishInfo().objects.all()
+    # orders = Orderinfo().objects.all() 
+    header_list = ["#", "Dish", "Order Date", "Quantity", "Total Price"]
+    context = {"userdetails": userdetails, "dishes": dishes, "header": header_list}
     return render(request, "buyer/order.html", context)
 
 
