@@ -1,12 +1,12 @@
+import datetime
 import json
 
 import stripe
 from django.conf import settings
-from django.contrib.auth import logout, login, authenticate
+from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
-from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
@@ -18,60 +18,36 @@ from develop.forms import (
     DishInfoForm,
     SellerSettings, VerifyForm, UserCreationForm
 )
-from develop.models import BuyerInfo, SellerInfo, Product, User, Order, OrderItem
+from develop.models import BuyerInfo, SellerInfo, Product, Order, OrderItem
 
 """
 """
-# TWILIO_ACCOUNT_SID = "ACf91579ced56697582b00416541947683"
-# TWILIO_AUTH_TOKEN = "9a2f8474b329324195b3ec3432f23eba"
-
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
-class CreateCheckoutSessionView(View):
-    def post(self, request, *args, **kwargs):
-        price = Product.objects.get(user_id=request.user)
-        YOUR_DOMAIN = "http://127.0.0.1:7000"  # change in production
-        checkout_session = stripe.checkout.Session.create(
-            payment_method_types=['card'],
-            line_items=[
-                {
-                    'price': price.stripe_price_id,
-                    # TODO: change quantity t get from Dish table
-                    'quantity': 1,
-                },
-            ],
-            mode='payment',
-            success_url=YOUR_DOMAIN + '/success/',
-            cancel_url=YOUR_DOMAIN + '/cancel/',
-        )
-        return redirect(checkout_session.url)
+# take user to stripe checkout
+def CreateCheckoutSessionView(request):
+    order = OrderItem.objects.get(user=request.user, product_id=1)
+    YOUR_DOMAIN = "http://127.0.0.1:7000"  # change in production #changes to 8000
+    checkout_session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=[
+            {
+                'price': order.product.stripe_price_id,
+                'quantity': order.quantity,
+            },
+        ],
+        mode='payment',
+        success_url=YOUR_DOMAIN + '/buyer/orders',
+        cancel_url=YOUR_DOMAIN + '/cancel/',
+    )
+    return redirect(checkout_session.url)
 
 
-class SuccessView(TemplateView):
-    template_name = "success.html"
-
-
+# for canceling the order
 class CancelView(TemplateView):
-    template_name = "cancel.html"
-
-
-# TESTING STRIPE
-class ProductLandingPageView(TemplateView):
-    template_name = "landing.html"
-
-    def get_context_data(self, **kwargs):
-        product = Product.objects.get(product="Test Product", user_id=1)
-
-        context = super(ProductLandingPageView,
-                        self).get_context_data(**kwargs)
-        context.update({
-            "product": product,
-            "prices": product.price,
-
-        })
-        return context
+    template_name = "buyer/cancel.html"
 
 
 # home view
@@ -81,10 +57,12 @@ def home(request):
     return render(request, "registration/login.html")
 
 
+# ability for user to select buyer or seller option
 def buyer_seller_option(request):
     return render(request, "buyer-or-seller-option.html")
 
 
+# login verification using twilio
 def login_verify_code(request):
     verify.send(request.user.phone)
     return redirect('verify')
@@ -115,6 +93,7 @@ def sign_up(request):
         return render(request, "registration/signup.html", {"form": form})
 
 
+# verification using Twilio
 @login_required
 def verify_code(request):
     if request.method == 'POST':
@@ -127,12 +106,13 @@ def verify_code(request):
                 return redirect('option')
         else:
             form = VerifyForm()
-            return render(request, 'verify.html', {'form': form})
+            return render(request, 'twilio/verify.html', {'form': form})
     else:
         form = VerifyForm()
-        return render(request, 'verify.html', {'form': form})
+        return render(request, 'twilio/verify.html', {'form': form})
 
 
+# buyer dashboard
 def buyer_dashboard(request):
     dishes = Product.objects.all()
     userdetails = BuyerInfo.objects.get(user=request.user)
@@ -140,18 +120,21 @@ def buyer_dashboard(request):
     return render(request, "buyer/buyer_dashboard.html", context)
 
 
+# seller dashboard page
 def seller_dashboard(request):
     user_details = SellerInfo.objects.get(user=request.user)
     context = {"userdetails": user_details}
     return render(request, "seller/seller_dashboard.html", context)
 
 
+# reports page
 def reports(request):
     user_details = SellerInfo.objects.get(user=request.user)
     context = {"userdetails": user_details}
     return render(request, "seller/report.html", context)
 
 
+# edit menu page
 def editmenu(request):
     user_details = SellerInfo.objects.get(user=request.user)
     dishes = Product.objects.filter(user=request.user).order_by("product")
@@ -161,6 +144,7 @@ def editmenu(request):
     return render(request, "seller/editmenu.html", context)
 
 
+# seller page settings
 def seller_settings(request):
     user_details = SellerInfo.objects.get(user=request.user)
 
@@ -202,37 +186,23 @@ def seller_settings(request):
             return render(request, "seller/seller_settings.html", context)
 
 
+# order page
 def order(request):
     userdetails = BuyerInfo.objects.get(user=request.user)
-    context = {"userdetails": userdetails}
+    time = datetime.datetime.now().timestamp()
+    # Todo :  remove OrderItem and complete order in order table
+    context = {"userdetails": userdetails, "time": time}
     return render(request, "buyer/order.html", context)
 
 
+# favourites page
 def favourites(request):
     userdetails = BuyerInfo.objects.get(user=request.user)
     context = {"userdetails": userdetails}
     return render(request, "buyer/favourites.html", context)
 
 
-def checkout(request):
-    userdetails = BuyerInfo.objects.get(user=request.user)
-    data = []
-    products = OrderItem.objects.filter(user_id=request.user)
-    price = 0
-
-    for i in products:
-        item = Product.objects.get(product=i.product)
-        # pic = Product.objects.filter(.id)[0]
-        data.append([item, i])
-        print(i.quantity)
-        # item.price
-        price += (3 * i.quantity)
-
-    context = {"userdetails": userdetails, "data": data,
-               "price": '%.2f' % round(price, 2)}
-    return render(request, "buyer/checkout.html", context)
-
-
+# buyer form
 def buyer_form(request):
     if BuyerInfo.objects.filter(user=request.user, membership=True).exists():
         return HttpResponseRedirect("/buyer/dashboard")
@@ -256,6 +226,7 @@ def buyer_form(request):
             return render(request, "buyer/buyer_form.html", {"buyerform": form})
 
 
+# seller form
 def seller_form(request):
     if SellerInfo.objects.filter(user=request.user, membership=True).exists():
         return HttpResponseRedirect("/seller/dashboard")
@@ -282,6 +253,7 @@ def seller_form(request):
             return render(request, "seller/seller_form.html", {"sellerform": form})
 
 
+# ability for seller to add item to the edit menu
 def add_item(request):
     if request.method == "POST":
         filled_form = DishInfoForm(request.POST, request.FILES)
@@ -291,16 +263,16 @@ def add_item(request):
             # TODO : add price from Price Table
             dish.user = request.user
             dish.price = filled_form.cleaned_data["price"]
-
+            unit_price = int(dish.price) * 100
             dish.product = filled_form.cleaned_data["product"]
             dish.seller = SellerInfo.objects.get(user=request.user)
             dish.image = filled_form.cleaned_data["image"]
             dish.quantity = filled_form.cleaned_data["quantity"]
             dish.category = filled_form.cleaned_data["category"]
-            product = stripe.Product.create(name=dish.product)
+            product = stripe.Product.create(name=dish.product, images=[dish.image])
             dish.stripe_product_id = product.id
             stripe_price = stripe.Price.create(
-                unit_amount=dish.price,
+                unit_amount=unit_price,
                 currency="cad",
                 product=product.id,
             )
@@ -313,14 +285,17 @@ def add_item(request):
                 print(filled_form.errors[msg])
 
 
+# add to cart : to use in the future
 def add_dish(request):
     return HttpResponseRedirect("/buyer/checkout")
 
 
+# ability to edit food item on seller page
 def edit_item(request):
     return HttpResponseRedirect("/seller/editmenu")
 
 
+# settings for buyer page
 def buyer_settings(request):
     userdetails = BuyerInfo.objects.get(user=request.user)
 
@@ -353,12 +328,14 @@ def buyer_settings(request):
                 return render(request, "buyer/buyer_settings.html", context)
 
 
+# views all the restaurants
 def restaurants(request):
     user_details = SellerInfo.objects.all()
     context = {"userdetails": user_details}
     return render(request, "buyer/restaurants.html", context)
 
 
+# adding item to cart
 @csrf_exempt
 def add_cart(request):
     post_data = json.loads(request.body.decode("utf-8"))
@@ -369,17 +346,19 @@ def add_cart(request):
     # action = post_data["action"]
     productname = Product.objects.get(product=item)
 
-    orderdetails, created = Order.objects.get_or_create(user=request.user, buyer=BuyerInfo.objects.get(user=request.user),
-                                                 complete=False)
+    orderdetails, created = Order.objects.get_or_create(user=request.user,
+                                                        buyer=BuyerInfo.objects.get(user=request.user),
+                                                        complete=False)
     orderItem, created = OrderItem.objects.get_or_create(user=request.user, order=orderdetails, product=productname,
-                                                     buyer=BuyerInfo.objects.get(user=request.user), quantity=quantity
-                                                     )
+                                                         buyer=BuyerInfo.objects.get(user=request.user),
+                                                         quantity=quantity
+                                                         )
     orderItem.save()
-    # OrderItem(product=item, user=user_id, quantity=quantity, buyer=buyerdetails).save()
 
     return JsonResponse({"code": 200})
 
 
+# deleting item from card
 @csrf_exempt
 def delete_cart(request):
     post_data = json.loads(request.body.decode("utf-8"))
@@ -387,13 +366,13 @@ def delete_cart(request):
 
     item_id = post_data["item_id"]
     user_id = request.user
-    # buyerdetails = BuyerInfo.objects.get(user=request.user)
 
     OrderItem.objects.get(item_id=item_id, user_id=user_id).delete()
 
     return JsonResponse({"code": 200})
 
 
+# update item from cart
 @csrf_exempt
 def modify_cart(request):
     post_data = json.loads(request.body.decode("utf-8"))
@@ -408,12 +387,9 @@ def modify_cart(request):
     return JsonResponse({"code": 200})
 
 
-
-
-
-
-
+# cart page
 def cart(request):
+    userdetails = BuyerInfo.objects.get(user=request.user)
     if request.user.is_authenticated:
         customer = request.user
         order, created = Order.objects.get_or_create(user=customer, buyer=BuyerInfo.objects.get(user=request.user),
@@ -424,5 +400,5 @@ def cart(request):
         items = []
         order = {'get_cart_total': 0, 'get_cart_items': 0}
 
-    context = {'items': items, 'order': order}
-    return render(request, 'cart.html', context)
+    context = {'items': items, 'order': order, "userdetails": userdetails}
+    return render(request, 'buyer/cart.html', context)

@@ -20,7 +20,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from develop import views
-from develop.views import SuccessView, CancelView, CreateCheckoutSessionView, ProductLandingPageView
+from develop.views import CancelView, CreateCheckoutSessionView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,7 +36,6 @@ urlpatterns = [
     path('buyer/orders', views.order, name='order'),
     path('buyer/adddishitem', views.add_item, name='adddish product'),
     path('buyer/favourites', views.favourites, name='favourites'),
-    path('buyer/checkout', views.checkout, name='checkout'),
     path('accounts/', include('django.contrib.auth.urls')),
     # login for authentication
     path('', auth_views.LoginView.as_view(), name='login'),
@@ -49,14 +48,10 @@ urlpatterns = [
     path('seller/report', views.reports, name='report'),
     path('buyer/restaurants', views.restaurants, name='buyer restaurants'),
     path('cancel/', CancelView.as_view(), name='cancel'),
-    path('success/', SuccessView.as_view(), name='success'),
-    path('create-checkout-session/', CreateCheckoutSessionView.as_view(), name='create-checkout-session'),
-    # testing
-    path('landing/', ProductLandingPageView.as_view(), name='landing'),
+    path('create-checkout-session/', views.CreateCheckoutSessionView, name='create-checkout-session'),
     path('loginverification', views.login_verify_code, name='verify_login'),
     # 2fa authentication
     path('verify/', views.verify_code, name='verify'),
-    # path("item/", views.view_item),
     path("add-cart/", views.add_cart),
     path("delete-cart/", views.delete_cart),
     path("modify-item/", views.modify_cart),

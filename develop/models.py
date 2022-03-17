@@ -16,6 +16,7 @@ class User(AbstractUser):
     is_verified = models.BooleanField(default=False)
 
 
+# seller table
 class SellerInfo(models.Model):
     businessname = models.CharField(max_length=20)
     phoneNumberRegex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
@@ -26,6 +27,7 @@ class SellerInfo(models.Model):
     membership = models.BooleanField(default=False)
 
 
+# buyer table
 class BuyerInfo(models.Model):
     firstname = models.CharField(max_length=20)
     lastname = models.CharField(max_length=20)
@@ -35,6 +37,7 @@ class BuyerInfo(models.Model):
     membership = models.BooleanField(default=False)
 
 
+# product table
 class Product(models.Model):
     product = models.CharField(max_length=30)
     stripe_product_id = models.CharField(max_length=100)
@@ -48,6 +51,7 @@ class Product(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
+# order table
 class Order(models.Model):
     payment_id = models.CharField(max_length=100, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
