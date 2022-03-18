@@ -1,35 +1,33 @@
 {%  extends 'buyer_dashboard_base.html' %}
 {% block content %}
-    Restaurant here!
- {% endblock %}
 
+    <ul class="nav justify-content-center">
+    <div>
+     <form class="form-inline my-2 my-lg-0", method="POST">
+         {% csrf_token %}
+            {{ form.as_p }}
+         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+    <li class="nav-item">
+  </li>
+    </div>
+    </ul>
 
+{% for i in list %}
 
+<div class="card-deck">
+        <div class="card border-primary mb-3" style="max-width: 18rem;">
+            {% load static %}
+            <img src="{% static 'develop/icreamnewlandscape.jpg' %}" alt="My image">
+            <div class="card-body">
+            <h5 class="card-title">{{ i.address }}</h5>
+                <p class="card-text-warning">$ {{ i.description }}</p>
+                <p class="card-text">Name : {{ i.businessname}}</p>
+                <p class="card-text">Phone : {{ i.phone }}</p>
+                <a href="#" class="btn btn-success">Buy</a>
+            </div>
+        </div>
+{% endfor %}
+</div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+{% endblock %}

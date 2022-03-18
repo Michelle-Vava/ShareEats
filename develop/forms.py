@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
-from .models import User
+from develop.models import User
 from django import forms
 from django.forms import TextInput
 
@@ -144,3 +144,10 @@ class SellerSettings(forms.ModelForm):
             "address",
             "description"
         ]
+class searchrestaurant(forms.Form):
+    name = forms.CharField(max_length=100,
+                           widget= forms.TextInput
+                           (attrs={'placeholder':'Restaurants or Dishes'}), required=True)
+    loc = forms.CharField(max_length=100,
+                           widget= forms.TextInput
+                           (attrs={'placeholder':'Location'}), required=False)

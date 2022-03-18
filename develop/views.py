@@ -20,6 +20,8 @@ from develop.forms import (
 )
 from develop.models import BuyerInfo, SellerInfo, Product, Order, OrderItem
 
+from .forms import searchrestaurant
+
 """
 """
 
@@ -335,6 +337,16 @@ def restaurants(request):
     return render(request, "buyer/restaurants.html", context)
 
 
+
+
+
+
+
+
+
+
+
+
 # adding item to cart
 @csrf_exempt
 def add_cart(request):
@@ -402,3 +414,27 @@ def cart(request):
 
     context = {'items': items, 'order': order, "userdetails": userdetails}
     return render(request, 'buyer/cart.html', context)
+
+
+def restaurants(request):
+    if request.method != "POST":
+        form = searchrestaurant()
+
+        return render(request, "buyer/restaurants.html", {"form": form})
+    elif request.method == "POST":
+        filledform = searchrestaurant(request.POST)
+
+        prelistbyres = SellerInfo.objects.filter(businessname__icontains = filledform["name"].value(), address__icontains = filledform["loc"].value())
+        prelistbydish = Product.objects.filter(product__icontains = filledform["name"].value())
+
+        listbydish = []
+        for i in prelistbydish:
+            listbydish.append(i.seller)
+        listbyres = []
+        for i in prelistbyres:
+            listbyres.append(i)
+        FinalList = listbyres + listbydish
+        FinalList = list(dict.fromkeys(FinalList))
+
+        return render(request, "buyer/restaurants.html", {"form": filledform, "list": FinalList})
+
