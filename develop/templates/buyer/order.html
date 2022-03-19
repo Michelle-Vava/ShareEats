@@ -1,3 +1,7 @@
+1. make table for all orders, today's orders and future orders
+2. make option for incomplete orders
+3. make a card for total orders
+
 {%  extends 'buyer_dashboard_base.html' %}
 {% block content %}
     <br>
@@ -6,48 +10,32 @@
     <a class="nav-link active" href="#">Today</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="#">Tomorrow</a>
+    <a class="nav-link" href="#">All</a>
   </li>
  <li class="nav-item">
-    <a class="nav-link" href="#">All</a>
+    <a class="nav-link" href="#">Incomplete Orders</a>
   </li>
 </ul>
 <table class="table">
   <thead>
       <tr>
           {% for i in header%}
-          <th>{{k}}</th>
+          <th>{{i}}</th>
           {% endfor %}
       </tr>
   </thead>
+
   <tbody>
-      {% for items in dishes %}
           <tr>
-              <td>{{items.name}}</td>
-              <td>{{items.quantity}}</td>
-              <td>{{items.price}}</td>
+              <td>{{items.product}}</td>
+              <td>{{sellerdetails}}</td>
+              <td>{{order.timestamp}}</td>
+              <td>{{orderitem.quantity}}</td>
+              <td>{{ordertotal}}</td>
           </tr>
       {% endfor %}
   </tbody>
 </table>
     <br>
-     <div class="container-fluid border ">
-<br>
-         {% for item in dishes %}
-             <div class="card-deck">
-                
-        <div class="card border-primary mb-3" style="max-width: 18rem;">
-            <img class="card-img-top" src="../media/{{ item.image }}" alt="Card image cap">
-            <div class="card-body">
-            <h5 class="card-title">{{ item.item }}</h5>
-                <p class="card-text-warning">$ {{ item.price }}</p>
-                <p class="card-text">Quantity : {{ item.quantity}}</p>
-                <p class="card-text">Category : {{ item.category }}</p>
-                <a href="#" class="btn btn-success">Buy</a>
-            </div>
-        </div>
-         {% endfor %}
-         </div>
-    </div>
 
 {% endblock %}
