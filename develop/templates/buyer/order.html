@@ -1,11 +1,49 @@
-{%  extends 'buyer_dashboard_base.html' %}
+1. make table for all orders, today's orders and future orders
+2. make option for incomplete orders
+3. make a card for total orders
+
+{% extends 'buyer_dashboard_base.html' %}
 {% block content %}
-     <div class="container border py-3 my-3">
-        <h1>Order</h1>
-        <p>
-           Thank you for order at Share eats ,seller will notify you when order is ready!
-            Time of order : {{ time }}
-        </p>
-        <a href="{% url 'buyer dashboard' %}">Order again</a>
-    </div>
+<br>
+<ul class="nav justify-content-center">
+  <li class="nav-item">
+    <a class="nav-link active" href="#">Today</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">All</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Incomplete Orders</a>
+  </li>
+</ul>
+<table class="table table-hover">
+  <!-- Header row -->
+  <thead>
+    <tr>
+      <th scope="row">Dish</th>
+      <th scope="row">Quantity</th>
+      <th scope="row">Price</th>
+      <th scope="row">Order Date</th>
+    </tr>
+  </thead>
+  <!-- Rows below header-->
+  <tbody>
+    {% for dish in dishes %}
+    <tr>
+      <td>{{dish.product}}</td>
+      <td>{{dish.quantity}}</td>
+      <td>{{dish.price}}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+    {% for item in order %}
+      <td>{{item.timestamp}}</td>
+      <td>{{item.complete}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+
+</table>
+<br>
+
 {% endblock %}
