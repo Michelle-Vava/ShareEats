@@ -115,6 +115,7 @@ def verify_code(request):
 # buyer dashboard
 def buyer_dashboard(request):
     dishes = Product.objects.all()
+    order = Order.objects.all()
     userdetails = BuyerInfo.objects.get(user=request.user)
     context = {"dishes": dishes, "userdetails": userdetails}
     return render(request, "buyer/buyer_dashboard.html", context)
@@ -188,10 +189,10 @@ def seller_settings(request):
 
 # order page
 def order(request):
-    userdetails = BuyerInfo.objects.get(user=request.user)
-    time = datetime.datetime.now().timestamp()
-    # Todo :  remove OrderItem and complete order in order table
-    context = {"userdetails": userdetails, "time": time}
+    dishes = OrderItem.objects.filter(user = request.user)
+    orders = Order.objects.filter(user = request.user)
+    context = {"dishes": dishes, "orders": orders}
+
     return render(request, "buyer/order.html", context)
 
 
