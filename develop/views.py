@@ -189,22 +189,9 @@ def seller_settings(request):
 
 # order page
 def order(request):
-
-    # if Order.objects.filter(user=request.user, complete = True).exists():
-    seller = SellerInfo.objects.get(user = request.user)
-    businessname = seller.businessname
-    time = datetime.datetime.now().timestamp()     # time from system
-    order = Order.objects.get(user = request.user)
-    ordertotal = order.get_cart_total.fget(user = request.user)
-    orderitem = OrderItem.objects.get(user = request.user)
-    header = ["Dish", "Seller", "Order date/time", "Quantity", "Total Price"]
-    # Todo :  remove OrderItem and complete order in order table
-    context = {"time": time,
-      "orderitem": orderitem,
-      "total": ordertotal,
-      "header": header,
-      "sellerdetails": businessname,
-      "order": order}
+    dishes = OrderItem.objects.filter(user = request.user)
+    orders = Order.objects.filter(user = request.user)
+    context = {"dishes": dishes, "orders": orders}
 
     return render(request, "buyer/order.html", context)
 
