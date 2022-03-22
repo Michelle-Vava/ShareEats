@@ -423,23 +423,30 @@ def restaurants(request):
         return render(request, "buyer/restaurants.html", {"form": form, "list": FinalList})
     elif request.method == "POST":
         filledform = searchrestaurant(request.POST)
-        if filledform["name"].value() == "" and filledform["loc"].value() == "":
-            prelistbyres = SellerInfo.objects.all()
+        if filledform.is_valid():
+            if filledform["name"].value() == "" and filledform["loc"].value() == "":
+                prelistbyres = SellerInfo.objects.all()
+            else:
+                prelistbyres = SellerInfo.objects.filter(businessname__icontains = filledform["name"].value(), address__icontains = filledform["loc"].value())
+            if filledform["name"].value()!="":
+                prelistbydish = Product.objects.filter(product__icontains = filledform["name"].value())
+
+            listbydish = []
+            if filledform["name"].value()!="":
+                for i in prelistbydish:
+                    if filledform["loc"].value() in i.seller.address:
+                        listbydish.append(i.seller)
+            listbyres = []
+            for i in prelistbyres:
+                listbyres.append(i)
+            FinalList = listbyres + listbydish
+            FinalList = list(dict.fromkeys(FinalList))
+
+            return render(request, "buyer/restaurants.html", {"form": filledform, "list": FinalList})
         else:
-            prelistbyres = SellerInfo.objects.filter(businessname__icontains = filledform["name"].value(), address__icontains = filledform["loc"].value())
-        if filledform["name"].value()!="":
-            prelistbydish = Product.objects.filter(product__icontains = filledform["name"].value())
-
-        listbydish = []
-        if filledform["name"].value()!="":
-            for i in prelistbydish:
-                if filledform["loc"].value() in i.seller.address:
-                    listbydish.append(i.seller)
-        listbyres = []
-        for i in prelistbyres:
-            listbyres.append(i)
-        FinalList = listbyres + listbydish
-        FinalList = list(dict.fromkeys(FinalList))
-
-        return render(request, "buyer/restaurants.html", {"form": filledform, "list": FinalList})
+            for msg in filledform.errors:
+                print(filledform.errors[msg])
+                form = searchrestaurant()
+                FinalList = SellerInfo.objects.all()
+                return render(request, "buyer/restaurants.html", {"form": form, "list": FinalList})
 
