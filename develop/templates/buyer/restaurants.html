@@ -1,35 +1,37 @@
 {%  extends 'buyer_dashboard_base.html' %}
 {% block content %}
-    Restaurant here!
- {% endblock %}
 
 
+    <ul class="nav justify-content-center">
+    <form class="form-inline my-2 my-lg-0" method="post">
 
+    {% for field in form %}
+        {% csrf_token %}
+        <label>
+        <div class="fieldWrapper", style = "padding: 10px 15px;">
+            {{ field }}
+        </div>
+        </label>
+    {% endfor %}
+    <button class="btn btn-outline-success my-2 my-sm-0  " type="submit" >Search</button>
+    </form>
+    </ul>
 
+{% for i in list %}
 
+<div class="card-deck">
+        <div class="card border-primary mb-3" style="max-width: 18rem;">
+            {% load static %}
+            <img src="{% static 'develop/restaurant.jpg' %}" alt="My image">
+            <div class="card-body">
+            <h5 class="card-title">{{ i.businessname }}</h5>
+                <p class="card-text-warning">{{ i.description }}</p>
+                <p class="card-text">Address : {{ i.address}}</p>
+                <p class="card-text">Phone : {{ i.phone }}</p>
+                <a href="#" class="btn btn-success">Buy</a>
+            </div>
+        </div>
+{% endfor %}
+</div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+{% endblock %}

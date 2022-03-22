@@ -19,6 +19,8 @@ from develop.forms import (
 )
 from develop.models import BuyerInfo, SellerInfo, Product, Order, Cart, Purchase
 
+from .forms import searchrestaurant
+
 """
 """
 
@@ -360,6 +362,16 @@ def restaurants(request):
     return render(request, "buyer/restaurants.html", context)
 
 
+
+
+
+
+
+
+
+
+
+
 # adding item to cart
 @csrf_exempt
 def add_cart(request):
@@ -432,3 +444,39 @@ def cart(request):
 
     context = {'items': items, 'order': order, "userdetails": userdetails, 'cartItems': cartItems}
     return render(request, 'buyer/cart.html', context)
+
+
+def restaurants(request):
+    if request.method != "POST":
+        form = searchrestaurant()
+        FinalList = SellerInfo.objects.all()
+        return render(request, "buyer/restaurants.html", {"form": form, "list": FinalList})
+    elif request.method == "POST":
+        filledform = searchrestaurant(request.POST)
+        if filledform.is_valid():
+            if filledform["name"].value() == "" and filledform["loc"].value() == "":
+                prelistbyres = SellerInfo.objects.all()
+            else:
+                prelistbyres = SellerInfo.objects.filter(businessname__icontains = filledform["name"].value(), address__icontains = filledform["loc"].value())
+            if filledform["name"].value()!="":
+                prelistbydish = Product.objects.filter(product__icontains = filledform["name"].value())
+
+            listbydish = []
+            if filledform["name"].value()!="":
+                for i in prelistbydish:
+                    if filledform["loc"].value() in i.seller.address:
+                        listbydish.append(i.seller)
+            listbyres = []
+            for i in prelistbyres:
+                listbyres.append(i)
+            FinalList = listbyres + listbydish
+            FinalList = list(dict.fromkeys(FinalList))
+
+            return render(request, "buyer/restaurants.html", {"form": filledform, "list": FinalList})
+        else:
+            for msg in filledform.errors:
+                print(filledform.errors[msg])
+                form = searchrestaurant()
+                FinalList = SellerInfo.objects.all()
+                return render(request, "buyer/restaurants.html", {"form": form, "list": FinalList})
+

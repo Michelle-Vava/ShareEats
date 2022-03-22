@@ -46,7 +46,7 @@ class Product(models.Model):
     category = models.CharField(max_length=20)
     # file will be uploaded to MEDIA_ROOT / uploads
     image = models.ImageField(upload_to='images')
-    seller = models.ForeignKey(SellerInfo, on_delete=models.CASCADE)
+    seller = models.ForeignKey(SellerInfo, on_delete=models.CASCADE, related_name="SellerInfo")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
