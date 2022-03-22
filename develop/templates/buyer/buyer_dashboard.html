@@ -32,11 +32,9 @@
 <ul class="nav justify-content-end">
      <li class="nav-item">
     <div class="card border-secondary" style="max-width: 18rem;">
-        <img class="card-img-top" src="../static/img/219969-1x-png@1x.png" alt="Card image">
+  Welcome to Share Eats
   <div class="card-header" href='{% url "buyer dashboard" %}' >{{ userdetails.firstname }}, {{ userdetails.lastname }}</div>
   <div class="card-body text-secondary">
-    <h5 class="card-title">Joined</h5>
-    <p class="card-text">2 weeks ago.</p>
   </div>
 </div>
   </li>
@@ -52,9 +50,9 @@
             <div class="card-body">
             <h5  class="card-title">{{ item.product }}</h5>
                 <p class="card-text-warning">$ {{ item.price }}</p>
-                <p class="card-text" id="quantity" >Quantity : {{ item.quantity}}</p>
+                <p class="card-text" id="quantity" >Quantity : {{ item.servings }}</p>
                 <p class="card-text">Category : {{ item.category }}</p>
-                <a  id="buy" data-product="{{ item.product }}" data-action="add"  data-quantity="{{ item.quantity }}" class="btn btn-success update-cart">Add to Cart</a>
+                <a id="buy" data-product="{{ item.product }}" data-action="add" data-price="{{ item.price }}" data-quantity="{{ item.servings }}" data-toggle="modal" data-target="#DishModal" class="btn btn-success update-modal">Buy</a>
             </div>
             </div>
              </div>
@@ -76,10 +74,14 @@
         </button>
       </div>
       <div class="modal-body">
-<p> The value of the option selected is:
-        <span class="output"></span>
-    </p>
-                  <button type="button" class="btn btn-primary" id="cart">Add to Cart</button>
+<p> Product Details : </p>
+
+           <p id="output"></p>
+
+            <p id="quan"></p>
+
+            <p id="p"></p>
+                  <button type="button"  class="btn btn-success update-cart" id="cart">Add to Cart</button>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -92,6 +94,7 @@
     <script>
    var updateBtns = document.getElementsByClassName('update-cart')
    var user = '{{ request.user }}'
+   /*
    for (var i=0; i< updateBtns.length;i++)
    {
        updateBtns[i].addEventListener('click',function(){
@@ -110,6 +113,45 @@
 
        })
    }
+   */
+     for (var i=0; i< updateBtns.length;i++) {
+         updateBtns[i].addEventListener('click', function () {
+             var productname = document.getElementById('output').innerHTML
+             var quantity = 1 //document.getElementById('quantity').innerHTML
+
+             //  var action = this.dataset.action
+             // var quantity = this.dataset.quantity
+             console.log('product:', productname,'quantity:',quantity)
+             console.log('USER', user)
+             if (user === 'AnonymousUser') {
+                 console.log("User is not authenticated")
+
+             } else {
+                 console.log("user is authenticated,sending data..")
+                 updateUserOrder(productname,quantity)
+             }
+
+         })
+     }
+
+   
+   var buyBtns = document.getElementsByClassName('update-modal')
+   for (var i=0; i< buyBtns.length;i++)
+   {
+       buyBtns[i].addEventListener('click',function(){
+           var productname = this.dataset.product
+           var action = this.dataset.action
+           var quantity = this.dataset.quantity
+           var price = this.dataset.price
+           console.log('product:',productname,'Action',action,'quantity:',quantity)
+
+
+
+              displaySelectedFood(productname,quantity,price)
+
+
+       })
+   }
    function updateUserOrder(productId,quantity){
         var url = '/add-cart/'
       fetch(url, {
@@ -125,27 +167,17 @@
       })
    }
 
+   function displaySelectedFood(productId,quantity,price){
+        var name = productId
+        var quan = quantity
+       var get_p = price
 
-    var pastQuantity = 1;
-    document.getElementById("cart").onclick = () => {
-        var quantity ="{{ dishes.first.quantity }}"
-        var product=  "{{ dishes.first.product }}"
-        console.log(JSON.stringify({product: product, quantity: quantity}))
 
-        var url = '/add-cart/'
-      fetch(url, {
-        method: "POST",
+    document.getElementById('output').innerHTML = name;
+    document.getElementById('quan').innerHTML = quan;
+    document.getElementById('p').innerHTML = get_p;
+   }
 
-        credentials: "same-origin",
-        body: JSON.stringify({product: product, quantity: quantity})
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-      })
-
-      window.location.assign("http://127.0.0.1:7000/buyer/checkout")
-    }
 
   </script>
 

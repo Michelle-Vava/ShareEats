@@ -7,7 +7,7 @@ from develop.models import SellerInfo, BuyerInfo, Product
 
 
 class UserCreationForm(BaseUserCreationForm):
-    phone = forms.CharField(max_length=20, required=True, help_text='Phone number')
+    phone = forms.CharField(max_length=20, required=True, help_text='Phone number Format +1902338532')
 
     class Meta:
         model = User
@@ -19,7 +19,7 @@ class SellerInfoForm(forms.ModelForm):
         model = SellerInfo
         fields = [
             "businessname",
-            "phone",
+            "business_phone_number",
             "address",
             "description",
         ]
@@ -48,13 +48,13 @@ class VerifyForm(forms.Form):
 class BuyerInfoForm(forms.ModelForm):
     class Meta:
         model = BuyerInfo
-        fields = ["firstname", "lastname", "phone"]
+        fields = ["firstname", "lastname"]
 
 
 class DishInfoForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ["product", "quantity","price", "category", "image"]
+        fields = ["product", "servings", "price", "category", "image"]
 
 
 class BuyerSettings(forms.ModelForm):
@@ -78,20 +78,10 @@ class BuyerSettings(forms.ModelForm):
             }
         ),
     )
-    phone = forms.CharField(
-        label="Phone",
-        widget=TextInput(
-            attrs={
-                "class": "form-control",
-                "style": "max-width: 300px;",
-                "placeholder": "Phone",
-            }
-        ),
-    )
 
     class Meta:
         model = BuyerInfo
-        fields = ["firstname", "lastname", "phone"]
+        fields = ["firstname", "lastname"]
 
 
 class SellerSettings(forms.ModelForm):
@@ -105,7 +95,7 @@ class SellerSettings(forms.ModelForm):
             }
         ),
     )
-    phone = forms.CharField(
+    business_phone_number = forms.CharField(
         label="Phone",
         widget=TextInput(
             attrs={
@@ -140,7 +130,7 @@ class SellerSettings(forms.ModelForm):
         model = SellerInfo
         fields = [
             "businessname",
-            "phone",
+            "business_phone_number",
             "address",
             "description"
         ]

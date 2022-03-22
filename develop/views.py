@@ -1,4 +1,3 @@
-import datetime
 import json
 
 import stripe
@@ -18,7 +17,7 @@ from develop.forms import (
     DishInfoForm,
     SellerSettings, VerifyForm, UserCreationForm
 )
-from develop.models import BuyerInfo, SellerInfo, Product, Order, OrderItem
+from develop.models import BuyerInfo, SellerInfo, Product, Order, Cart, Purchase
 
 from .forms import searchrestaurant
 
@@ -30,7 +29,7 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 # take user to stripe checkout
 def CreateCheckoutSessionView(request):
-    order = OrderItem.objects.get(user=request.user, product_id=1)
+    order = Cart.objects.get(user=request.user)
     YOUR_DOMAIN = "http://127.0.0.1:7000"  # change in production #changes to 8000
     checkout_session = stripe.checkout.Session.create(
         payment_method_types=['card'],
@@ -41,7 +40,7 @@ def CreateCheckoutSessionView(request):
             },
         ],
         mode='payment',
-        success_url=YOUR_DOMAIN + '/buyer/orders',
+        success_url=YOUR_DOMAIN + '/success/',
         cancel_url=YOUR_DOMAIN + '/cancel/',
     )
     return redirect(checkout_session.url)
@@ -50,6 +49,24 @@ def CreateCheckoutSessionView(request):
 # for canceling the order
 class CancelView(TemplateView):
     template_name = "buyer/cancel.html"
+
+
+# for successful the order
+def Success(request):
+    userdetails = BuyerInfo.objects.get(user=request.user)
+    cart = Cart.objects.filter(order=Order.objects.get(user=request.user, complete=False), user=request.user,
+                               buyer=BuyerInfo.objects.get(user=request.user))
+    completed_order = Purchase()
+    completed_order.quantity = cart.first().quantity
+    completed_order.seller_price = cart.first().product.price
+    completed_order.product = cart.first().product
+    completed_order.order = cart.first().order
+    completed_order.save()
+    cart.delete()
+    Order.objects.filter(user=request.user, complete=False).update(complete=True)
+
+    context = {"userdetails": userdetails}
+    return render(request, "buyer/success.html", context)
 
 
 # home view
@@ -118,7 +135,14 @@ def verify_code(request):
 def buyer_dashboard(request):
     dishes = Product.objects.all()
     userdetails = BuyerInfo.objects.get(user=request.user)
-    context = {"dishes": dishes, "userdetails": userdetails}
+    if Order.objects.filter(user=request.user, complete=False).exists():
+        order = Order.objects.get(user=request.user, complete=False)
+        cartItems = order.get_cart_items
+    else:
+        order = {'get_cart_total': 0, 'get_cart_items': 0}
+        cartItems = order['get_cart_items']
+
+    context = {"dishes": dishes, "userdetails": userdetails, 'cartItems': cartItems}
     return render(request, "buyer/buyer_dashboard.html", context)
 
 
@@ -153,12 +177,12 @@ def seller_settings(request):
     if request.method != "POST":
         seller = SellerInfo.objects.get(user=request.user)
         businessname = seller.businessname
-        phone = seller.phone
+        phone = seller.business_phone_number
         address = seller.address
         description = seller.description
         context = {
             "businessname": businessname,
-            "phone": phone,
+            "business_phone_number": phone,
             "address": address,
             "description": description,
             "userdetails": user_details
@@ -176,7 +200,7 @@ def seller_settings(request):
             seller.user = request.user
             seller.id = SellerInfo.objects.get(user=request.user).id
             seller.businessname = filled_form.cleaned_data["businessname"]
-            seller.phone = filled_form.cleaned_data["phone"]
+            seller.business_phone_number = filled_form.cleaned_data["business_phone_number"]
             seller.address = filled_form.cleaned_data["address"]
             seller.description = filled_form.cleaned_data["description"]
             seller.membership = True
@@ -191,9 +215,10 @@ def seller_settings(request):
 # order page
 def order(request):
     userdetails = BuyerInfo.objects.get(user=request.user)
-    time = datetime.datetime.now().timestamp()
-    # Todo :  remove OrderItem and complete order in order table
-    context = {"userdetails": userdetails, "time": time}
+    orders = Order.objects.filter(user=request.user, buyer=BuyerInfo.objects.get(user=request.user), complete=True)
+    recent = Purchase.objects.filter(order=orders)
+    context = {"userdetails": userdetails, "orders": orders, "recent": recent}
+
     return render(request, "buyer/order.html", context)
 
 
@@ -239,7 +264,7 @@ def seller_form(request):
                 seller = SellerInfo()
                 seller.user = request.user
                 seller.businessname = filled_form.cleaned_data["businessname"]
-                seller.phone = filled_form.cleaned_data["phone"]
+                seller.business_phone_number = filled_form.cleaned_data["business_phone_number"]
                 seller.address = filled_form.cleaned_data["address"]
                 seller.description = filled_form.cleaned_data["description"]
                 seller.membership = True
@@ -265,16 +290,16 @@ def add_item(request):
             # TODO : add price from Price Table
             dish.user = request.user
             dish.price = filled_form.cleaned_data["price"]
-            unit_price = int(dish.price) * 100
+            unit_price = float(dish.price) * 100
             dish.product = filled_form.cleaned_data["product"]
             dish.seller = SellerInfo.objects.get(user=request.user)
             dish.image = filled_form.cleaned_data["image"]
-            dish.quantity = filled_form.cleaned_data["quantity"]
+            dish.servings = filled_form.cleaned_data["servings"]
             dish.category = filled_form.cleaned_data["category"]
             product = stripe.Product.create(name=dish.product, images=[dish.image])
             dish.stripe_product_id = product.id
             stripe_price = stripe.Price.create(
-                unit_amount=unit_price,
+                unit_amount=int(unit_price),
                 currency="cad",
                 product=product.id,
             )
@@ -305,8 +330,8 @@ def buyer_settings(request):
         user_details = BuyerInfo.objects.get(user=request.user)
         firstname = user_details.firstname
         lastname = user_details.lastname
-        phone = user_details.phone
-        initial = {"firstname": firstname, "lastname": lastname, "phone": phone}
+        phone = user_details.business_phone_number
+        initial = {"firstname": firstname, "lastname": lastname, "business_phone_number": phone}
         filled_form = BuyerSettings(initial=initial)
         context = {"userdetails": userdetails, "settings": filled_form}
         return render(request, "buyer/buyer_settings.html", context)
@@ -319,7 +344,7 @@ def buyer_settings(request):
             buyer.id = BuyerInfo.objects.get(user=request.user).id
             buyer.firstname = filled_form.cleaned_data["firstname"]
             buyer.lastname = filled_form.cleaned_data["lastname"]
-            buyer.phone = filled_form.cleaned_data["phone"]
+            buyer.phone = filled_form.cleaned_data["business_phone_number"]
             buyer.membership = True
             buyer.save()
             return HttpResponseRedirect("dashboard")
@@ -361,10 +386,11 @@ def add_cart(request):
     orderdetails, created = Order.objects.get_or_create(user=request.user,
                                                         buyer=BuyerInfo.objects.get(user=request.user),
                                                         complete=False)
-    orderItem, created = OrderItem.objects.get_or_create(user=request.user, order=orderdetails, product=productname,
-                                                         buyer=BuyerInfo.objects.get(user=request.user),
-                                                         quantity=quantity
-                                                         )
+    orderItem, created = Cart.objects.get_or_create(user=request.user, order=orderdetails, product=productname,
+                                                    buyer=BuyerInfo.objects.get(user=request.user),
+                                                    quantity=quantity
+                                                    )
+
     orderItem.save()
 
     return JsonResponse({"code": 200})
@@ -379,7 +405,7 @@ def delete_cart(request):
     item_id = post_data["item_id"]
     user_id = request.user
 
-    OrderItem.objects.get(item_id=item_id, user_id=user_id).delete()
+    Cart.objects.get(item_id=item_id, user_id=user_id).delete()
 
     return JsonResponse({"code": 200})
 
@@ -390,10 +416,10 @@ def modify_cart(request):
     post_data = json.loads(request.body.decode("utf-8"))
     item_id = post_data["item_id"]
     user_id = request.user.id
-    quantity = post_data["quantity"]
+    quantity = post_data["servings"]
 
-    c = OrderItem.objects.get(user_id=user_id, item_id=item_id)
-    c.quantity = quantity
+    c = Cart.objects.get(user_id=user_id, item_id=item_id)
+    c.servings = quantity
     c.save()
 
     return JsonResponse({"code": 200})
@@ -402,17 +428,21 @@ def modify_cart(request):
 # cart page
 def cart(request):
     userdetails = BuyerInfo.objects.get(user=request.user)
+
     if request.user.is_authenticated:
         customer = request.user
         order, created = Order.objects.get_or_create(user=customer, buyer=BuyerInfo.objects.get(user=request.user),
                                                      complete=False)
-        items = order.orderitem_set.all()
+        items = order.cart_set.all()
+        cartItems = order.get_cart_items
+
     else:
         # Create empty cart for now for non-logged in user
         items = []
         order = {'get_cart_total': 0, 'get_cart_items': 0}
+        cartItems = order['get_cart_items']
 
-    context = {'items': items, 'order': order, "userdetails": userdetails}
+    context = {'items': items, 'order': order, "userdetails": userdetails, 'cartItems': cartItems}
     return render(request, 'buyer/cart.html', context)
 
 
