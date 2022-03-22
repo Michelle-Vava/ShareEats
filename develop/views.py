@@ -438,8 +438,6 @@ def restaurants(request):
         listbyres = []
         for i in prelistbyres:
             listbyres.append(i)
-        print(listbyres,"list by restaurant")
-        print(listbydish,"listbyloc")
         FinalList = listbyres + listbydish
         FinalList = list(dict.fromkeys(FinalList))
 
