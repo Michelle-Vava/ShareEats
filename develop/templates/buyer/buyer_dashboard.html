@@ -32,11 +32,9 @@
 <ul class="nav justify-content-end">
      <li class="nav-item">
     <div class="card border-secondary" style="max-width: 18rem;">
-        <img class="card-img-top" src="../static/img/219969-1x-png@1x.png" alt="Card image">
+  Welcome to Share Eats
   <div class="card-header" href='{% url "buyer dashboard" %}' >{{ userdetails.firstname }}, {{ userdetails.lastname }}</div>
   <div class="card-body text-secondary">
-    <h5 class="card-title">Joined</h5>
-    <p class="card-text">2 weeks ago.</p>
   </div>
 </div>
   </li>
@@ -52,9 +50,9 @@
             <div class="card-body">
             <h5  class="card-title">{{ item.product }}</h5>
                 <p class="card-text-warning">$ {{ item.price }}</p>
-                <p class="card-text" id="quantity" >Quantity : {{ item.quantity}}</p>
+                <p class="card-text" id="quantity" >Quantity : {{ item.servings }}</p>
                 <p class="card-text">Category : {{ item.category }}</p>
-                <a  id="buy" data-product="{{ item.product }}" data-action="add" data-price="{{ item.price }}" data-quantity="{{ item.quantity }}" data-toggle="modal" data-target="#DishModal" class="btn btn-success update-modal">Buy</a>
+                <a id="buy" data-product="{{ item.product }}" data-action="add" data-price="{{ item.price }}" data-quantity="{{ item.servings }}" data-toggle="modal" data-target="#DishModal" class="btn btn-success update-modal">Buy</a>
             </div>
             </div>
              </div>
@@ -77,8 +75,11 @@
       </div>
       <div class="modal-body">
 <p> Product Details : </p>
+
            <p id="output"></p>
+
             <p id="quan"></p>
+
             <p id="p"></p>
                   <button type="button"  class="btn btn-success update-cart" id="cart">Add to Cart</button>
       </div>
@@ -170,6 +171,7 @@
         var name = productId
         var quan = quantity
        var get_p = price
+
 
     document.getElementById('output').innerHTML = name;
     document.getElementById('quan').innerHTML = quan;

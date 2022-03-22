@@ -23,7 +23,7 @@ class TestViews(TestCase):
     def setUp(self):
         self.client = Client()
         # self.user = User.objects.create(username='alex', password='2421djfes')
-        # self.buyer = BuyerInfo.objects.create(firstname='alex', lastname='peters', phone='9023188172',
+        # self.buyer = BuyerInfo.objects.create(firstname='alex', lastname='peters', business_phone_number='9023188172',
         # logged_in= login_sample_user(self.client)
 
     def test_home_page(self):

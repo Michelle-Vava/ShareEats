@@ -1,6 +1,6 @@
-1. make table for all orders, today's orders and future orders
-2. make option for incomplete orders
-3. make a card for total orders
+{#TODO:1. make table for all orders, today's orders and future orders#}
+{#TODO:2. make option for incomplete orders#}
+{#TODO:3. make a card for total orders#}
 
 {% extends 'buyer_dashboard_base.html' %}
 {% block content %}
@@ -16,34 +16,24 @@
     <a class="nav-link" href="#">Incomplete Orders</a>
   </li>
 </ul>
-<table class="table table-hover">
-  <!-- Header row -->
+<table class="table">
   <thead>
     <tr>
-      <th scope="row">Dish</th>
-      <th scope="row">Quantity</th>
-      <th scope="row">Price</th>
-      <th scope="row">Order Date</th>
+      <th scope="col">Time of Completed Order</th>
+
     </tr>
   </thead>
-  <!-- Rows below header-->
   <tbody>
-    {% for dish in dishes %}
+    {% for item in orders %}
     <tr>
-      <td>{{dish.product}}</td>
-      <td>{{dish.quantity}}</td>
-      <td>{{dish.price}}</td>
-    </tr>
-    {% endfor %}
-    <tr>
-    {% for item in order %}
-      <td>{{item.timestamp}}</td>
-      <td>{{item.complete}}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
+      <td>{{ item.timestamp }}</td>
 
+    </tr>
+  {% endfor %}
+  </tbody>
 </table>
 <br>
+
+
 
 {% endblock %}
