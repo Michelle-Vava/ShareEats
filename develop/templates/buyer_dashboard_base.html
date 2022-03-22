@@ -22,7 +22,7 @@
   <link rel="stylesheet" type="text/css" href="../static/css/sidebar.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<div id="mySidebar" class="sidebar">
+<div id="mySidebar" class="sidebar bg-white text-dark">
 
   <a>Share Eats</a>
   <a onclick="location.href='{% url 'buyer dashboard' %}'"><i class="fa fa-home"></i> Dashboard</a>
@@ -56,15 +56,12 @@
 
 
     </span>
-    <span class="navbar-item">
-      <a href="{% url 'cart' %}">
-        <p id="cart-total">{{ cartItems }}</p>
-      </a>
-    </span>
+
 
     <span class="navbar-item">
-      <button class="btn" onclick="location.href='{% url 'cart' %}'"><i class="fa fa-shopping-cart"></i>
-      </button>
+        <button type="button" class="btn btn-primary" onclick="location.href='{% url 'cart' %}'">
+  Cart <i class="fa fa-shopping-cart"></i> <span class="badge badge-light">{{ cartItems }}</span>
+</button>
 
     </span>
     <span class="navbar-item">

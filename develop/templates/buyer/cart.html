@@ -10,7 +10,7 @@
 				<table class="table">
 					<tr>
 						<th><h5>Number of Items: <strong>{{order.get_cart_items}}</strong></h5></th>
-						<th><h5>Total:<strong> ${{order.get_cart_total|floatformat:2}}</strong></h5></th>
+						<th><h5>Total:<strong> ${{order.get_cart_total}}</strong></h5></th>
 						<th>
 							<a  style="float:right; margin:5px;" class="btn btn-warning createcheckout " href="{% url 'create-checkout-session' %}"   >Checkout</a>
 						</th>
@@ -38,9 +38,9 @@
 </div>
   </th>
       <th>{{ item.product.product }}</th>
-       <th>${{item.product.price|floatformat:2}}</th>
+       <th>${{item.product.price}}</th>
        <th>{{item.quantity}}</th>
-       <th>${{item.get_total|floatformat:2}}</th>
+       <th>${{item.get_total}}</th>
 
       </tr>
   {% endfor %}

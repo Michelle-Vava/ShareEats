@@ -51,10 +51,10 @@
     {{ settings.lastname | as_crispy_field}}
 </div>
 <div class="fieldWrapper">
-    {{ settings.phone.errors }}
-    <label for="{{ settings.phone.id_for_label }}"></label>
+    {{ settings.business_phone_number.errors }}
+    <label for="{{ settings.business_phone_number.id_for_label }}"></label>
     
-    {{ settings.phone | as_crispy_field }}
+    {{ settings.business_phone_number | as_crispy_field }}
 </div>
 <link rel="stylesheet" type="text/css" href="../static/css/button.css" />
     <input id = "save" type="submit" value="Update">

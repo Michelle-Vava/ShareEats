@@ -17,11 +17,11 @@ herokuAppDeployment: &herokuAppDeployment
     - git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master -f
 pipelines:
   default:
-        - step:
-              name: Testing
-              script:
-                - pip install -r requirements.txt
-                - python manage.py test
+#        - step:
+#              name: Testing
+#              script:
+#                - pip install -r requirements.txt
+#                - python manage.py test
 #      - step:
 ##            caches:
 ##             - pip

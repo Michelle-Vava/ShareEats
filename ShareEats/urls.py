@@ -20,7 +20,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from develop import views
-from develop.views import CancelView, CreateCheckoutSessionView
+from develop.views import CancelView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -48,6 +48,7 @@ urlpatterns = [
     path('seller/report', views.reports, name='report'),
     path('buyer/restaurants', views.restaurants, name='buyer restaurants'),
     path('cancel/', CancelView.as_view(), name='cancel'),
+    path('success/', views.Success, name='success'),
     path('create-checkout-session/', views.CreateCheckoutSessionView, name='create-checkout-session'),
     path('loginverification', views.login_verify_code, name='verify_login'),
     # 2fa authentication
