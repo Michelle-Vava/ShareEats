@@ -1,16 +1,20 @@
 {%  extends 'buyer_dashboard_base.html' %}
 {% block content %}
 
+
     <ul class="nav justify-content-center">
-    <div>
-     <form class="form-inline my-2 my-lg-0", method="POST">
-         {% csrf_token %}
-            {{ form.as_p }}
-         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    <form class="form-inline my-2 my-lg-0" method="post">
+
+    {% for field in form %}
+        {% csrf_token %}
+        <label>
+        <div class="fieldWrapper", style = "padding: 10px 15px;">
+            {{ field }}
+        </div>
+        </label>
+    {% endfor %}
+    <button class="btn btn-outline-success my-2 my-sm-0  " type="submit" >Search</button>
     </form>
-    <li class="nav-item">
-  </li>
-    </div>
     </ul>
 
 {% for i in list %}
@@ -18,11 +22,11 @@
 <div class="card-deck">
         <div class="card border-primary mb-3" style="max-width: 18rem;">
             {% load static %}
-            <img src="{% static 'develop/icreamnewlandscape.jpg' %}" alt="My image">
+            <img src="{% static 'develop/restaurant.jpg' %}" alt="My image">
             <div class="card-body">
-            <h5 class="card-title">{{ i.address }}</h5>
-                <p class="card-text-warning">$ {{ i.description }}</p>
-                <p class="card-text">Name : {{ i.businessname}}</p>
+            <h5 class="card-title">{{ i.businessname }}</h5>
+                <p class="card-text-warning">{{ i.description }}</p>
+                <p class="card-text">Address : {{ i.address}}</p>
                 <p class="card-text">Phone : {{ i.phone }}</p>
                 <a href="#" class="btn btn-success">Buy</a>
             </div>

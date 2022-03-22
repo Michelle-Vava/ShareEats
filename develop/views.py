@@ -419,20 +419,27 @@ def cart(request):
 def restaurants(request):
     if request.method != "POST":
         form = searchrestaurant()
-
-        return render(request, "buyer/restaurants.html", {"form": form})
+        FinalList = SellerInfo.objects.all()
+        return render(request, "buyer/restaurants.html", {"form": form, "list": FinalList})
     elif request.method == "POST":
         filledform = searchrestaurant(request.POST)
-
-        prelistbyres = SellerInfo.objects.filter(businessname__icontains = filledform["name"].value(), address__icontains = filledform["loc"].value())
-        prelistbydish = Product.objects.filter(product__icontains = filledform["name"].value())
+        if filledform["name"].value() == "" and filledform["loc"].value() == "":
+            prelistbyres = SellerInfo.objects.all()
+        else:
+            prelistbyres = SellerInfo.objects.filter(businessname__icontains = filledform["name"].value(), address__icontains = filledform["loc"].value())
+        if filledform["name"].value()!="":
+            prelistbydish = Product.objects.filter(product__icontains = filledform["name"].value())
 
         listbydish = []
-        for i in prelistbydish:
-            listbydish.append(i.seller)
+        if filledform["name"].value()!="":
+            for i in prelistbydish:
+                if filledform["loc"].value() in i.seller.address:
+                    listbydish.append(i.seller)
         listbyres = []
         for i in prelistbyres:
             listbyres.append(i)
+        print(listbyres,"list by restaurant")
+        print(listbydish,"listbyloc")
         FinalList = listbyres + listbydish
         FinalList = list(dict.fromkeys(FinalList))
 

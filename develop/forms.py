@@ -147,7 +147,7 @@ class SellerSettings(forms.ModelForm):
 class searchrestaurant(forms.Form):
     name = forms.CharField(max_length=100,
                            widget= forms.TextInput
-                           (attrs={'placeholder':'Restaurants or Dishes'}), required=True)
+                           (attrs={'placeholder':'Restaurants or Dishes'}), required=False, label='')
     loc = forms.CharField(max_length=100,
                            widget= forms.TextInput
-                           (attrs={'placeholder':'Location'}), required=False)
+                           (attrs={'placeholder':'Location'}), required=False, label='')
