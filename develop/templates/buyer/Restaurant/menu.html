@@ -1,46 +1,26 @@
 {%  extends 'base_templates/buyer_dashboard_base.html' %}
-{% load crispy_forms_filters %}
 {% block content %}
-    {% load crispy_forms_tags %}
-     <h1>{{ userdetails.firstname }}</h1>
-<br>
+    <button type="button" onclick="location.href='{% url 'buyer restaurants' %}'" class="btn btn-link">Return to Restaurant Dashboard</button>
+    <button type="button" onclick="location.href='{% url 'buyer dashboard' %}'" class="btn btn-link">Return to Buyer Dashboard</button>
     <br>
-<ul class="nav justify-content-center">
-      <li class="nav-item">  <a class="nav-link" href='{% url 'buyer restaurants' %}'>Restaurants dashboard</a></li>
- <li class="nav-item">
-     <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search by Name" aria-label="Search">
-         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
-  </li>
 
-</ul>
-    <br>
-    <br>
-     <div class="container border ">
-<br>
-      <div class="row mt-5 justify-content-center">
-         {% for item in dishes %}
+    <h2> Business Name : {{ seller.businessname }}</h2>
+     <div class="row mt-5 justify-content-center">
              <div class="card-deck mx-2 mb-3">
-        <div class="card border-primary rounded mb-3" style="max-width: 18rem;">
-            <img class="card-img-top" src="{{ item.image.url }}" alt="Card image cap">
+                 {% for t in food %}
+        <div class="card border-primary mb-3" style="max-width: 18rem;">
+            <img class="card-img-top" src="{{ t.image.url }}" alt="Card image cap">
             <div class="card-body">
-            <h5  class="card-title">{{ item.product }}</h5>
-                <p class="card-text-warning">$ {{ item.price }}</p>
-                <p class="card-text" id="quantity" ><i class="fa fa-user"></i> Servings : {{ item.servings }}</p>
-                <p class="card-text">Category : {{ item.category }}</p>
-                <a id="buy" data-image="{{ item.image.url }}" data-product="{{ item.product }}" data-action="add" data-price="{{ item.price }}" data-quantity="{{ item.servings }}" data-toggle="modal" data-target="#DishModal" class="btn btn-success update-modal">Buy</a>
+            <h5  class="card-title">{{ t.product }}</h5>
+                <p class="card-text-warning"></p>
+                <p class="card-text" id="quantity" >Quantity : {{ t.servings }} </p>
+                <p class="card-text">Category : {{ t.category }} </p>
+                <a id="buy" data-product="{{ t.product }}" data-action="add" data-price="{{ t.price }}" data-quantity="{{ t.servings }}" data-toggle="modal" data-target="#DishModal" class="btn btn-success update-modal">Buy</a>
             </div>
             </div>
+                   {% endfor %}
              </div>
-
-
-         {% endfor %}
-
-         </div>
-
-    </div>
-    <!-- Modal -->
+<!-- Modal -->
 <div class="modal fade" id="DishModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -93,6 +73,7 @@
     </div>
   </div>
 </div>
-<script type="text/javascript" src="../../static/js/cart.js "></script>
 
+     </div>
+    <script type="text/javascript" src="../../static/js/cart.js "></script>
 {% endblock %}

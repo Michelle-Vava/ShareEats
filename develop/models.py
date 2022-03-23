@@ -92,3 +92,4 @@ class Purchase(models.Model):
     seller_price = models.CharField(max_length=5)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
+    order_status = models.CharField(max_length=30, default='seller notified')
