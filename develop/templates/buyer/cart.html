@@ -1,0 +1,51 @@
+{% extends 'buyer_dashboard_base.html' %}
+{% block content %}
+
+<div class="container bg-white text-dark border border-dark">
+<br>
+    <a  class="btn btn-outline-dark" href="{% url 'buyer dashboard' %}">&#x2190; Continue Shopping</a>
+
+				<br>
+				<br>
+				<table class="table">
+					<tr>
+						<th><h5>Number of Items: <strong>{{order.get_cart_items}}</strong></h5></th>
+						<th><h5>Total:<strong> ${{order.get_cart_total}}</strong></h5></th>
+						<th>
+							<a  style="float:right; margin:5px;" class="btn btn-warning createcheckout " href="{% url 'create-checkout-session' %}"   >Checkout</a>
+						</th>
+					</tr>
+				</table>
+</div>
+   <br>
+<div class="container bg-white text-dark border border-dark">
+    <table class="table">
+        <thead>
+    <tr>
+        <th scope="col"><strong></strong></th>
+      <th scope="col"><strong>Item</strong></th>
+      <th scope="col"><strong>Price</strong></th>
+      <th scope="col"><strong>Quantity</strong></th>
+      <th scope="col"><strong>Total</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for item in items %}
+  </tr><th>
+  <div class="card" style="width: 18rem;">
+  <img class="card-img-top" src="{{item.product.image.url}}" alt="Card image cap">
+
+</div>
+  </th>
+      <th>{{ item.product.product }}</th>
+       <th>${{item.product.price}}</th>
+       <th>{{item.quantity}}</th>
+       <th>${{item.get_total}}</th>
+
+      </tr>
+  {% endfor %}
+  </tbody>
+    </table>
+</div>
+
+{% endblock %}

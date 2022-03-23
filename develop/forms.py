@@ -1,17 +1,17 @@
-# class SellerInfoForm(forms.Form):
-#     firstname = forms.CharField(max_length=20)
-#     lastname = forms.CharField(max_length=20)
-# from develop.models import SellerInfoForm
-#
-# remove phone number_fields
-
+from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
+from develop.models import User
 from django import forms
 from django.forms import TextInput
 
-# KWEKU WAS HERE
-from develop.models import SellerInfo, BuyerInfo, DishInfo, OrderInfo
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
+from develop.models import SellerInfo, BuyerInfo, Product
+
+
+class UserCreationForm(BaseUserCreationForm):
+    phone = forms.CharField(max_length=20, required=True, help_text='Phone number Format +1902338532')
+
+    class Meta:
+        model = User
+        fields = ('username', 'phone', 'password1', 'password2')
 
 
 class SellerInfoForm(forms.ModelForm):
@@ -19,12 +19,9 @@ class SellerInfoForm(forms.ModelForm):
         model = SellerInfo
         fields = [
             "businessname",
-            "phone",
+            "business_phone_number",
             "address",
             "description",
-            "cardnumber",
-            "cvv",
-            "expiry_date",
         ]
         widgets = {
             "name": TextInput(
@@ -44,22 +41,20 @@ class SellerInfoForm(forms.ModelForm):
         }
 
 
+class VerifyForm(forms.Form):
+    code = forms.CharField(max_length=8, required=True)
+
+
 class BuyerInfoForm(forms.ModelForm):
     class Meta:
         model = BuyerInfo
-        fields = ["firstname", "lastname", "phone"]
+        fields = ["firstname", "lastname"]
 
 
 class DishInfoForm(forms.ModelForm):
     class Meta:
-        model = DishInfo
-        fields = ["item", "price", "quantity", "category", "image"]
-
-
-class OrderInfoForm(forms.ModelForm):
-    class Meta:
-        model = OrderInfo
-        fields = ["quantity"]
+        model = Product
+        fields = ["product", "servings", "price", "category", "image"]
 
 
 class BuyerSettings(forms.ModelForm):
@@ -83,20 +78,10 @@ class BuyerSettings(forms.ModelForm):
             }
         ),
     )
-    phone = forms.CharField(
-        label="Phone",
-        widget=TextInput(
-            attrs={
-                "class": "form-control",
-                "style": "max-width: 300px;",
-                "placeholder": "Phone",
-            }
-        ),
-    )
 
     class Meta:
         model = BuyerInfo
-        fields = ["firstname", "lastname", "phone"]
+        fields = ["firstname", "lastname"]
 
 
 class SellerSettings(forms.ModelForm):
@@ -110,7 +95,7 @@ class SellerSettings(forms.ModelForm):
             }
         ),
     )
-    phone = forms.CharField(
+    business_phone_number = forms.CharField(
         label="Phone",
         widget=TextInput(
             attrs={
@@ -140,43 +125,19 @@ class SellerSettings(forms.ModelForm):
             }
         ),
     )
-    cardnumber = forms.CharField(
-        label="Card Number",
-        widget=TextInput(
-            attrs={
-                "class": "form-control",
-                "style": "max-width: 300px;",
-            }
-        ),
-    )
-    cvv = forms.CharField(
-        label="CVV",
-        widget=TextInput(
-            attrs={
-                "class": "form-control",
-                "style": "max-width: 300px;",
-            }
-        ),
-    )
-    expiry_date = forms.CharField(
-        label="Exp Date",
-        widget=TextInput(
-            attrs={
-                "class": "form-control",
-                "style": "max-width: 300px;",
-                "PlaceHolder": "MMYY",
-            }
-        ),
-    )
 
     class Meta:
         model = SellerInfo
         fields = [
             "businessname",
-            "phone",
+            "business_phone_number",
             "address",
-            "description",
-            "cardnumber",
-            "cvv",
-            "expiry_date",
+            "description"
         ]
+class searchrestaurant(forms.Form):
+    name = forms.CharField(max_length=100,
+                           widget= forms.TextInput
+                           (attrs={'placeholder':'Restaurants or Dishes'}), required=False, label='')
+    loc = forms.CharField(max_length=100,
+                           widget= forms.TextInput
+                           (attrs={'placeholder':'Location'}), required=False, label='')

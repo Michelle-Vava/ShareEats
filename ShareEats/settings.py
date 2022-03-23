@@ -88,7 +88,7 @@ WSGI_APPLICATION = 'ShareEats.wsgi.application'
 #         'PORT': '5432',
 #     }
 # }
-#
+
 if 'test' in sys.argv:
     # config for testing
     DATABASES = {
@@ -152,9 +152,14 @@ USE_TZ = True
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+STATIC_ROOT = os.path.join(PROJECT_ROOT, '/develop/static')
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = BASE_DIR / 'develop/static/'
+
+# stripe
+STRIPE_PUBLIC_KEY = 'pk_test_51KLzyLC6KJdG6nXQ5xuYYYKndAYSYW9mSc9SFDTglJaxbJfizQ8xG1m3n2jT9VaiXKFOI8FpuseEFvdyLAphuFS600UjVEBK4b'
+STRIPE_SECRET_KEY ='sk_test_51KLzyLC6KJdG6nXQ5nPCdw37zF1BY7YzzQsDLsOjKTSVT0DtkXg3FSX3L9UGeQfMTbLxsIxjcBHoZs1N8ZN5N3tD00wVwOEHRE'
+STRIPE_WEBHOOK_SECRET = ''
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -162,7 +167,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGGING = {}
 # user is directed to the dashboard when they successfully log in
-LOGIN_REDIRECT_URL = '/option'
+LOGIN_REDIRECT_URL = '/loginverification'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
+AUTH_USER_MODEL = 'develop.User'
 django_heroku.settings(locals())
