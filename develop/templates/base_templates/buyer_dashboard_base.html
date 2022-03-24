@@ -10,6 +10,9 @@
   <meta name="twitter:card" content="photo" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round|Open+Sans">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
     crossorigin="anonymous"></script>
@@ -19,12 +22,13 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
-  <link rel="stylesheet" type="text/css" href="../static/css/sidebar.css" />
+  <link rel="stylesheet" type="text/css" href="../../static/css/sidebar.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <div id="mySidebar" class="sidebar bg-white text-dark">
 
-  <a>Share Eats</a>
+  <a><img src="../../static/img/Share%20Eats%20Logo%20-%20Words%20Only.png"  width="160"
+     height="35"></a>
   <a onclick="location.href='{% url 'buyer dashboard' %}'"><i class="fa fa-home"></i> Dashboard</a>
   <a onclick="location.href='{% url 'favourites' %}'"><i class="fa fa-star"></i> Favourites</a>
   <a onclick="location.href='{% url 'order' %}'"><i class="fa fa-bars"></i> Order</a>
@@ -37,7 +41,7 @@
 
   <!-- Page content -->
 
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-white bg-white text-black">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
       aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -50,7 +54,7 @@
 
       </ul>
       <span class="navbar-item">
-        <a class="nav-link" href='{% url "seller info" %}'>Switch to Seller Account</a>
+        <a class="nav-link text-black" href='{% url "seller info" %}'>Switch to Seller Account</a>
       </span>
     </div>
 
@@ -59,8 +63,8 @@
 
 
     <span class="navbar-item">
-        <button type="button" class="btn btn-primary" onclick="location.href='{% url 'cart' %}'">
-  Cart <i class="fa fa-shopping-cart"></i> <span class="badge badge-light">{{ cartItems }}</span>
+        <button type="button" class="btn btn-light" onclick="location.href='{% url 'cart' %}'">
+  Cart <i class="fa fa-shopping-cart"></i> <span class="badge badge-light">Items: {{ cartItems }}</span>
 </button>
 
     </span>

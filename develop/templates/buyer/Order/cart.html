@@ -1,6 +1,18 @@
-{% extends 'buyer_dashboard_base.html' %}
+{% extends 'base_templates/buyer_dashboard_base.html' %}
 {% block content %}
+    <style>
 
+table.table td a.add {
+    color: #27C46B;
+}
+table.table td a.edit {
+    color: #FFC107;
+}
+table.table td a.delete {
+    color: #E34724;
+}
+
+</style>
 <div class="container bg-white text-dark border border-dark">
 <br>
     <a  class="btn btn-outline-dark" href="{% url 'buyer dashboard' %}">&#x2190; Continue Shopping</a>
@@ -19,14 +31,13 @@
 </div>
    <br>
 <div class="container bg-white text-dark border border-dark">
-    <table class="table">
+    <table class="table table-hover">
         <thead>
     <tr>
         <th scope="col"><strong></strong></th>
       <th scope="col"><strong>Item</strong></th>
       <th scope="col"><strong>Price</strong></th>
       <th scope="col"><strong>Quantity</strong></th>
-      <th scope="col"><strong>Total</strong></th>
     </tr>
   </thead>
   <tbody>
@@ -39,13 +50,18 @@
   </th>
       <th>{{ item.product.product }}</th>
        <th>${{item.product.price}}</th>
-       <th>{{item.quantity}}</th>
-       <th>${{item.get_total}}</th>
+       <th>{{item.quantity}}
+       <a class="add" title="Increase" data-toggle="tooltip"><i class="material-icons">&#xE316;</i></a>
+                            <a class="delete" title="Decrease" data-toggle="tooltip"><i class="material-icons">&#xE313;</i></a> </th>
+</th>
 
       </tr>
   {% endfor %}
   </tbody>
     </table>
 </div>
+<script>
+
+</script>
 
 {% endblock %}

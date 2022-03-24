@@ -1,0 +1,37 @@
+{% extends 'base_templates/buyer_dashboard_base.html' %}
+{% block content %}
+<head>
+ <link rel="stylesheet" type="text/css" href="../../static/css/cooking-preloader.css" />
+</head>
+
+
+
+    <div class="container bg-white text-dark border border-dark">
+    <h1>Order in progress</h1>
+      <p>Your payment succeeded.</p>
+    <p>Seller has been notified of your order</p>
+        <br>
+
+    <div id="cooking">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div id=area>
+            <div id="sides">
+                <div id="pan"></div>
+                <div id="handle"></div>
+            </div>
+            <div id="pancake">
+                <div id="pastry"></div>
+            </div>
+        </div>
+    </div>
+    <br>
+  <a  class="btn btn-outline-dark" href="{% url 'buyer dashboard' %}">&#x2190; Continue Shopping</a>
+        <br>
+ <a  class="btn btn-outline-dark" href="{% url 'order' %}">&#x2190; Review Order </a>
+    </div>
+
+{% endblock %}
