@@ -18,7 +18,6 @@ from develop.forms import (
     SellerSettings, VerifyForm, UserCreationForm
 )
 from develop.models import BuyerInfo, SellerInfo, Product, Order, Cart, Purchase
-
 from .forms import searchrestaurant
 
 """
@@ -29,16 +28,17 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 # take user to stripe checkout
 def CreateCheckoutSessionView(request):
-    order = Cart.objects.get(user=request.user)
+    order = Cart.objects.filter(user=request.user)
+    line_items_list = []
+    for i in order:
+        line_items_list.append({'price': i.product.stripe_price_id,
+                                'quantity': i.quantity})
+
     YOUR_DOMAIN = "http://127.0.0.1:7000"  # change in production #changes to 8000
     checkout_session = stripe.checkout.Session.create(
         payment_method_types=['card'],
-        line_items=[
-            {
-                'price': order.product.stripe_price_id,
-                'quantity': order.quantity,
-            },
-        ],
+
+        line_items=line_items_list,
         mode='payment',
         success_url=YOUR_DOMAIN + '/success/',
         cancel_url=YOUR_DOMAIN + '/cancel/',
@@ -48,7 +48,7 @@ def CreateCheckoutSessionView(request):
 
 # for canceling the order
 class CancelView(TemplateView):
-    template_name = "buyer/cancel.html"
+    template_name = "buyer/Order/cancel.html"
 
 
 # for successful the order
@@ -56,17 +56,13 @@ def Success(request):
     userdetails = BuyerInfo.objects.get(user=request.user)
     cart = Cart.objects.filter(order=Order.objects.get(user=request.user, complete=False), user=request.user,
                                buyer=BuyerInfo.objects.get(user=request.user))
-    completed_order = Purchase()
-    completed_order.quantity = cart.first().quantity
-    completed_order.seller_price = cart.first().product.price
-    completed_order.product = cart.first().product
-    completed_order.order = cart.first().order
-    completed_order.save()
+    for i in cart:
+        Purchase.objects.create(quantity=i.quantity, seller_price=i.product.price, product=i.product, order=i.order)
     cart.delete()
     Order.objects.filter(user=request.user, complete=False).update(complete=True)
 
     context = {"userdetails": userdetails}
-    return render(request, "buyer/success.html", context)
+    return render(request, "buyer/Order/success.html", context)
 
 
 # home view
@@ -78,7 +74,7 @@ def home(request):
 
 # ability for user to select buyer or seller option
 def buyer_seller_option(request):
-    return render(request, "buyer-or-seller-option.html")
+    return render(request, "base_templates/buyer-or-seller-option.html")
 
 
 # login verification using twilio
@@ -219,7 +215,7 @@ def order(request):
     recent = Purchase.objects.filter(order=orders)
     context = {"userdetails": userdetails, "orders": orders, "recent": recent}
 
-    return render(request, "buyer/order.html", context)
+    return render(request, "buyer/Order/order.html", context)
 
 
 # favourites page
@@ -330,7 +326,6 @@ def buyer_settings(request):
         user_details = BuyerInfo.objects.get(user=request.user)
         firstname = user_details.firstname
         lastname = user_details.lastname
-        phone = user_details.business_phone_number
         initial = {"firstname": firstname, "lastname": lastname, "business_phone_number": phone}
         filled_form = BuyerSettings(initial=initial)
         context = {"userdetails": userdetails, "settings": filled_form}
@@ -344,7 +339,6 @@ def buyer_settings(request):
             buyer.id = BuyerInfo.objects.get(user=request.user).id
             buyer.firstname = filled_form.cleaned_data["firstname"]
             buyer.lastname = filled_form.cleaned_data["lastname"]
-            buyer.phone = filled_form.cleaned_data["business_phone_number"]
             buyer.membership = True
             buyer.save()
             return HttpResponseRedirect("dashboard")
@@ -359,17 +353,7 @@ def buyer_settings(request):
 def restaurants(request):
     user_details = SellerInfo.objects.all()
     context = {"userdetails": user_details}
-    return render(request, "buyer/restaurants.html", context)
-
-
-
-
-
-
-
-
-
-
+    return render(request, "buyer/Restaurant/restaurants.html", context)
 
 
 # adding item to cart
@@ -380,13 +364,13 @@ def add_cart(request):
 
     item = post_data["product"]
     quantity = post_data["quantity"]
-    # action = post_data["action"]
-    productname = Product.objects.get(product=item)
+    product = Product.objects.get(product=item)
 
     orderdetails, created = Order.objects.get_or_create(user=request.user,
                                                         buyer=BuyerInfo.objects.get(user=request.user),
                                                         complete=False)
-    orderItem, created = Cart.objects.get_or_create(user=request.user, order=orderdetails, product=productname,
+
+    orderItem, created = Cart.objects.get_or_create(user=request.user, order=orderdetails, product=product,
                                                     buyer=BuyerInfo.objects.get(user=request.user),
                                                     quantity=quantity
                                                     )
@@ -443,26 +427,57 @@ def cart(request):
         cartItems = order['get_cart_items']
 
     context = {'items': items, 'order': order, "userdetails": userdetails, 'cartItems': cartItems}
-    return render(request, 'buyer/cart.html', context)
+    return render(request, 'buyer/Order/cart.html', context)
+
+
+@csrf_exempt
+def menu(request):
+    post_data = json.loads(request.body.decode("utf-8"))
+    businessname = post_data["businessname"]
+    request.session['businessname'] = businessname  # set 'businessname' in the session
+    return JsonResponse({"code": 200})
+
+
+def menu_page(request):
+    token = request.session['businessname']  # get 'token' from the session
+    # renew session : request.session.pop('token', None)
+    seller_details = SellerInfo.objects.get(businessname=token)
+    food_details = Product.objects.filter(seller=seller_details)
+    if Order.objects.filter(user=request.user, complete=False).exists():
+        order = Order.objects.get(user=request.user, complete=False)
+        cartItems = order.get_cart_items
+    else:
+        order = {'get_cart_total': 0, 'get_cart_items': 0}
+        cartItems = order['get_cart_items']
+    context = {'item': token, 'seller': seller_details, 'food': food_details, 'cartItems': cartItems}
+    return render(request, "buyer/Restaurant/menu.html", context)
 
 
 def restaurants(request):
+    if Order.objects.filter(user=request.user, complete=False).exists():
+        order = Order.objects.get(user=request.user, complete=False)
+        cartItems = order.get_cart_items
+    else:
+        order = {'get_cart_total': 0, 'get_cart_items': 0}
+        cartItems = order['get_cart_items']
     if request.method != "POST":
         form = searchrestaurant()
         FinalList = SellerInfo.objects.all()
-        return render(request, "buyer/restaurants.html", {"form": form, "list": FinalList})
+        return render(request, "buyer/Restaurant/restaurants.html",
+                      {"form": form, "list": FinalList, 'cartItems': cartItems})
     elif request.method == "POST":
         filledform = searchrestaurant(request.POST)
         if filledform.is_valid():
             if filledform["name"].value() == "" and filledform["loc"].value() == "":
                 prelistbyres = SellerInfo.objects.all()
             else:
-                prelistbyres = SellerInfo.objects.filter(businessname__icontains = filledform["name"].value(), address__icontains = filledform["loc"].value())
-            if filledform["name"].value()!="":
-                prelistbydish = Product.objects.filter(product__icontains = filledform["name"].value())
+                prelistbyres = SellerInfo.objects.filter(businessname__icontains=filledform["name"].value(),
+                                                         address__icontains=filledform["loc"].value())
+            if filledform["name"].value() != "":
+                prelistbydish = Product.objects.filter(product__icontains=filledform["name"].value())
 
             listbydish = []
-            if filledform["name"].value()!="":
+            if filledform["name"].value() != "":
                 for i in prelistbydish:
                     if filledform["loc"].value() in i.seller.address:
                         listbydish.append(i.seller)
@@ -472,11 +487,12 @@ def restaurants(request):
             FinalList = listbyres + listbydish
             FinalList = list(dict.fromkeys(FinalList))
 
-            return render(request, "buyer/restaurants.html", {"form": filledform, "list": FinalList})
+            return render(request, "buyer/Restaurant/restaurants.html",
+                          {"form": filledform, "list": FinalList, 'cartItems': cartItems})
         else:
             for msg in filledform.errors:
                 print(filledform.errors[msg])
                 form = searchrestaurant()
                 FinalList = SellerInfo.objects.all()
-                return render(request, "buyer/restaurants.html", {"form": form, "list": FinalList})
-
+                return render(request, "buyer/Restaurant/restaurants.html",
+                              {"form": form, "list": FinalList, 'cartItems': cartItems})
