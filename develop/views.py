@@ -111,6 +111,7 @@ def sign_up(request):
 # verification using Twilio
 @login_required
 def verify_code(request):
+    User = request.user
     if request.method == 'POST':
         form = VerifyForm(request.POST)
         if form.is_valid():
@@ -121,7 +122,8 @@ def verify_code(request):
                 return redirect('option')
         else:
             form = VerifyForm()
-            return render(request, 'twilio/verify.html', {'form': form})
+            context = {'form': form}
+            return render(request, 'twilio/verify.html', context)
     else:
         form = VerifyForm()
         return render(request, 'twilio/verify.html', {'form': form})
@@ -326,7 +328,7 @@ def buyer_settings(request):
         user_details = BuyerInfo.objects.get(user=request.user)
         firstname = user_details.firstname
         lastname = user_details.lastname
-        initial = {"firstname": firstname, "lastname": lastname, "business_phone_number": phone}
+        initial = {"firstname": firstname, "lastname": lastname}
         filled_form = BuyerSettings(initial=initial)
         context = {"userdetails": userdetails, "settings": filled_form}
         return render(request, "buyer/buyer_settings.html", context)

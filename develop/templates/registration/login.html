@@ -1,13 +1,25 @@
 {%  extends 'base_templates/base.html' %}
 {% block content %}
 {% load crispy_forms_tags %}
-
+<style>
+    .alert {
+   display:inline-block;
+        position: center;
+        width:300px;
+         left: 40%;
+}
+    body, h1, h2, h3, h4, h5, h6  {
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+</style>
      <div class="d-flex justify-content-center">
 <h2><i class="fa fa-shopping-bag"></i> Login</h2>
 
+     <br>
 </div>
-      <div class=" alert alert-warning w-300"  role="alert">
-  * : indicates it is a required field.
+<br>
+          <div class=" alert alert-warning "  role="alert">
+  * : &nbsp; indicates it is a required field.
 </div>
      <br>
      <div class="container d-flex justify-content-center">
@@ -16,13 +28,14 @@
   {% csrf_token %}
   {{ form | crispy  }}
     <div class="container d-flex justify-content-center">
-        <button class="btn btn-primary mb-2" type="submit">Login</button>
+        <button class="btn btn-light mb-2" type="submit">Login</button>
     </div>
 
 </form>
 </div>
      <br>
 <div class="d-flex justify-content-center">
-    Don't have an account? <a href='{% url "sign up" %}'><strong>  Sign Up Here!</strong></a>
+    Don't have an account? <a href='{% url "sign up" %}'><strong> &nbsp; Sign Up Here!</strong></a>
 </div>
+    <br>
 {% endblock %}
