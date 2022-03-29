@@ -26,16 +26,26 @@ class SellerInfoForm(forms.ModelForm):
         widgets = {
             "name": TextInput(
                 attrs={
+                    "label": "Business Name",
                     "class": "form-control",
-                    "style": "max-width: 300px;",
+                    "style": "max-width: 400px;",
                     "placeholder": "BusinessName",
                 }
             ),
-            "email": TextInput(
+            "Address": TextInput(
                 attrs={
+                    "label": "Address",
                     "class": "form-control",
-                    "style": "max-width: 300px;",
-                    "placeholder": "Email",
+                    "style": "max-width: 400px;",
+                    "placeholder": "Address",
+                }
+            ),
+            "description": TextInput(
+                attrs={
+                    "label": "Description",
+                    "class": "form-control",
+                    "style": "max-width: 400px;",
+                    "placeholder": "Description",
                 }
             ),
         }
@@ -134,10 +144,12 @@ class SellerSettings(forms.ModelForm):
             "address",
             "description"
         ]
+
+
 class searchrestaurant(forms.Form):
     name = forms.CharField(max_length=100,
-                           widget= forms.TextInput
-                           (attrs={'placeholder':'Restaurants or Dishes'}), required=False, label='')
+                           widget=forms.TextInput
+                           (attrs={'placeholder': 'Restaurants or Dishes'}), required=False, label='')
     loc = forms.CharField(max_length=100,
-                           widget= forms.TextInput
-                           (attrs={'placeholder':'Location'}), required=False, label='')
+                          widget=forms.TextInput
+                          (attrs={'placeholder': 'Location'}), required=False, label='')

@@ -2,10 +2,26 @@
 {% load crispy_forms_filters %}
 
 {% block content %}
-  <h1>Verify your account</h1>
+{% load crispy_forms_tags %}
+    <style>
+      body, h1, h2, h3, h4, h5, h6  {
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+    </style>
+    <br>
+    <div class="d-flex justify-content-center">
+  <h2>Verify your account</h2></div>
+    <br>
+<div class="d-flex justify-content-center">
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p   }}
+    {{ form | crispy   }}
+      <br>
+         <div class="d-flex justify-content-center">
     <button type="submit" class="btn btn-warning">Verify</button>
+             </div>
   </form>
+</div>
+    <br>
+
 {% endblock %}

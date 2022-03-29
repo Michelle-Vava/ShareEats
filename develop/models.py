@@ -12,7 +12,7 @@ from django.db import models
 # python manage.py migrate
 # python  manage.py makemigrations
 class User(AbstractUser):
-    phone = models.TextField(max_length=20, blank=False)
+    phone = models.TextField(max_length=11, blank=False)
     is_verified = models.BooleanField(default=False)
 
 
