@@ -1,0 +1,29 @@
+.stats_combined {
+    position: relative;
+    z-index: 1;
+    right: -120px;
+    filter: blur(8px);
+}
+
+.premium_image {
+    position: relative;
+    z-index: 2;
+    top: -632px;
+    right: -535px;
+}
+
+.sub_button {
+    background: #fbc226;
+    border-color: #fbc226;
+    font-size: 24px;
+    color: white;
+    position: relative;
+    z-index: 3;
+    top: -790px;
+    right: -822px;
+    width: 265px;
+    height: 68px;
+}
+
+body {
+}
