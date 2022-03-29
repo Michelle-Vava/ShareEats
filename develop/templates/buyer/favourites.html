@@ -1,7 +1,53 @@
 {%  extends 'base_templates/buyer_dashboard_base.html' %}
 {% block content %}
-     <div class="container border py-3 my-3">
-        <h1>This is a heading</h1>
-        <p>This is a paragraph of text.</p>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="../../static/css/report.css" />
+    <link rel="stylesheet" type="text/css" href="../../static/css/subscribe modal.css" />
+    <script>
+	$(document).ready(function(){
+		$("#myModal").modal('show');
+	});
+</script>
+</head>
+    <br>
+
+    <div class="element_align">
+        <img src="../../static/img/Fav Combined No BG Resized.png" class="img-fluid" style="filter: blur(8px); z-index: 1;">
     </div>
+
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="left_panel">
+                        <img src="../../static/img/Ticket Icon Resized.png">
+                    </div>
+                        <div class="right_panel">
+                            <div class="modal-body">
+                                <br>
+                                <br>
+                                <p style="font-family: Arial; color: black; font-size: 28px; text-align: center">
+                                    <b>Coming Soon</b>
+                                </p>
+                                <p style="font-family: Arial; color: #707070; font-size: 17px; text-align: center">
+                                    This page is under construction <br> and is coming soon
+                                </p>
+                                <br>
+                                <div class="element_align">
+                                    <button type="button" class="btn btn-primary button_style">
+                                        <b>Notify Me</b>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 {% endblock %}
