@@ -8,9 +8,6 @@
         width:300px;
          left: 40%;
 }
-    body, h1, h2, h3, h4, h5, h6  {
-  font-family: "Segoe UI", Arial, sans-serif;
-}
 </style>
      <div class="d-flex justify-content-center">
 <h2><i class="fa fa-shopping-bag"></i> Login</h2>
@@ -33,7 +30,13 @@
 
 </form>
 </div>
+    <br>
+    <div class="d-flex justify-content-center">
+    Forgot Password?
+        <a href="{% url 'reset_password' %}" class="link-secondary"><strong>&nbsp; Reset Password.</strong></a>
+    </div>
      <br>
+
 <div class="d-flex justify-content-center">
     Don't have an account? <a href='{% url "sign up" %}'><strong> &nbsp; Sign Up Here!</strong></a>
 </div>

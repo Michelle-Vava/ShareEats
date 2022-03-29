@@ -12,6 +12,12 @@ Class-based views
 Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+
+1 - Submit email form                         //PasswordResetView.as_view()
+2 - Email sent success message                //PasswordResetDoneView.as_view()
+3 - Link to password Rest form in email       //PasswordResetConfirmView.as_view()
+4 - Password successfully changed message     //PasswordResetCompleteView.as_view()
+
 """
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
@@ -32,6 +38,8 @@ urlpatterns = [
     path('seller/settings', views.seller_settings, name='seller settings'),
     path('seller/additem', views.add_item, name='add product'),
     path('seller/edititem', views.edit_item, name='edit product'),
+    path('seller/item', views.item, name='item editing'),
+    path('seller/deleteitem', views.delete_food_item, name='delete food'),
     path('buyer/settings', views.buyer_settings, name='buyer settings'),
     path('buyer/orders', views.order, name='order'),
     path('buyer/adddishitem', views.add_item, name='adddish product'),
@@ -39,6 +47,21 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     # login for authentication
     path('', auth_views.LoginView.as_view(), name='login'),
+    path('reset_password/',
+         auth_views.PasswordResetView.as_view(template_name="registration/Password/password_reset.html"),
+         name="reset_password"),
+
+    path('reset_password_sent/',
+         auth_views.PasswordResetDoneView.as_view(template_name="registration/Password/password_reset_sent.html"),
+         name="password_reset_done"),
+
+    path('reset/<uidb64>/<token>/',
+         auth_views.PasswordResetConfirmView.as_view(template_name="registration/Password/password_reset_form.html"),
+         name="password_reset_confirm"),
+
+    path('reset_password_complete/',
+         auth_views.PasswordResetCompleteView.as_view(template_name="registration/Password/password_reset_done.html"),
+         name="password_reset_complete"),
     # logout for authentication
     path('logout', views.logout_view, name='logout'),
     # signing up for authentication

@@ -69,6 +69,21 @@
            document.getElementById('response').innerHTML = "Item added to cart" ;
       })
    }
+    function RemoveItem(){
+        var url = '/delete-cart/'
+      fetch(url, {
+        method: "POST",
+
+        credentials: "same-origin",
+        body: JSON.stringify({product: productId})
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+          location.reload()
+           document.getElementById('response').innerHTML = "Item added to cart" ;
+      })
+   }
    function IncreaseQuantity(){
         var url = '/delete-cart/'
       fetch(url, {
@@ -96,7 +111,11 @@
     document.getElementById('p').innerHTML = get_p;
     document.getElementsByName('product_image')[0].src = image_url;
    }
-
+$('#remove-item').on('click', function(){
+	  // $(this).parents("tr").remove();
+        var input = $(this).parents("tr").find('input[type="text"]');
+        console.log(JSON.stringify(input))
+	})
 $(document).ready(function(){
 	$('[data-toggle="tooltip"]').tooltip();
 	var actions = $("table td:last-child").html();
