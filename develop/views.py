@@ -18,7 +18,8 @@ from develop.forms import (
     SellerSettings, VerifyForm, UserCreationForm
 )
 from develop.models import BuyerInfo, SellerInfo, Product, Order, Cart, Purchase
-from .forms import searchrestaurant
+from .forms import searching_restaurants
+from .verify import send_message_to_seller
 
 """
 """
@@ -54,6 +55,8 @@ class CancelView(TemplateView):
 # for successful the order
 def Success(request):
     userdetails = BuyerInfo.objects.get(user=request.user)
+    to = '+19023188172'
+    send_message_to_seller(to)
     cart = Cart.objects.filter(order=Order.objects.get(user=request.user, complete=False), user=request.user,
                                buyer=BuyerInfo.objects.get(user=request.user))
     for i in cart:
@@ -77,9 +80,10 @@ def buyer_seller_option(request):
     return render(request, "base_templates/buyer-or-seller-option.html")
 
 
+# get phone number as string : client.phone.as_e164
 # login verification using twilio
 def login_verify_code(request):
-    verify.send(request.user.phone)
+    verify.send(request.user.phone.as_e164)
     return redirect('verify')
 
 
@@ -116,7 +120,7 @@ def verify_code(request):
         form = VerifyForm(request.POST)
         if form.is_valid():
             code = form.cleaned_data.get('code')
-            if verify.check(request.user.phone, code):
+            if verify.check(request.user.phone.as_e164, code):
                 request.user.is_verified = True
                 request.user.save()
                 return redirect('option')
@@ -168,6 +172,40 @@ def editmenu(request):
     return render(request, "seller/editmenu.html", context)
 
 
+# remove item from edit menu page
+def delete_food_item(request):
+    token = request.session['product_item']  # get 'token' from the session
+    Product.objects.get(product=token).delete()
+    return render(request, "seller/editmenu.html")
+
+
+# edit item on the edit menu page
+def item(request):
+    token = request.session['product_item']  # get 'token' from the session
+    # renew session : request.session.pop('token', None)
+    print(token)
+    if request.method != "POST":
+        food_item = Product.objects.get(product=token)
+        p = food_item.product
+        price = food_item.price
+        category = food_item.category
+        servings = food_item.servings
+        image = food_item.image
+        context = {"product": p,
+                   "servings": servings,
+                   "price": price,
+                   "category": category
+            , "image": image}
+        form = DishInfoForm(initial=context)
+        context = {"editingform": form}
+        return render(request, "seller/editmenu.html", context)
+    else:
+        # Purchase.objects.create(quantity=i.quantity, seller_price=i.product.price, product=i.product, order=i.order)
+   # cart.delete()
+   # Order.objects.filter(user=request.user, complete=False).update(complete=True)
+        return HttpResponseRedirect("/seller/editmenu")
+
+
 # seller page settings
 def seller_settings(request):
     user_details = SellerInfo.objects.get(user=request.user)
@@ -215,7 +253,13 @@ def order(request):
     userdetails = BuyerInfo.objects.get(user=request.user)
     orders = Order.objects.filter(user=request.user, buyer=BuyerInfo.objects.get(user=request.user), complete=True)
     recent = Purchase.objects.filter(order=orders)
-    context = {"userdetails": userdetails, "orders": orders, "recent": recent}
+    if Order.objects.filter(user=request.user, complete=False).exists():
+        order = Order.objects.get(user=request.user, complete=False)
+        cartItems = order.get_cart_items
+    else:
+        order = {'get_cart_total': 0, 'get_cart_items': 0}
+        cartItems = order['get_cart_items']
+    context = {"userdetails": userdetails, "orders": orders, "recent": recent, 'cartItems': cartItems}
 
     return render(request, "buyer/Order/order.html", context)
 
@@ -253,6 +297,7 @@ def buyer_form(request):
 
 # seller form
 def seller_form(request):
+    global form
     if SellerInfo.objects.filter(user=request.user, membership=True).exists():
         return HttpResponseRedirect("/seller/dashboard")
     else:
@@ -272,7 +317,7 @@ def seller_form(request):
             else:
                 for msg in filled_form.errors:
                     print(filled_form.errors[msg])
-                return render(request, "seller/seller_form.html", {"form": filled_form})
+                return render(request, "seller/seller_form.html", {"sellerform": filled_form})
         else:
             form = SellerInfoForm
             return render(request, "seller/seller_form.html", {"sellerform": form})
@@ -315,9 +360,13 @@ def add_dish(request):
     return HttpResponseRedirect("/buyer/checkout")
 
 
-# ability to edit food item on seller page
+# ability to edit food item on seller page/edit menu
+@csrf_exempt
 def edit_item(request):
-    return HttpResponseRedirect("/seller/editmenu")
+    post_data = json.loads(request.body.decode("utf-8"))
+    productname = post_data["productname"]
+    request.session['product_item'] = productname  # set 'businessname' in the session
+    return JsonResponse({"code": 200})
 
 
 # settings for buyer page
@@ -388,10 +437,10 @@ def delete_cart(request):
     post_data = json.loads(request.body.decode("utf-8"))
     # https://stackoverflow.com/questions/61543829/django-taking-values-from-post-request-javascript-fetch-api
 
-    item_id = post_data["item_id"]
+    product_name = post_data["product"]
     user_id = request.user
 
-    Cart.objects.get(item_id=item_id, user_id=user_id).delete()
+    Cart.objects.get(product=Product.objects.get(product=product_name), user=user_id).delete()
 
     return JsonResponse({"code": 200})
 
@@ -463,12 +512,12 @@ def restaurants(request):
         order = {'get_cart_total': 0, 'get_cart_items': 0}
         cartItems = order['get_cart_items']
     if request.method != "POST":
-        form = searchrestaurant()
+        form = searching_restaurants()
         FinalList = SellerInfo.objects.all()
         return render(request, "buyer/Restaurant/restaurants.html",
                       {"form": form, "list": FinalList, 'cartItems': cartItems})
     elif request.method == "POST":
-        filledform = searchrestaurant(request.POST)
+        filledform = searching_restaurants(request.POST)
         if filledform.is_valid():
             if filledform["name"].value() == "" and filledform["loc"].value() == "":
                 prelistbyres = SellerInfo.objects.all()
@@ -494,7 +543,7 @@ def restaurants(request):
         else:
             for msg in filledform.errors:
                 print(filledform.errors[msg])
-                form = searchrestaurant()
+                form = searching_restaurants()
                 FinalList = SellerInfo.objects.all()
                 return render(request, "buyer/Restaurant/restaurants.html",
                               {"form": form, "list": FinalList, 'cartItems': cartItems})

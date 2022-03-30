@@ -1,15 +1,9 @@
 {%  extends 'base_templates/seller_dashboard_base.html' %}
+{% load crispy_forms_filters %}
 {% block content %}
 {% load crispy_forms_tags %}
     <br>
      <h1>Edit Menu</h1>
-<br>
-     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-  <strong>Page currently in Progress!</strong>
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
     <br>
     <div class="card" style="width: 10rem;">
   <img class="card-img-top" src="../static/img/add_item.png" alt="Card image cap">
@@ -52,6 +46,33 @@
 </div>
   </div>
 
+    <!-- Edit food Item Modal -->
+<div class="modal fade" id="edititem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form enctype="multipart/form-data"
+                class='form-control '
+                action="{% url 'item editing' %}"
+                method="post">
+              {% csrf_token %}
+              {{ editingform | crispy  }}
+
+              <input class="btn btn-warning" type="submit" value="Edit Product">
+
+          </form>
+          <br>
+           <button onclick="location.href='{% url 'delete food' %}'" class="btn btn-warning" >Remove item</button>
+      </div>
+
+    </div>
+  </div>
+</div>
 
     </div>
     <br>
@@ -67,7 +88,7 @@
         <p class="card-text">Price : $ {{ item.price }}</p>
        <p class="card-text">Quantity : {{ item.servings }}</p>
        <p class="card-text">Category : {{ item.category }}</p>
-        <a data-toggle="modal" data-target="#edititem" class="btn btn-warning">Edit</a>
+        <a data-productname="{{ item.product }}" class="btn btn-warning get-food-item">Edit</a>
         </div>
     </div>
 
@@ -75,36 +96,7 @@
 
     </div>
     </div>
-<!-- Edit food Item Modal -->
-    <div class="modal fade" id="edititem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-         <div class="container-fluid">
-               <div class="row">
-      <div class="col-md-3 ms-auto">
-           </div>
-          <div class="card" style="width: 18rem;">
-         <img class="card-img-top" src="../static/img/share-eats-logo@1x.png" alt="Card image cap">
-             This feature is under construction and coming soon....
-        </div>
 
-      </div>
-          </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-
-      </div>
-
-    </div>
-  </div>
-</div>
-
+<script type="text/javascript" src="../../static/js/editmenu.js "></script>
 {% endblock %}
 

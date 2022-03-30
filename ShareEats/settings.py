@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'develop',
     'crispy_forms',
+    'phonenumber_field',
 
 ]
 
@@ -158,9 +159,12 @@ MEDIA_ROOT = BASE_DIR / 'develop/static/'
 
 # stripe
 STRIPE_PUBLIC_KEY = 'pk_test_51KLzyLC6KJdG6nXQ5xuYYYKndAYSYW9mSc9SFDTglJaxbJfizQ8xG1m3n2jT9VaiXKFOI8FpuseEFvdyLAphuFS600UjVEBK4b'
-STRIPE_SECRET_KEY ='sk_test_51KLzyLC6KJdG6nXQ5nPCdw37zF1BY7YzzQsDLsOjKTSVT0DtkXg3FSX3L9UGeQfMTbLxsIxjcBHoZs1N8ZN5N3tD00wVwOEHRE'
+STRIPE_SECRET_KEY = 'sk_test_51KLzyLC6KJdG6nXQ5nPCdw37zF1BY7YzzQsDLsOjKTSVT0DtkXg3FSX3L9UGeQfMTbLxsIxjcBHoZs1N8ZN5N3tD00wVwOEHRE'
 STRIPE_WEBHOOK_SECRET = ''
 
+TWILIO_ACCOUNT_SID = 'ACf91579ced56697582b00416541947683'
+TWILIO_AUTH_TOKEN = '9a2f8474b329324195b3ec3432f23eba'
+TWILIO_PHONE_NUMBER = '+15134343957'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -171,3 +175,12 @@ LOGIN_REDIRECT_URL = '/loginverification'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 AUTH_USER_MODEL = 'develop.User'
 django_heroku.settings(locals())
+
+#SMTP Configuration
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'shareeats88@gmail.com'
+EMAIL_HOST_PASSWORD = 'jinja@348'
