@@ -28,6 +28,8 @@ class SellerInfo(models.Model):
     description = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     membership = models.BooleanField(default=False)
+    image = models.ImageField(upload_to='images', blank=True, null=True)
+
 
 
 # buyer table

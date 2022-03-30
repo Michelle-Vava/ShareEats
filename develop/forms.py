@@ -37,6 +37,7 @@ class SellerInfoForm(forms.ModelForm):
             "business_phone_number",
             "address",
             "description",
+            "image"
         ]
 
 

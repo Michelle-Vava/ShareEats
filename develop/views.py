@@ -311,6 +311,7 @@ def seller_form(request):
                 seller.address = filled_form.cleaned_data["address"]
                 seller.description = filled_form.cleaned_data["description"]
                 seller.membership = True
+                seller.image = filled_form.cleaned_data["image"]
                 seller.save()
                 return HttpResponseRedirect("/seller/dashboard")
 
