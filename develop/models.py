@@ -3,6 +3,8 @@ from django.core.validators import RegexValidator
 from django.db import models
 
 #  this is where we will add the tables for our database
+from phonenumber_field.modelfields import PhoneNumberField
+
 """
 
 """
@@ -11,16 +13,17 @@ from django.db import models
 # commands to remember :
 # python manage.py migrate
 # python  manage.py makemigrations
+# get phone number as string : client.phone.as_e164
 class User(AbstractUser):
-    phone = models.TextField(max_length=20, blank=False)
+    phone = PhoneNumberField(unique=False, null=False, blank=False)  # Here
     is_verified = models.BooleanField(default=False)
 
 
 # seller table
 class SellerInfo(models.Model):
     businessname = models.CharField(max_length=20)
-    phoneNumberRegex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
-    business_phone_number = models.CharField(validators=[phoneNumberRegex], max_length=16)
+    # phoneNumberRegex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
+    business_phone_number = PhoneNumberField(unique=False, null=True, blank=False)  # Here
     address = models.CharField(max_length=30)
     description = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -92,3 +95,4 @@ class Purchase(models.Model):
     seller_price = models.CharField(max_length=5)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
+    order_status = models.CharField(max_length=30, default='seller notified')

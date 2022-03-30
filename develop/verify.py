@@ -1,7 +1,9 @@
 from twilio.base.exceptions import TwilioRestException
 from twilio.rest import Client
 
-client = Client('ACf91579ced56697582b00416541947683', '9a2f8474b329324195b3ec3432f23eba')
+from ShareEats import settings
+
+client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 verify = client.verify.services('VA0c501788f7b23295ea6c712bf03bc607')
 
 
@@ -16,3 +18,17 @@ def check(phone, code):
         print('no')
         return False
     return result.status == 'approved'
+
+
+def send_message_to_seller(to):
+    # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    client.messages.create(
+        body='Hi,user has just purchased an item from you',
+        to=to, from_=settings.TWILIO_PHONE_NUMBER)
+
+
+def send_message_to_buyer(to):
+    # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    client.messages.create(
+        body='Thank you for purchasing an order on ShareEats,the vendor has been notified of your order',
+        to=to, from_=settings.TWILIO_PHONE_NUMBER)

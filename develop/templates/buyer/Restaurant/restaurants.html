@@ -1,4 +1,4 @@
-{%  extends 'buyer_dashboard_base.html' %}
+{%  extends 'base_templates/buyer_dashboard_base.html' %}
 {% block content %}
 
 
@@ -20,18 +20,19 @@
 {% for i in list %}
 
 <div class="card-deck">
-        <div class="card border-primary mb-3" style="max-width: 18rem;">
+        <div class="card border-primary rounded mb-3" style="max-width: 18rem;">
             {% load static %}
-            <img src="{% static 'develop/restaurant.jpg' %}" alt="My image">
+            <img src="../../static/img/share-eats-logo----fffcef@1x.png" alt="My image">
             <div class="card-body">
             <h5 class="card-title">{{ i.businessname }}</h5>
                 <p class="card-text-warning">{{ i.description }}</p>
                 <p class="card-text">Address : {{ i.address}}</p>
                 <p class="card-text">Phone : {{ i.phone }}</p>
-                <a href="#" class="btn btn-success">Buy</a>
+                <a data-business="{{ i.businessname }}" class="btn btn-success get-menu">View Menu</a>
             </div>
         </div>
 {% endfor %}
 </div>
 
+  <script type="text/javascript" src="../../static/js/restaurants.js "></script>
 {% endblock %}
