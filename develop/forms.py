@@ -28,7 +28,6 @@ class SellerInfoForm(forms.ModelForm):
                                             help_text='Phone number must be entered in the format: '
                                                       '+999999999. Up to 15 digits is allowed.')
     description = forms.CharField(widget=forms.Textarea, help_text='Enter the description of the business')
-    busiesssname = forms.CharField(help_text='Enter the name of the business/house')
     address = forms.CharField(help_text="Enter the address of the business/house")
 
     class Meta:
