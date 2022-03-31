@@ -46,7 +46,7 @@
 </div>
   </div>
 
-    <!-- Edit food Item Modal -->
+    {% comment %} <!-- Edit food Item Modal -->
 <div class="modal fade" id="edititem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -72,7 +72,7 @@
 
     </div>
   </div>
-</div>
+</div> {% endcomment %}
 
     </div>
     <br>
@@ -88,7 +88,42 @@
         <p class="card-text">Price : $ {{ item.price }}</p>
        <p class="card-text">Quantity : {{ item.servings }}</p>
        <p class="card-text">Category : {{ item.category }}</p>
-        <a data-productname="{{ item.product }}" class="btn btn-warning get-food-item">Edit</a>
+      <button type="button" class="btn btn-warning get-food-item" data-toggle="modal" data-productname="{{ item.product }}" data-target="#editItem">
+  Edit Item
+  {% comment %} #<a data-productname="{{ item.product }}" class="btn btn-warning get-food-item" >Edit Item</a> {% endcomment %}
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="editItem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit  </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+     <form enctype="multipart/form-data"
+                class='form-control '
+                action="{% url 'item editing' %}"
+                method="post">
+              {% csrf_token %}
+              {{ addform | crispy  }}
+
+              {% comment %} <input class="btn btn-warning" type="submit" value="Edit Product"> {% endcomment %}
+
+          </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+        {% comment %} <a data-productname="{{ item.product }}" class="btn btn-warning get-food-item" >Edit</a> {% endcomment %}
+        {% comment %} <button type="button" location. class="btn btn-warning get-food-item" data-toggle="modal" data-target="#edititem"> {% endcomment %}
+ {% comment %} Edit food item {% endcomment %}
+</button>
         </div>
     </div>
 
@@ -97,6 +132,7 @@
     </div>
     </div>
 
+
+
 <script type="text/javascript" src="../../static/js/editmenu.js "></script>
 {% endblock %}
-
