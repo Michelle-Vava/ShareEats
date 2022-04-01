@@ -1,6 +1,6 @@
 {%  extends 'base_templates/buyer_dashboard_base.html' %}
 {% block content %}
-
+{% load static %}
 
     <ul class="nav justify-content-center">
     <form class="form-inline my-2 my-lg-0" method="post">
@@ -21,13 +21,17 @@
 
 <div class="card-deck">
         <div class="card border-primary rounded mb-3" style="max-width: 18rem;">
-            {% load static %}
-            <img src="../../static/img/share-eats-logo----fffcef@1x.png" alt="My image">
+
+            {% if i.image %}
+                <img src= "{{i.image.url}}">
+            {% else %}
+                {% load static %}
+                <img src="{% static 'img/share-eats-logo----fffcef@1x.png' %}" alt="My image">
+            {% endif %}
             <div class="card-body">
-            <h5 class="card-title">{{ i.businessname }}</h5>
                 <p class="card-text-warning">{{ i.description }}</p>
                 <p class="card-text">Address : {{ i.address}}</p>
-                <p class="card-text">Phone : {{ i.phone }}</p>
+                <p class="card-text">Phone : {{ i.business_phone_number }}</p>
                 <a data-business="{{ i.businessname }}" class="btn btn-success get-menu">View Menu</a>
             </div>
         </div>

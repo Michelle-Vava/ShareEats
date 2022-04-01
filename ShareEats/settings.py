@@ -13,11 +13,14 @@ import os
 import sys
 from pathlib import Path
 import django_heroku
+from os.path import dirname, abspath
+BASE_DIR = Path(__file__).resolve().parent.parent #dirname(dirname(abspath(__file__)))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from django.views import static
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -108,26 +111,17 @@ if 'test' in sys.argv:
     }
 else:
     # Default configuration
-    # DATABASES = {
-    #     'default': {
-    #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #         'NAME': 'd7v8j1gf1115uk',
-    #         'USER': 'cauikhfxvaggth',
-    #         'PASSWORD': '3442684880261bc35b6f69efe8337896b0d9437b8f892f4349ef427e3b3b3be1',
-    #         'HOST': 'ec2-34-230-110-100.compute-1.amazonaws.com',
-    #         'PORT': '5432',
-    #     }
-    # }
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'demodb',
-            'USER': 'postgres',
-            'PASSWORD': 'israp2396',
-            'HOST': 'localhost',
+            'NAME': 'd7v8j1gf1115uk',
+            'USER': 'cauikhfxvaggth',
+            'PASSWORD': '3442684880261bc35b6f69efe8337896b0d9437b8f892f4349ef427e3b3b3be1',
+            'HOST': 'ec2-34-230-110-100.compute-1.amazonaws.com',
             'PORT': '5432',
         }
     }
+
 
 
 # Password validation
@@ -163,7 +157,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(PROJECT_ROOT, '/develop/static')
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / 'develop/static/'

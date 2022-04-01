@@ -302,7 +302,7 @@ def seller_form(request):
         return HttpResponseRedirect("/seller/dashboard")
     else:
         if request.method == "POST":
-            filled_form = SellerInfoForm(request.POST)
+            filled_form = SellerInfoForm(request.POST, request.FILES)
             if filled_form.is_valid():
                 seller = SellerInfo()
                 seller.user = request.user
