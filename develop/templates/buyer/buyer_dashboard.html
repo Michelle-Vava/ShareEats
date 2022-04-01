@@ -8,8 +8,15 @@
 <ul class="nav justify-content-center">
       <li class="nav-item">  <a class="nav-link" href='{% url 'buyer restaurants' %}'>Restaurants dashboard</a></li>
  <li class="nav-item">
-     <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search by Name" aria-label="Search">
+     <form class="form-inline my-2 my-lg-0", method="post">
+         {% for field in form %}
+        {% csrf_token %}
+        <label>
+        <div class="fieldWrapper", style = "padding: 10px 15px;">
+            {{ field }}
+        </div>
+        </label>
+        {% endfor %}
          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
   </li>

@@ -18,7 +18,7 @@ from develop.forms import (
     SellerSettings, VerifyForm, UserCreationForm
 )
 from develop.models import BuyerInfo, SellerInfo, Product, Order, Cart, Purchase
-from .forms import searching_restaurants
+from .forms import searching_restaurants, searching_dishes
 from .verify import send_message_to_seller
 
 """
@@ -135,17 +135,40 @@ def verify_code(request):
 
 # buyer dashboard
 def buyer_dashboard(request):
-    dishes = Product.objects.all()
-    userdetails = BuyerInfo.objects.get(user=request.user)
-    if Order.objects.filter(user=request.user, complete=False).exists():
-        order = Order.objects.get(user=request.user, complete=False)
-        cartItems = order.get_cart_items
-    else:
-        order = {'get_cart_total': 0, 'get_cart_items': 0}
-        cartItems = order['get_cart_items']
 
-    context = {"dishes": dishes, "userdetails": userdetails, 'cartItems': cartItems}
-    return render(request, "buyer/buyer_dashboard.html", context)
+    if request.method!="POST":
+        dishes = Product.objects.all()
+        unfilledform = searching_dishes()
+        userdetails = BuyerInfo.objects.get(user=request.user)
+        if Order.objects.filter(user=request.user, complete=False).exists():
+            order = Order.objects.get(user=request.user, complete=False)
+            cartItems = order.get_cart_items
+        else:
+            order = {'get_cart_total': 0, 'get_cart_items': 0}
+            cartItems = order['get_cart_items']
+
+        context = {"dishes": dishes, "userdetails": userdetails, 'cartItems': cartItems, 'form': unfilledform}
+        return render(request, "buyer/buyer_dashboard.html", context)
+    else:
+        filledform = searching_dishes(request.POST)
+        if filledform.is_valid():
+            print(filledform["dishname"].value(), filledform["category"].value())
+            if filledform["dishname"].value() == "" and filledform["category"].value() == "":
+                disheslist = Product.objects.all()
+            else:
+                disheslist = Product.objects.filter(product__icontains=filledform["dishname"].value(),
+                                                         category__icontains=filledform["category"].value())
+
+        userdetails = BuyerInfo.objects.get(user=request.user)
+        if Order.objects.filter(user=request.user, complete=False).exists():
+            order = Order.objects.get(user=request.user, complete=False)
+            cartItems = order.get_cart_items
+        else:
+            order = {'get_cart_total': 0, 'get_cart_items': 0}
+            cartItems = order['get_cart_items']
+
+        context = {"dishes": disheslist, "userdetails": userdetails, 'cartItems': cartItems, 'form': filledform}
+        return render(request, "buyer/buyer_dashboard.html", context)
 
 
 # seller dashboard page
@@ -516,7 +539,7 @@ def restaurants(request):
         form = searching_restaurants()
         FinalList = SellerInfo.objects.all()
         return render(request, "buyer/Restaurant/restaurants.html",
-                      {"form": form, "list": FinalList, 'cartItems': cartItems})
+                      {"form": form, "Restaurants": FinalList, 'cartItems': cartItems})
     elif request.method == "POST":
         filledform = searching_restaurants(request.POST)
         if filledform.is_valid():
@@ -540,11 +563,11 @@ def restaurants(request):
             FinalList = list(dict.fromkeys(FinalList))
 
             return render(request, "buyer/Restaurant/restaurants.html",
-                          {"form": filledform, "list": FinalList, 'cartItems': cartItems})
+                          {"form": filledform, "Restaurants": FinalList, 'cartItems': cartItems})
         else:
             for msg in filledform.errors:
                 print(filledform.errors[msg])
                 form = searching_restaurants()
                 FinalList = SellerInfo.objects.all()
                 return render(request, "buyer/Restaurant/restaurants.html",
-                              {"form": form, "list": FinalList, 'cartItems': cartItems})
+                              {"form": form, "Restaurants": FinalList, 'cartItems': cartItems})
