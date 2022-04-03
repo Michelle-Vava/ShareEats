@@ -17,11 +17,12 @@
      </div>
     <br>
 <div class="container d-flex justify-content-center">
-<form action="{% url 'seller info' %}" method="post" >
+<form enctype="multipart/form-data" class="form-control" action="{% url 'seller info' %}" method="post">
     {% csrf_token %}
     {{ sellerform | crispy  }}
  <div class="d-flex justify-content-center">
-    <input type="submit" class="btn btn-light mb-2" value="Create Seller Profile">
+     <input class="btn btn-warning" type="submit" value="Create Seller Profile">
+{#    <input type="submit" class="btn btn-light mb-2" >#}
  </div>
 </form>
 </div>

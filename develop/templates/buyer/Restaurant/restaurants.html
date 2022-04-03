@@ -1,6 +1,6 @@
 {%  extends 'base_templates/buyer_dashboard_base.html' %}
 {% block content %}
-
+{% load static %}
 
     <ul class="nav justify-content-center">
     <form class="form-inline my-2 my-lg-0" method="post">
@@ -17,21 +17,40 @@
     </form>
     </ul>
 
-{% for i in list %}
 
-<div class="card-deck">
+
+
+<div class="container border ">
+<br>
+      <div class="row mt-5 justify-content-center">
+
+         {% for record in Restaurants %}
+             <div class="card-deck mx-2 mb-3">
         <div class="card border-primary rounded mb-3" style="max-width: 18rem;">
-            {% load static %}
-            <img src="../../static/img/share-eats-logo----fffcef@1x.png" alt="My image">
+            {% if record.image %}
+                <img src= "{{record.image.url}}">
+            {% else %}
+                {% load static %}
+                <img src="{% static 'img/share-eats-logo----fffcef@1x.png' %}" alt="My image">
+            {% endif %}
             <div class="card-body">
-            <h5 class="card-title">{{ i.businessname }}</h5>
-                <p class="card-text-warning">{{ i.description }}</p>
-                <p class="card-text">Address : {{ i.address}}</p>
-                <p class="card-text">Phone : {{ i.phone }}</p>
-                <a data-business="{{ i.businessname }}" class="btn btn-success get-menu">View Menu</a>
+            <h5  class="card-title">{{ record.businessname }}</h5>
+                <p class="card-text-warning">$ {{ record.description }}</p>
+                <p class="card-text">Address : {{ record.address}}</p>
+                <p class="card-text">Phone : {{ record.business_phone_number }}</p>
+                <a data-business="{{ record.businessname }}" class="btn btn-success get-menu">View Menu</a>
             </div>
-        </div>
-{% endfor %}
+            </div>
+             </div>
+
+
+         {% endfor %}
+
+         </div>
+
+    </div>
+
+
 </div>
 
   <script type="text/javascript" src="../../static/js/restaurants.js "></script>
