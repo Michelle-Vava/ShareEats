@@ -54,3 +54,8 @@ div.content {
     float: none;
   }
 }
+
+.link_style {
+  text-align: center;
+  color: #666666;
+}
