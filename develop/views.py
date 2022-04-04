@@ -251,7 +251,6 @@ def seller_settings(request):
         context = {"userdetails": user_details, "form": form}
         return render(request, "seller/seller_settings.html", context)
 
-
     else:
         filled_form = SellerSettings(request.POST)
         if filled_form.is_valid():
@@ -270,6 +269,45 @@ def seller_settings(request):
             context = {"userdetails": user_details, "form": filled_form}
             return render(request, "seller/seller_settings.html", context)
 
+# seller page personalsettings
+def seller_personalsettings(request):
+    user_details = SellerInfo.objects.get(user=request.user)
+
+    if request.method != "POST":
+        seller = SellerInfo.objects.get(user=request.user)
+        businessname = seller.businessname
+        phone = seller.business_phone_number
+        address = seller.address
+        description = seller.description
+        context = {
+            "businessname": businessname,
+            "business_phone_number": phone,
+            "address": address,
+            "description": description,
+            "userdetails": user_details
+        }
+
+        form = SellerSettings(initial=context)
+        context = {"userdetails": user_details, "form": form}
+        return render(request, "seller/seller_personalsettings.html", context)
+
+    else:
+        filled_form = SellerSettings(request.POST)
+        if filled_form.is_valid():
+            seller = SellerInfo()
+            seller.user = request.user
+            seller.id = SellerInfo.objects.get(user=request.user).id
+            seller.businessname = filled_form.cleaned_data["businessname"]
+            seller.business_phone_number = filled_form.cleaned_data["business_phone_number"]
+            seller.address = filled_form.cleaned_data["address"]
+            seller.description = filled_form.cleaned_data["description"]
+            seller.membership = True
+            seller.save()
+
+            return HttpResponseRedirect("/seller/dashboard")
+        else:
+            context = {"userdetails": user_details, "form": filled_form}
+            return render(request, "seller/seller_personalsettings.html", context)
 
 # order page
 def order(request):
