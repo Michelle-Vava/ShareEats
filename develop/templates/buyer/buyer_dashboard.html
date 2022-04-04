@@ -23,31 +23,31 @@
     </form>
   </div>
 
-
+<br>
 <div class="container-fluid border card_container justify-content-center">
     <div class="row justify-content-center">
         {% for item in dishes %}
             <div class="card-deck mx-2 mb-3">
-                <div class="card card_style mb-3" style="width: 22rem;">
+                <div class="card card_style mb-3" style="width: 19rem;">
         <img class="card-img-top" src="../../static/img/Food Item 1.jpg" alt="Card image cap">
         <div class="card-body">
             <div class="row card-title">
                 <h5 class="col">
-                    Food Name
+                    {{ item.product }}
                 </h5>
                 <h5 class="col" style="text-align: right">
-                    Price
+                    $ {{ item.price }}
                 </h5>
             </div>
             <p class="card-text">
-                Category
+                Category: {{ item.category }}
             </p>
             <div class="row">
                 <div class="col">
-                    Servings
+                    <i class="fa fa-user"></i> Servings : {{ item.servings }}
                 </div>
                 <div class="col" style="text-align: right">
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    <a href="#" class="btn btn-primary">Buy</a>
                 </div>
             </div>
         </div>
