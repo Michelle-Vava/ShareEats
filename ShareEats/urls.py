@@ -36,6 +36,7 @@ urlpatterns = [
     path('seller/dashboard', views.seller_dashboard, name='seller dashboard'),
     path('seller/editmenu', views.editmenu, name='edit menu'),
     path('seller/settings', views.seller_settings, name='seller settings'),
+    path('seller/personalsettings', views.seller_personalsettings, name='seller personalsettings'),
     path('seller/additem', views.add_item, name='add product'),
     path('seller/edititem', views.edit_item, name='edit product'),
     path('seller/item', views.item, name='item editing'),
