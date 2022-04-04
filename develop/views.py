@@ -221,15 +221,16 @@ def item(request):
                 stripe_update = True
 
             if stripe_update:
-                product = stripe.Product.create(name=dish.product, images=[dish.image])
-                dish.stripe_product_id = product.id
+                product = stripe.Product.modify(
+                    dish.stripe_product_id, name=dish.product, images=[dish.image]
+                )
                 stripe_price = stripe.Price.create(
                     unit_amount=int(unit_price),
                     currency="cad",
                     product=product.id,
                 )
                 dish.stripe_price_id = stripe_price.id
-                
+
             dish.save()
 
             return HttpResponseRedirect("/seller/editmenu")
