@@ -2,12 +2,14 @@
 {% load crispy_forms_filters %}
 {% block content %}
     {% load crispy_forms_tags %}
-     <h1>{{ userdetails.firstname }}</h1>
-<br>
-    <br>
-<ul class="nav justify-content-center">
-      <li class="nav-item">  <a class="nav-link" href='{% url 'buyer restaurants' %}'>Restaurants dashboard</a></li>
- <li class="nav-item">
+    <h1 style="font-family: Arial; font-size: 40px"><b> &ensp; Hello, {{ userdetails.firstname }}</b></h1>
+
+
+      <div class="nav-item">
+          <a class="nav-link" href='{% url 'buyer restaurants' %}'>Restaurants dashboard</a>
+      </div>
+
+ <div class="nav-item">
      <form class="form-inline my-2 my-lg-0", method="post">
          {% for field in form %}
         {% csrf_token %}
@@ -19,11 +21,54 @@
         {% endfor %}
          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
-  </li>
+  </div>
 
-</ul>
+
+<div class="container-fluid border card_container justify-content-center">
+    <div class="row justify-content-center">
+        {% for item in dishes %}
+            <div class="card-deck mx-2 mb-3">
+                <div class="card card_style mb-3" style="width: 22rem;">
+        <img class="card-img-top" src="../../static/img/Food Item 1.jpg" alt="Card image cap">
+        <div class="card-body">
+            <div class="row card-title">
+                <h5 class="col">
+                    Food Name
+                </h5>
+                <h5 class="col" style="text-align: right">
+                    Price
+                </h5>
+            </div>
+            <p class="card-text">
+                Category
+            </p>
+            <div class="row">
+                <div class="col">
+                    Servings
+                </div>
+                <div class="col" style="text-align: right">
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+        {% endfor %}
+    </div>
+</div>
+
+
+
+
+
+<br>
+    <br>
+<ul class="nav justify-content-center">
+
     <br>
     <br>
+<!--
      <div class="container border ">
 <br>
       <div class="row mt-5 justify-content-center">
@@ -47,6 +92,7 @@
          </div>
 
     </div>
+-->
     <!-- Modal -->
 <div class="modal fade" id="DishModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
