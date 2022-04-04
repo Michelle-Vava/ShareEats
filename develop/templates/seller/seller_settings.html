@@ -3,7 +3,51 @@
 
 {% load crispy_forms_tags %}
 {% block content %}
-     <h1>Seller Settings</h1>
+         <h1 style="font-family: Arial; font-size: 40px"><b> &ensp; Buyer Settings</b></h1>
+     <div class="container-fluid" style="float: left; padding: 40px">
+      <div class="row justify-content-between">
+        <div class="col-3 border" style="height: 850px; padding: 25px;  background: white">
+            <br>
+            <div class="container py-3 p_profile" style="background: #FBC226; height: 131px">
+                <a style="font-family: Arial; font-size: 20px">&nbsp;<i class="fa fa-building"></i><b>&nbsp; Business Profile & Payment</b></a>
+                <div class="container-fluid">
+                    <p style="font-size: 17px; color: #666666; word-break: break-word"> Edit business profiles/payments.<br> Update your changes.</p>
+                </div>
+            </div>
+            <br>
+            <div class="container py-3 p_profile" style="background: white; height: 131px">
+                <a style="font-family: Arial; font-size: 20px">&nbsp;<i class="fa fa-user"></i><b>&nbsp; Personal Profile</b></a>
+                <div class="container-fluid">
+                    <p style="font-size: 17px; color: #666666; word-break: break-word"> Edit your personal profile settings.<br> Update your changes.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col border" style="background: #f5f5f5; padding: 50px">
+            <p style="font-family: Arial; font-size: 30px;"><b>Business Profile and Payment</b></p>
+            <p style="font-family: Arial; font-size: 17px; color: #666666">
+                You can edit and change your business profile and payment details down below.
+            </p>
+
+            <form action="{% url 'seller settings' %}" method="post" >
+                {% csrf_token %}
+                {{form | crispy }}
+
+                <link rel="stylesheet" type="text/css" href="../static/css/button.css" />
+                <input id = "save" type="submit" value="Update">
+
+                <a id="cancel" href="dashboard"> Cancel </a>
+            </form>
+
+            <br>
+            <br>
+
+
+
+        </div>
+      </div>
+   </div>
+
+<!--
 <br>
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
   <strong>Page currently in Progress!</strong>
@@ -15,15 +59,7 @@
  <div class="container border py-3 my-3">
     <div class="form-row align-items-center">
         <div class="col-auto">
-            <form action="{% url 'seller settings' %}" method="post" >
-                {% csrf_token %}
-                {{form | crispy }}
 
-                <link rel="stylesheet" type="text/css" href="../static/css/button.css" />
-                <input id = "save" type="submit" value="Update">
-            
-                <a id="cancel" href="dashboard"> Cancel </a>
-            </form>
         </div>
       
     </div>
@@ -65,6 +101,8 @@
         
 
     </div>
+-->
+
 {% endblock %} {% endcomment %}
 
 
