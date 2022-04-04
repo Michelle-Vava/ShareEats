@@ -45,36 +45,7 @@
   </div>
 </div>
   </div>
-
-    {% comment %} <!-- Edit food Item Modal -->
-<div class="modal fade" id="edititem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form enctype="multipart/form-data"
-                class='form-control '
-                action="{% url 'item editing' %}"
-                method="post">
-              {% csrf_token %}
-              {{ editingform | crispy  }}
-
-              <input class="btn btn-warning" type="submit" value="Edit Product">
-
-          </form>
-          <br>
-           <button onclick="location.href='{% url 'delete food' %}'" class="btn btn-warning" >Remove item</button>
-      </div>
-
-    </div>
-  </div>
-</div> {% endcomment %}
-
-    </div>
+s    </div>
     <br>
     <div class="container-fluid border">
 
@@ -88,7 +59,7 @@
         <p class="card-text">Price : $ {{ item.price }}</p>
        <p class="card-text">Quantity : {{ item.servings }}</p>
        <p class="card-text">Category : {{ item.category }}</p>
-      <button type="button" class="btn btn-warning get-food-item" data-toggle="modal" data-productname="{{ item.product }} {{ item.servings }} {{item.price}} {{ item.category }} {{ item.image.url }}" data-target="#editItem">
+      <button type="button" class="btn btn-warning get-food-item" data-toggle="modal" data-productname="{{ item.product }} {{ item.servings }} {{item.price}} {{ item.category }} {{ item.image.url }} {{item.id}}" data-target="#editItem">
   Edit Item
   {% comment %} #<a data-productname="{{ item.product }}" class="btn btn-warning get-food-item" >Edit Item</a> {% endcomment %}
 </button>
@@ -140,6 +111,11 @@
                         {{ editform.image.errors }}
                         <label for="{{ form.image.id_for_label }}"></label>
                         {{ editform.image | as_crispy_field   }}
+                    </div>
+                    <div class="fieldWrapper" id = "id">
+                        {{ editform.id.errors }}
+                        <label for="{{ form.image.id_for_label }}"></label>
+                        {{ editform.id.as_hidden  }}
                     </div>
                     
               {% comment %} {{ addform | crispy  }} {% endcomment %}

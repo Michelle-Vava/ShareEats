@@ -67,13 +67,18 @@ class DishInfoForm(forms.ModelForm):
 
 
 class EditDishInfoForm(forms.ModelForm):
+    id = forms.IntegerField()
+
     class Meta:
         model = Product
         fields = ["product", "servings", "price", "category", "image"]
 
     def __init__(self, *args, **kwargs):
+        from django.forms.widgets import HiddenInput
+
         super(EditDishInfoForm, self).__init__(*args, **kwargs)
         self.fields["image"].required = False
+        self.fields["id"].widget = HiddenInput()
 
 
 class BuyerSettings(forms.ModelForm):
