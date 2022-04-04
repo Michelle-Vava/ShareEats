@@ -13,11 +13,14 @@ import os
 import sys
 from pathlib import Path
 import django_heroku
+from os.path import dirname, abspath
+BASE_DIR = Path(__file__).resolve().parent.parent #dirname(dirname(abspath(__file__)))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from django.views import static
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -119,6 +122,8 @@ else:
         }
     }
 
+
+
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -152,7 +157,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(PROJECT_ROOT, '/develop/static')
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / 'develop/static/'
