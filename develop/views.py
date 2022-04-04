@@ -206,7 +206,7 @@ def item(request):
         if filled_form.is_valid():
             token = filled_form.cleaned_data["id"]
             dish = Product.objects.get(Q(user=request.user), Q(id=token))
-            unit_price = float(dish.price) * 100
+
             if dish.product != filled_form.cleaned_data["product"]:
                 dish.product = filled_form.cleaned_data["product"]
                 stripe_update = True
@@ -221,13 +221,17 @@ def item(request):
                 stripe_update = True
 
             if stripe_update:
+
                 product = stripe.Product.modify(
                     dish.stripe_product_id, name=dish.product, images=[dish.image]
                 )
+                # activate new price
+                unit_price = float(dish.price) * 100
                 stripe_price = stripe.Price.create(
                     unit_amount=int(unit_price),
                     currency="cad",
                     product=product.id,
+                    transfer_lookup_key=True,
                 )
                 dish.stripe_price_id = stripe_price.id
 
