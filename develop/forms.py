@@ -37,6 +37,7 @@ class SellerInfoForm(forms.ModelForm):
             "business_phone_number",
             "address",
             "description",
+            "image"
         ]
 
 
@@ -142,3 +143,12 @@ class searching_restaurants(forms.Form):
     loc = forms.CharField(max_length=100,
                           widget=forms.TextInput
                           (attrs={'placeholder': 'Location'}), required=False, label='')
+
+
+class searching_dishes(forms.Form):
+    dishname = forms.CharField(max_length=100,
+                           widget=forms.TextInput
+                           (attrs={'placeholder': 'Dish Name'}), required=False, label='')
+    category = forms.CharField(max_length=100,
+                          widget=forms.TextInput
+                          (attrs={'placeholder': 'Category'}), required=False, label='')
