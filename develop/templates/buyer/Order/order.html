@@ -5,11 +5,24 @@
 {% extends 'base_templates/buyer_dashboard_base.html' %}
 {% block content %}
 
+
 <h1>YOUR ORDERS</h1>
 <br>
 
-<div class="container border ">
-  <p>{{today}}</p>
+<ul class="nav justify-content-center">
+  <li class="nav-item">
+    <a class="nav-link active" href="#Current">Current Orders</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#Past">Past Orders</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#Incomplete">Incomplete Orders</a>
+  </li>
+</ul>
+
+
+<div class="container border", id = "Current">
   <br>
   <h3>Current Orders</h3>
   <div class="row mt-5 justify-content-center">
@@ -19,7 +32,7 @@
         <!-- <img class="card-img-top" src="{{ product.image.url }}" alt="Card image cap"> -->
         <div class="card-body">
 
-          <h5 class="card-title">Order# {{ orderid }}</h5>
+          <h5 class="card-title">Order# {{ id }}</h5>
           {% for purchase, product in info %}
             
             <img class="card-img-top" src="{{ product.image.url }}" alt="Card image cap">
@@ -34,9 +47,10 @@
     </div>
     {% endfor %}
 
-
   <br>
-  <div class="row mt-5 justify-content-center">
+  
+  <div class="row mt-5 justify-content-center", id = "Past">
+    <h3>Past Orders</h3>
     {% for orderid, info in info_obj_complete.items %}
     <div class="card-deck mx-2 mb-3">
       <div class="card border-primary rounded mb-3" style="max-width: 18rem;">
@@ -57,12 +71,12 @@
       </div>
     </div>
     {% endfor %}
-
+  </div>
 
     <br>
 
-
-    <h3>Incomplete Orders</h3>
+  <div class="row mt-5 justify-content-center", id = "Incomplete">
+      <h3>Incomplete Orders</h3>
     <br>
     {% for id, details in info_obj_incomplete.items %}
     <div class="card-deck mx-2 mb-3">
