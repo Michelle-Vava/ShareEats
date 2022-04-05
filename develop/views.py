@@ -56,10 +56,10 @@ class CancelView(TemplateView):
 # for successful the order
 def Success(request):
     userdetails = BuyerInfo.objects.get(user=request.user)
-    to = '+19023188172'
-    send_message_to_seller(to)
     cart = Cart.objects.filter(order=Order.objects.get(user=request.user, complete=False), user=request.user,
                                buyer=BuyerInfo.objects.get(user=request.user))
+    to = cart.first().product.seller.business_phone_number.as_e164
+    send_message_to_seller(to)
     for i in cart:
         Purchase.objects.create(quantity=i.quantity, seller_price=i.product.price, product=i.product, order=i.order)
     cart.delete()
@@ -596,19 +596,21 @@ def add_cart(request):
     item = post_data["product"]
     quantity = post_data["quantity"]
     product = Product.objects.get(product=item)
-
-    orderdetails, created = Order.objects.get_or_create(user=request.user,
+    currentCart = Cart.objects.filter(user=request.user).first()
+    if currentCart is None or product.seller == currentCart.product.seller:
+        orderdetails, created = Order.objects.get_or_create(user=request.user,
+                                                            buyer=BuyerInfo.objects.get(user=request.user),
+                                                            complete=False)
+        orderItem, created = Cart.objects.get_or_create(user=request.user, order=orderdetails, product=product,
                                                         buyer=BuyerInfo.objects.get(user=request.user),
-                                                        complete=False)
+                                                        quantity=quantity
+                                                        )
+        orderItem.save()
 
-    orderItem, created = Cart.objects.get_or_create(user=request.user, order=orderdetails, product=product,
-                                                    buyer=BuyerInfo.objects.get(user=request.user),
-                                                    quantity=quantity
-                                                    )
+        return JsonResponse({"code": 200})
+    else:
 
-    orderItem.save()
-
-    return JsonResponse({"code": 200})
+        return JsonResponse({"code": 200})
 
 
 # deleting item from card

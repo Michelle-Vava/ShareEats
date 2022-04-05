@@ -29,6 +29,7 @@ class SellerInfoForm(forms.ModelForm):
                                                       '+999999999. Up to 15 digits is allowed.')
     description = forms.CharField(widget=forms.Textarea, help_text='Enter the description of the business')
     address = forms.CharField(help_text="Enter the address of the business/house")
+    image = forms.CharField(help_text="Optional.")
 
     class Meta:
         model = SellerInfo
@@ -147,8 +148,8 @@ class searching_restaurants(forms.Form):
 
 class searching_dishes(forms.Form):
     dishname = forms.CharField(max_length=100,
-                           widget=forms.TextInput
-                           (attrs={'placeholder': 'Dish Name'}), required=False, label='')
+                               widget=forms.TextInput
+                               (attrs={'placeholder': 'Dish Name'}), required=False, label='')
     category = forms.CharField(max_length=100,
-                          widget=forms.TextInput
-                          (attrs={'placeholder': 'Category'}), required=False, label='')
+                               widget=forms.TextInput
+                               (attrs={'placeholder': 'Category'}), required=False, label='')
