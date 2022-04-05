@@ -11,15 +11,15 @@
     <a class="nav-link active" href="{% url 'order' %}">Current Orders</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="{% url 'complete order' %}">Past Orders</a>
+    <a class="nav-link" href="{% url 'complete order' %}">Past Completed Orders</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="{% url 'incomplete order' %}">Incomplete Orders</a>
   </li>
 </ul>
-
+<h3>Past Completed Orders</h3>
   <div class="row mt-5 justify-content-center", id = "Past">
-    <h3>Past Orders</h3>
+
     {% for orderid, info in info_obj_complete.items %}
     <div class="card-deck mx-2 mb-3">
       <div class="card border-primary rounded mb-3" style="max-width: 18rem;">

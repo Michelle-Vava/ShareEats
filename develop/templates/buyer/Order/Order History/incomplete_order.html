@@ -11,7 +11,7 @@
     <a class="nav-link active" href="{% url 'order' %}">Current Orders</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="{% url 'complete order' %}">Past Orders</a>
+    <a class="nav-link" href="{% url 'complete order' %}">Past Completed Orders</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="{% url 'incomplete order' %}">Incomplete Orders</a>
@@ -19,9 +19,8 @@
 </ul>
 
 
-
+<h3>Incomplete Orders</h3>
   <div class="row mt-5 justify-content-center", id = "Incomplete">
-      <h3>Incomplete Orders</h3>
     <br>
     {% for id, details in info_obj_incomplete.items %}
     <div class="card-deck mx-2 mb-3">

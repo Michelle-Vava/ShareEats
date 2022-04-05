@@ -4,6 +4,7 @@ from django.db import models
 
 #  this is where we will add the tables for our database
 from phonenumber_field.modelfields import PhoneNumberField
+
 """
 
 """
@@ -28,7 +29,6 @@ class SellerInfo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     membership = models.BooleanField(default=False)
     image = models.ImageField(upload_to='images', null=True, blank=True)
-
 
 
 # buyer table
@@ -60,6 +60,7 @@ class Order(models.Model):
     buyer = models.ForeignKey(BuyerInfo, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False)
+    status = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.id)
