@@ -16,10 +16,11 @@
 }
 
 .buy_button {
-    background: #FBC226;
-    font-size: 12px;
-    color: white;
     text-align: center;
     width: 70px
+}
+
+.center_res {
+    margin-top: 10px;
 }
 

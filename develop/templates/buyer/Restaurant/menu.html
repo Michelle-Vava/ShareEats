@@ -1,24 +1,17 @@
 {%  extends 'base_templates/buyer_dashboard_base.html' %}
 {% block content %}
-    <button type="button" onclick="location.href='{% url 'buyer restaurants' %}'" class="btn btn-link">Return to Restaurant Dashboard</button>
-    <button type="button" onclick="location.href='{% url 'buyer dashboard' %}'" class="btn btn-link">Return to Buyer Dashboard</button>
-    <br>
+
 <h1 style="font-family: Arial; font-size: 40px"><b> Business Name : {{ seller.businessname }}</b></h1>
-
-
- <div class="nav-item">
-     <form class="form-inline my-2 my-lg-0", method="post">
-         {% for field in form %}
-        {% csrf_token %}
-        <label>
-        <div class="fieldWrapper", style = "padding: 10px 15px;">
-            {{ field }}
+<br>
+    <div class="row">
+        <div class="col-3 card_zoom" style="background: white; height: 40px;  text-align: center; margin-left: 20px">
+            <a onclick="location.href='{% url 'buyer restaurants' %}'" ><i class="fa fa-arrow-left center_res"></i><b> Return to Restaurant Dashboard</b></a>
         </div>
-        </label>
-        {% endfor %}
-         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
-  </div>
+        <div class="col-1" style="width: 10px"></div>
+        <div class="col-3 card_zoom" style="background: white; height: 40px;  text-align: center;">
+            <a onclick="location.href='{% url 'buyer dashboard' %}'" ><i class="fa fa-arrow-left center_res"></i><b> Return to Buyer Dashboard</b></a>
+        </div>
+    </div>
 
 <br>
 <div class="container-fluid border card_container justify-content-center">
@@ -34,10 +27,10 @@
                     {% endif %}
         <div class="card-body">
             <div class="row card-title">
-                <h5 class="col">
+                <h5 class="col" style="color: #FBC226; font-weight: bold">
                     {{ t.product }}
                 </h5>
-                <h5 class="col" style="text-align: right">
+                <h5 class="col" style="text-align: right; font-weight: bold; color: #666666">
                     $ {{ t.price }}
                 </h5>
             </div>
@@ -51,7 +44,10 @@
                 <div class="col" style="text-align: right">
                    <a id="buy" data-product="{{ t.product }}" data-action="add" data-price="{{ t.price }}"
                       data-quantity="{{ t.servings }}" data-toggle="modal" data-target="#DishModal"
-                      class="btn btn-success update-modal buy_button">Buy</a>
+                      class="btn btn-success update-modal buy_button card_zoom"
+                      style="background: #FBC226; border-color: #FBC226; color: white; font-size: 15px; font-weight: bold">
+                       Buy
+                   </a>
                 </div>
             </div>
         </div>

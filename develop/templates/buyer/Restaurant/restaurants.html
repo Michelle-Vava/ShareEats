@@ -2,7 +2,12 @@
 {% block content %}
 {% load static %}
 
-     <h1 style="font-family: Arial; font-size: 40px"><b> &ensp; Restaurants</b></h1>
+         <h1 style="font-family: Arial; font-size: 40px"><b> Restaurants</b></h1>
+
+    <br>
+    <div class="card_zoom" style="background: white; width: 250px; height: 40px;  text-align: center;">
+        <a onclick="location.href='{% url 'buyer dashboard' %}'" ><i class="fa fa-arrow-left center_res"></i><b> Return to Buyer Dashboard</b></a>
+    </div>
 
     <ul class="nav justify-content-center">
     <form class="form-inline my-2 my-lg-0" method="post">
@@ -19,7 +24,7 @@
     </form>
     </ul>
 
-
+<br>
 <div class="container-fluid border card_container justify-content-center">
     <div class="row justify-content-center">
         {% for record in Restaurants %}
@@ -36,7 +41,10 @@
             <p class="card-text-warning"><b>Description</b> : {{ record.description }}</p>
             <p class="card-text"><b>Address</b> : {{ record.address}}</p>
             <p class="card-text"><b>Phone</b> : {{ record.business_phone_number }}</p>
-            <a data-business="{{ record.businessname }}" class="btn btn-success get-menu">View Menu</a>
+            <a data-business="{{ record.businessname }}" class="btn btn-success get-menu card_zoom"
+            style="background: #FBC226; border-color: #FBC226; color: white; font-size: 15px; font-weight: bold">
+                View Menu
+            </a>
         </div>
     </div>
     </div>
