@@ -63,23 +63,6 @@
 </div>
 
 
-<!--
-    <div class="row mt-5 justify-content-center">
-             <div class="card-deck mx-2 mb-3">
-                 {% for t in food %}
-        <div class="card border-primary mb-3" style="max-width: 18rem;">
-            <img class="card-img-top" src="{{ t.image.url }}" alt="Card image cap">
-            <div class="card-body">
-            <h5  class="card-title">{{ t.product }}</h5>
-                <p class="card-text-warning"></p>
-                <p class="card-text" id="quantity" >Quantity : {{ t.servings }} </p>
-                <p class="card-text">Category : {{ t.category }} </p>
-                <a id="buy" data-product="{{ t.product }}" data-action="add" data-price="{{ t.price }}" data-quantity="{{ t.servings }}" data-toggle="modal" data-target="#DishModal" class="btn btn-success update-modal">Buy</a>
-            </div>
-            </div>
-                   {% endfor %}
-             </div>
--->
 <!-- Modal -->
 <div class="modal fade" id="DishModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">

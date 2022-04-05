@@ -46,36 +46,5 @@
 </div>
 
 
-
-<!--
-<div class="container border ">
-<br>
-      <div class="row mt-5 justify-content-center">
-
-         {% for record in Restaurants %}
-             <div class="card-deck mx-2 mb-3">
-        <div class="card border-primary rounded mb-3" style="max-width: 18rem;">
-            {% if record.image %}
-                <img src= "{{record.image.url}}">
-            {% else %}
-                {% load static %}
-                <img src="{% static 'img/share-eats-logo----fffcef@1x.png' %}" alt="My image">
-            {% endif %}
-            <div class="card-body">
-
-            </div>
-            </div>
-             </div>
-
-
-         {% endfor %}
-
-         </div>
-
-    </div>
-
-
-</div>
--->
   <script type="text/javascript" src="../../static/js/restaurants.js "></script>
 {% endblock %}
