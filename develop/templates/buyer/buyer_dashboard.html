@@ -1,47 +1,50 @@
-{%  extends 'base_templates/buyer_dashboard_base.html' %}
+{% extends 'base_templates/buyer_dashboard_base.html' %}
 {% load crispy_forms_filters %}
 {% block content %}
-    {% load crispy_forms_tags %}
-     <h1>{{ userdetails.firstname }}</h1>
+{% load crispy_forms_tags %}
+<h1>{{ userdetails.firstname }}</h1>
 <br>
-    <br>
+<br>
 <ul class="nav justify-content-center">
-      <li class="nav-item">  <a class="nav-link" href='{% url 'buyer restaurants' %}'>Restaurants dashboard</a></li>
- <li class="nav-item">
-     <form class="form-inline my-2 my-lg-0">
+  <li class="nav-item"> <a class="nav-link" href='{% url 'buyer restaurants' %}'>Restaurants dashboard</a></li>
+  <li class="nav-item">
+    <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2" type="search" placeholder="Search by Name" aria-label="Search">
-         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
   </li>
 
 </ul>
-    <br>
-    <br>
-     <div class="container border ">
 <br>
-      <div class="row mt-5 justify-content-center">
-         {% for item in dishes %}
-             <div class="card-deck mx-2 mb-3">
-        <div class="card border-primary rounded mb-3" style="max-width: 18rem;">
-            <img class="card-img-top" src="{{ item.image.url }}" alt="Card image cap">
-            <div class="card-body">
-            <h5  class="card-title">{{ item.product }}</h5>
-                <p class="card-text-warning">$ {{ item.price }}</p>
-                <p class="card-text" id="quantity" ><i class="fa fa-user"></i> Servings : {{ item.servings }}</p>
-                <p class="card-text">Category : {{ item.category }}</p>
-                <a id="buy" data-image="{{ item.image.url }}" data-product="{{ item.product }}" data-action="add" data-price="{{ item.price }}" data-quantity="{{ item.servings }}" data-toggle="modal" data-target="#DishModal" class="btn btn-success update-modal">Buy</a>
-            </div>
-            </div>
-             </div>
-
-
-         {% endfor %}
-
-         </div>
-
+<br>
+<div class="container border ">
+  <br>
+  <div class="row mt-5 justify-content-center">
+    {% for item in dishes %}
+    <div class="card-deck mx-2 mb-3">
+      <div class="card border-primary rounded mb-3" style="max-width: 18rem;">
+        <img class="card-img-top" src="{{ item.image.url }}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">{{ item.product }}</h5>
+          <p class="card-text-warning">$ {{ item.price }}</p>
+          <p class="card-text" id="quantity"><i class="fa fa-user"></i> Servings : {{ item.servings }}</p>
+          <p class="card-text">Category : {{ item.category }}</p>
+          <a id="buy" data-image="{{ item.image.url }}" data-product="{{ item.product }}" data-action="add"
+            data-price="{{ item.price }}" data-quantity="{{ item.servings }}" data-toggle="modal"
+            data-target="#DishModal" class="btn btn-success update-modal">Buy</a>
+        </div>
+      </div>
     </div>
-    <!-- Modal -->
-<div class="modal fade" id="DishModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+
+    {% endfor %}
+
+  </div>
+
+</div>
+<!-- Modal -->
+<div class="modal fade" id="DishModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -51,39 +54,45 @@
         </button>
       </div>
       <div class="modal-body">
-          <img src="" alt="..."  name="product_image" class="img-thumbnail">
-            <div class="container">
-  <div class="row">
-    <div class="col">
-     Product
-    </div>
-    <div class="col">
-      <strong><p id="output"></p></strong>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      Quantity :
-    </div>
-    <div class="col">
-      <strong><p id="quan"></p></strong>
-    </div>
+        <img src="" alt="..." name="product_image" class="img-thumbnail">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              Product
+            </div>
+            <div class="col">
+              <strong>
+                <p id="output"></p>
+              </strong>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              Quantity :
+            </div>
+            <div class="col">
+              <strong>
+                <p id="quan"></p>
+              </strong>
+            </div>
 
-  </div>
-                <div class="row">
-    <div class="col">
-      Price :
-    </div>
-    <div class="col">
-      <strong><p id="p"></p></strong>
-    </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              Price :
+            </div>
+            <div class="col">
+              <strong>
+                <p id="p"></p>
+              </strong>
+            </div>
 
-  </div>
-</div>
+          </div>
+        </div>
 
 
-            <p id="response"></p>
-           <button type="button"  class="btn btn-success update-cart" id="cart">Add to Cart</button>
+        <p id="response"></p>
+        <button type="button" class="btn btn-success update-cart" id="cart">Add to Cart</button>
       </div>
       <div class="modal-footer">
 

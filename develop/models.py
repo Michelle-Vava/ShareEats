@@ -4,7 +4,6 @@ from django.db import models
 
 #  this is where we will add the tables for our database
 from phonenumber_field.modelfields import PhoneNumberField
-
 """
 
 """
