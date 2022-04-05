@@ -1,13 +1,16 @@
 {%  extends 'base_templates/buyer_dashboard_base.html' %}
 {% load crispy_forms_filters %}
 {% block content %}
+    {% load static %}
     {% load crispy_forms_tags %}
-     <h1>{{ userdetails.firstname }}</h1>
+    <h1 style="font-family: Arial; font-size: 40px"><b>  Hello, {{ userdetails.firstname }}</b></h1>
+
 <br>
+      <div class="card_zoom" style="background: white; width: 200px; height: 40px;  text-align: center;">
+          <a onclick="location.href='{% url 'buyer restaurants' %}'" ><i class="fa fa-building center_res"></i><b> Restaurants</b></a>
+      </div>
     <br>
-<ul class="nav justify-content-center">
-      <li class="nav-item">  <a class="nav-link" href='{% url 'buyer restaurants' %}'>Restaurants dashboard</a></li>
- <li class="nav-item">
+ <div class="nav-item" style="margin-left: -14px;">
      <form class="form-inline my-2 my-lg-0", method="post">
          {% for field in form %}
         {% csrf_token %}
@@ -19,34 +22,62 @@
         {% endfor %}
          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
-  </li>
+  </div>
 
-</ul>
-    <br>
-    <br>
-     <div class="container border ">
 <br>
-      <div class="row mt-5 justify-content-center">
-         {% for item in dishes %}
-             <div class="card-deck mx-2 mb-3">
-        <div class="card border-primary rounded mb-3" style="max-width: 18rem;">
-            <img class="card-img-top" src="{{ item.image.url }}" alt="Card image cap">
-            <div class="card-body">
-            <h5  class="card-title">{{ item.product }}</h5>
-                <p class="card-text-warning">$ {{ item.price }}</p>
-                <p class="card-text" id="quantity" ><i class="fa fa-user"></i> Servings : {{ item.servings }}</p>
-                <p class="card-text">Category : {{ item.category }}</p>
-                <a id="buy" data-image="{{ item.image.url }}" data-product="{{ item.product }}" data-action="add" data-price="{{ item.price }}" data-quantity="{{ item.servings }}" data-toggle="modal" data-target="#DishModal" class="btn btn-success update-modal">Buy</a>
+<div class="container-fluid border card_container justify-content-center">
+    <div class="row justify-content-center">
+        {% for item in dishes %}
+            <div class="card-deck mx-2 mb-3">
+                <div class="card card_style mb-3 card_zoom" style="width: 19rem;">
+                    {% if item.image %}
+                        <img src= "{{ item.image.url }}">
+                    {% else %}
+                        {% load static %}
+                        <img src={% static 'img/Food Item Deafult.png' %}>
+                    {% endif %}
+        <div class="card-body">
+            <div class="row card-title">
+                <h5 class="col" style="color: #FBC226; font-weight: bold">
+                    {{ item.product }}
+                </h5>
+                <h5 class="col" style="text-align: right; font-weight: bold; color: #666666">
+                    <span style="color: #FBC226"> $ </span>  {{ item.price }}
+                </h5>
             </div>
+            <p class="card-text">
+                Category: {{ item.category }}
+            </p>
+            <div class="row">
+                <div class="col">
+                    <i class="fa fa-user"></i> Servings : {{ item.servings }}
+                </div>
+                <div class="col" style="text-align: right">
+                   <a id="buy" data-image="{{ item.image.url }}" data-product="{{ item.product }}" data-action="add"
+                      data-price="{{ item.price }}" data-quantity="{{ item.servings }}" data-toggle="modal"
+                      data-target="#DishModal" class="btn btn-success update-modal buy_button card_zoom"
+                      style="background: #FBC226; border-color: #FBC226; color: white; font-size: 15px; font-weight: bold">
+                       Buy
+                   </a>
+                </div>
             </div>
-             </div>
-
-
-         {% endfor %}
-
-         </div>
-
+        </div>
     </div>
+    </div>
+
+        {% endfor %}
+    </div>
+</div>
+
+
+
+<br>
+    <br>
+<ul class="nav justify-content-center">
+
+    <br>
+    <br>
+
     <!-- Modal -->
 <div class="modal fade" id="DishModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
