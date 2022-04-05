@@ -264,80 +264,35 @@ def seller_settings(request):
 
 # order page
 def order(request):
-
     userdetails = BuyerInfo.objects.filter(user=request.user)
-
-    info_dict_complete = {}
-    info_dict_incomplete = {}
     info_dict_current = {}
 
     current = datetime.datetime.now()
     today = current.day
 
     all_orders = Order.objects.filter(user=request.user, buyer=BuyerInfo.objects.get(user=request.user), complete=True)
-    incomplete_orders = Order.objects.filter(user=request.user, buyer=BuyerInfo.objects.get(user=request.user), complete = False)
+
     current_orders = []
 
     for orders in all_orders:
         if orders.timestamp.day == today:
             current_orders.append(orders)
 
-    # For complete orders
-    for order_object in all_orders:
-    
-        all_productid = []
-        purchasequery = Purchase.objects.filter(order_id=order_object.id)  # filtered purchase queryset for orderid 8,9,10,11
-        
-        all_purchaseobjects = []
-        for purchase_object in purchasequery:
-            
-            all_purchaseobjects.append(purchase_object)
-            all_productid.append(purchase_object.product_id)
-
-        all_productobjects = []
-    
-        for j in all_productid: # [3, 5, 5, 1, 4]
-            productobject = Product.objects.get(
-                id=j
-            )  # filtered queryset list where product id = filtered product ids
-            all_productobjects.append(productobject)
-
-        info_dict_complete[order_object.id] = zip(all_purchaseobjects, all_productobjects)
-
-
-    #For incomplete orders
-    for order_object in incomplete_orders:
-
-        productid = []  # product id where foreign key of order matches in product entity
-        cartquery = Cart.objects.filter(order_id = order_object.id) # filtered purchase queryset for orderid 12
-
-        cartobjects = []  # query objects for purchase entity
-        for cart_object in cartquery:
-            cartobjects.append(cart_object)
-            # orderobjects.append(order_object)
-            productid.append(cart_object.product_id)
-
-        productobjects = []
-        for j in productid:
-            productobjects.append(Product.objects.get(id = j))                         # filtered queryset list where product id = filtered product ids
-
-        info_dict_incomplete[order_object.id] = zip(cartobjects, productobjects)
-
     # For current orders
     for order_object in current_orders:
-    
+
         current_productid = []
-        purchasequery = Purchase.objects.filter(order_id=order_object.id)  # filtered purchase queryset for orderid 8,9,10,11
-        
+        purchasequery = Purchase.objects.filter(
+            order_id=order_object.id)  # filtered purchase queryset for orderid 8,9,10,11
+
         current_purchaseobjects = []
         for purchase_object in purchasequery:
-            
             current_purchaseobjects.append(purchase_object)
             current_productid.append(purchase_object.product_id)
 
         current_productobjects = []
-    
-        for j in current_productid: # [3, 5, 5, 1, 4]
+
+        for j in current_productid:  # [3, 5, 5, 1, 4]
             productobject = Product.objects.get(
                 id=j
             )  # filtered queryset list where product id = filtered product ids
@@ -357,14 +312,71 @@ def order(request):
         "userdetails": userdetails,
         "cartItems": cartItems,
         "all_orders": all_orders,
-        "info_obj_complete": info_dict_complete,
-        "info_obj_incomplete": info_dict_incomplete,
         "info_obj_current": info_dict_current,
         "curr_ord": current_orders,
         "today": today
     }
 
-    return render(request, "buyer/Order/order.html", context)
+    return render(request, "buyer/Order/Order History/order.html", context)
+
+
+def complete_order(request):
+    info_dict_complete = {}
+    userdetails = BuyerInfo.objects.get(user=request.user)
+
+    all_orders = Order.objects.filter(user=request.user, buyer=BuyerInfo.objects.get(user=request.user), complete=True)
+
+    # For complete orders
+    for order_object in all_orders:
+
+        all_productid = []
+        purchasequery = Purchase.objects.filter(
+            order_id=order_object.id)  # filtered purchase queryset for orderid 8,9,10,11
+
+        all_purchaseobjects = []
+        for purchase_object in purchasequery:
+            all_purchaseobjects.append(purchase_object)
+            all_productid.append(purchase_object.product_id)
+
+        all_productobjects = []
+
+        for j in all_productid:  # [3, 5, 5, 1, 4]
+            productobject = Product.objects.get(
+                id=j
+            )  # filtered queryset list where product id = filtered product ids
+            all_productobjects.append(productobject)
+
+        info_dict_complete[order_object.id] = zip(all_purchaseobjects, all_productobjects)
+
+    context = {"userdetails": userdetails, "info_obj_complete": info_dict_complete}
+    return render(request, "buyer/Order/Order History/completed_order.html", context)
+
+
+def incomplete_order(request):
+    info_dict_incomplete = {}
+    userdetails = BuyerInfo.objects.get(user=request.user)
+    incomplete_orders = Order.objects.filter(user=request.user, buyer=BuyerInfo.objects.get(user=request.user),
+                                             complete=False)
+    # For incomplete orders
+    for order_object in incomplete_orders:
+
+        productId = []  # product id where foreign key of order matches in product entity
+        cartquery = Cart.objects.filter(order_id=order_object.id)  # filtered purchase queryset for orderid 12
+
+        cartobjects = []  # query objects for purchase entity
+        for cart_object in cartquery:
+            cartobjects.append(cart_object)
+            # orderobjects.append(order_object)
+            productId.append(cart_object.product_id)
+
+        productobjects = []
+        for j in productId:
+            productobjects.append(
+                Product.objects.get(id=j))  # filtered queryset list where product id = filtered product ids
+
+        info_dict_incomplete[order_object.id] = zip(cartobjects, productobjects)
+    context = {"userdetails": userdetails, "info_obj_incomplete": info_dict_incomplete}
+    return render(request, "buyer/Order/Order History/incomplete_order.html", context)
 
 
 # favourites page
