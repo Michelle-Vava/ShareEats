@@ -3,9 +3,68 @@
     <button type="button" onclick="location.href='{% url 'buyer restaurants' %}'" class="btn btn-link">Return to Restaurant Dashboard</button>
     <button type="button" onclick="location.href='{% url 'buyer dashboard' %}'" class="btn btn-link">Return to Buyer Dashboard</button>
     <br>
+<h1 style="font-family: Arial; font-size: 40px"><b> Business Name : {{ seller.businessname }}</b></h1>
 
-    <h2> Business Name : {{ seller.businessname }}</h2>
-     <div class="row mt-5 justify-content-center">
+
+ <div class="nav-item">
+     <form class="form-inline my-2 my-lg-0", method="post">
+         {% for field in form %}
+        {% csrf_token %}
+        <label>
+        <div class="fieldWrapper", style = "padding: 10px 15px;">
+            {{ field }}
+        </div>
+        </label>
+        {% endfor %}
+         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+
+<br>
+<div class="container-fluid border card_container justify-content-center">
+    <div class="row justify-content-center">
+        {% for t in food %}
+            <div class="card-deck mx-2 mb-3">
+                <div class="card card_style mb-3 card_zoom" style="width: 19rem;">
+                    {% if item.image %}
+                        <img src= "{{ item.image.url }}">
+                    {% else %}
+                        {% load static %}
+                        <img src={% static 'img/Food Item Deafult.png' %}>
+                    {% endif %}
+        <div class="card-body">
+            <div class="row card-title">
+                <h5 class="col">
+                    {{ t.product }}
+                </h5>
+                <h5 class="col" style="text-align: right">
+                    $ {{ t.price }}
+                </h5>
+            </div>
+            <p class="card-text">
+                Category: {{ t.category }}
+            </p>
+            <div class="row">
+                <div class="col">
+                    <i class="fa fa-user"></i> Servings : {{ t.servings }}
+                </div>
+                <div class="col" style="text-align: right">
+                   <a id="buy" data-product="{{ t.product }}" data-action="add" data-price="{{ t.price }}"
+                      data-quantity="{{ t.servings }}" data-toggle="modal" data-target="#DishModal"
+                      class="btn btn-success update-modal buy_button">Buy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+        {% endfor %}
+    </div>
+</div>
+
+
+<!--
+    <div class="row mt-5 justify-content-center">
              <div class="card-deck mx-2 mb-3">
                  {% for t in food %}
         <div class="card border-primary mb-3" style="max-width: 18rem;">
@@ -20,6 +79,7 @@
             </div>
                    {% endfor %}
              </div>
+-->
 <!-- Modal -->
 <div class="modal fade" id="DishModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">

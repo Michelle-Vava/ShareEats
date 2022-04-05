@@ -1,6 +1,7 @@
 {%  extends 'base_templates/buyer_dashboard_base.html' %}
 {% load crispy_forms_filters %}
 {% block content %}
+    {% load static %}
     {% load crispy_forms_tags %}
     <h1 style="font-family: Arial; font-size: 40px"><b> &ensp; Hello, {{ userdetails.firstname }}</b></h1>
 
@@ -28,8 +29,13 @@
     <div class="row justify-content-center">
         {% for item in dishes %}
             <div class="card-deck mx-2 mb-3">
-                <div class="card card_style mb-3" style="width: 19rem;">
-        <img class="card-img-top" src="../../static/img/Food Item 1.jpg" alt="Card image cap">
+                <div class="card card_style mb-3 card_zoom" style="width: 19rem;">
+                    {% if item.image %}
+                        <img src= "{{ item.image.url }}">
+                    {% else %}
+                        {% load static %}
+                        <img src={% static 'img/Food Item Deafult.png' %}>
+                    {% endif %}
         <div class="card-body">
             <div class="row card-title">
                 <h5 class="col">
@@ -47,7 +53,11 @@
                     <i class="fa fa-user"></i> Servings : {{ item.servings }}
                 </div>
                 <div class="col" style="text-align: right">
-                    <a href="#" class="btn btn-primary">Buy</a>
+                   <a id="buy" data-image="{{ item.image.url }}" data-product="{{ item.product }}" data-action="add"
+                      data-price="{{ item.price }}" data-quantity="{{ item.servings }}" data-toggle="modal"
+                      data-target="#DishModal" class="btn btn-success update-modal buy_button card_zoom">
+                       Buy
+                   </a>
                 </div>
             </div>
         </div>
@@ -58,7 +68,7 @@
     </div>
 </div>
 
-
+<!--<img src="../../static/img/Food Item 1.png">-->
 
 
 
@@ -68,31 +78,7 @@
 
     <br>
     <br>
-<!--
-     <div class="container border ">
-<br>
-      <div class="row mt-5 justify-content-center">
-         {% for item in dishes %}
-             <div class="card-deck mx-2 mb-3">
-        <div class="card border-primary rounded mb-3" style="max-width: 18rem;">
-            <img class="card-img-top" src="{{ item.image.url }}" alt="Card image cap">
-            <div class="card-body">
-            <h5  class="card-title">{{ item.product }}</h5>
-                <p class="card-text-warning">$ {{ item.price }}</p>
-                <p class="card-text" id="quantity" ><i class="fa fa-user"></i> Servings : {{ item.servings }}</p>
-                <p class="card-text">Category : {{ item.category }}</p>
-                <a id="buy" data-image="{{ item.image.url }}" data-product="{{ item.product }}" data-action="add" data-price="{{ item.price }}" data-quantity="{{ item.servings }}" data-toggle="modal" data-target="#DishModal" class="btn btn-success update-modal">Buy</a>
-            </div>
-            </div>
-             </div>
 
-
-         {% endfor %}
-
-         </div>
-
-    </div>
--->
     <!-- Modal -->
 <div class="modal fade" id="DishModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
