@@ -43,6 +43,8 @@ urlpatterns = [
     path('seller/deleteitem', views.delete_food_item, name='delete food'),
     path('buyer/settings', views.buyer_settings, name='buyer settings'),
     path('buyer/orders', views.order, name='order'),
+    path('buyer/incompleteorders', views.incomplete_order, name='incomplete order'),
+    path('buyer/completeorders', views.complete_order, name='complete order'),
     path('buyer/adddishitem', views.add_item, name='adddish product'),
     path('buyer/favourites', views.favourites, name='favourites'),
     path('accounts/', include('django.contrib.auth.urls')),
