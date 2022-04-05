@@ -55,7 +55,13 @@ table.table td a.delete {
        <a class="add" title="Increase" data-toggle="tooltip"><i class="material-icons">&#xE316;</i></a>
                             <a class="delete" title="Decrease" data-toggle="tooltip"><i class="material-icons">&#xE313;</i></a> </th>
 </th>
-      <th><button class="btn btn-sm btn-primary" id="remove-item">Remove Test</button></th>
+      <th>
+      <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete" name="cart-item-del"><i class="fa fa-trash"></i></button>
+      {% comment %} <a class="btn btn-sm btn-primary" id="remove-item" href="#" role="button">RemoveLink</a></th> {% endcomment %}
+     {% comment %} <li class="list-inline-item">
+                                                    
+                                                </li> {% endcomment %}
+      {% comment %} <button class="btn btn-sm btn-primary" id="remove-item">Remove</button></th> {% endcomment %}
 
       </tr>
   {% endfor %}

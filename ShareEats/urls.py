@@ -79,6 +79,7 @@ urlpatterns = [
     path('menu/', views.menu, name='menu'),
     path('buyer/menu/', views.menu_page, name='menupage'),
     path("add-cart/", views.add_cart),
+    path("delete-cart-item/",views.delete_cart_item, name= 'cart-item-del'),
     path("delete-cart/", views.delete_cart),
     path("modify-item/", views.modify_cart),
     path("cart/", views.cart, name='cart'),

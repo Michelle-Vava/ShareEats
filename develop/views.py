@@ -505,6 +505,12 @@ def cart(request):
     return render(request, 'buyer/Order/cart.html', context)
 
 
+def delete_cart_item(request):
+    userdetails = BuyerInfo.objects.get(user=request.user)
+    customer = request.user
+
+
+
 @csrf_exempt
 def menu(request):
     post_data = json.loads(request.body.decode("utf-8"))
