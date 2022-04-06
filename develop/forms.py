@@ -53,7 +53,7 @@ class SellerInfoForm(forms.ModelForm):
 
 
 class VerifyForm(forms.Form):
-    code = forms.CharField(max_length=8, required=True)
+    code = forms.CharField(max_length=6, required=True)
 
 
 class BuyerInfoForm(forms.ModelForm):
