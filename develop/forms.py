@@ -29,7 +29,7 @@ class SellerInfoForm(forms.ModelForm):
                                                       '+999999999. Up to 15 digits is allowed.')
     description = forms.CharField(widget=forms.Textarea, help_text='Enter the description of the business')
     address = forms.CharField(help_text="Enter the address of the business/house")
-    image = forms.CharField(help_text="Optional.")
+    image = forms.ImageField(help_text="Optional.", required=False)
 
     class Meta:
         model = SellerInfo
