@@ -19,12 +19,13 @@
         {% for t in food %}
             <div class="card-deck mx-2 mb-3">
                 <div class="card card_style mb-3 card_zoom" style="width: 19rem;">
-                    {% if item.image %}
-                        <img src= "{{ item.image.url }}">
+                    {% if t.image %}
+                        <img src= "{{ t.image.url }}">
                     {% else %}
                         {% load static %}
                         <img src={% static 'img/Food Item Deafult.png' %}>
                     {% endif %}
+
         <div class="card-body">
             <div class="row card-title">
                 <h5 class="col" style="color: #FBC226; font-weight: bold">
@@ -43,7 +44,7 @@
                 </div>
                 <div class="col" style="text-align: right">
                    <a id="buy" data-product="{{ t.product }}" data-action="add" data-price="{{ t.price }}"
-                      data-quantity="{{ t.servings }}" data-toggle="modal" data-target="#DishModal"
+                     data-image="{{ t.image.url }}" data-quantity="{{ t.servings }}" data-toggle="modal" data-target="#DishModal"
                       class="btn btn-success update-modal buy_button card_zoom"
                       style="background: #FBC226; border-color: #FBC226; color: white; font-size: 15px; font-weight: bold">
                        Buy
