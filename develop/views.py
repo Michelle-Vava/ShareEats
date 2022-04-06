@@ -702,8 +702,11 @@ def cart(request):
 
 
 def delete_cart_item(request, id):
-    userdetails = BuyerInfo.objects.get(user=request.user)
-    customer = request.user
+    try:
+        Cart.objects.filter(user_id=request.user, id=id).delete()
+    except:
+        return HttpResponseRedirect("/cart")
+    return HttpResponseRedirect("/cart")
 
 
 @csrf_exempt
