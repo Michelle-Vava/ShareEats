@@ -224,10 +224,17 @@ def editmenu(request):
 
 
 # remove item from edit menu page
-def delete_food_item(request):
-    token = request.session["product_item"]  # get 'token' from the session
-    Product.objects.get(product=token).delete()
-    return render(request, "seller/editmenu.html")
+def delete_food_item(request, id):
+    
+    user_details = SellerInfo.objects.get(user=request.user)
+    try:
+        Product.objects.get(user=user_details.user, id=id).delete()
+    except:
+        return HttpResponseRedirect("/seller/editmenu")
+
+     # get 'token' from the session
+    #Product.objects.get(product=token).delete()
+    return HttpResponseRedirect("/seller/editmenu")
 
 
 # edit item on the edit menu page
