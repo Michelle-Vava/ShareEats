@@ -42,17 +42,25 @@ function updateUserOrder(productId, quantity) {
   fetch(url, {
     method: "POST",
 
-    credentials: "same-origin",
-    body: JSON.stringify({ product: productId, quantity: quantity })
-  })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data)
-      $('#DishModal').modal('show')
-      // location.reload()
-      document.getElementById('response').innerHTML = "Item added";
-    })
-}
+        credentials: "same-origin",
+        body: JSON.stringify({product: productId, quantity: quantity})
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+          if (data.status === 'error') {
+              location.reload()
+            alert("Unfortunately the product could not be added to the cart because the product is made by a different seller compared to the one currently in your cart.Please purchase another item from the same seller on our dashboard.")}
+          else if (data.status === 'success')
+          {
+              location.reload()
+              alert("Item added to cart successfully.")
+          }
+         // $('#DishModal').modal('show')
+          // location.reload()
+         // document.getElementById('response').innerHTML = "Item added" ;
+      })
+   }
 
 
 function displaySelectedFood(productId, quantity, price, image) {
