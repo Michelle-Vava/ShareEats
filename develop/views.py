@@ -101,11 +101,6 @@ def login_verify_code(request):
     return redirect("verify")
 
 
-def resend_code(request):
-    verify.send(request.user.phone.as_e164)
-    return redirect("verify")
-
-
 # log out view
 def logout_view(request):
     logout(request)
