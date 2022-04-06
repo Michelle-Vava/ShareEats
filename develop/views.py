@@ -319,7 +319,8 @@ def order(request):
     current = datetime.datetime.now()
     today = current.day
 
-    all_orders = Order.objects.filter(user=request.user, buyer=BuyerInfo.objects.get(user=request.user), complete=True,status=False)
+    all_orders = Order.objects.filter(user=request.user, buyer=BuyerInfo.objects.get(user=request.user), complete=True,
+                                      status=False)
 
     current_orders = []
 
@@ -373,14 +374,15 @@ def complete_order(request):
     info_dict_complete = {}
     userdetails = BuyerInfo.objects.get(user=request.user)
 
-    all_orders = Order.objects.filter(user=request.user, buyer=BuyerInfo.objects.get(user=request.user), complete=True,status=True)
+    all_orders = Order.objects.filter(user=request.user, buyer=BuyerInfo.objects.get(user=request.user), complete=True,
+                                      status=True)
 
     # For complete orders
     for order_object in all_orders:
 
         all_productid = []
         purchasequery = Purchase.objects.filter(
-            order_id=order_object.id,order_status="completed")  # filtered purchase queryset for orderid 8,9,10,11
+            order_id=order_object.id, order_status="completed")  # filtered purchase queryset for orderid 8,9,10,11
 
         all_purchaseobjects = []
         for purchase_object in purchasequery:
