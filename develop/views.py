@@ -59,18 +59,24 @@ class CancelView(TemplateView):
 def Success(request):
     userdetails = BuyerInfo.objects.get(user=request.user)
     date = datetime.datetime.now()
-    cart = Cart.objects.filter(order=Order.objects.get(user=request.user, complete=False), user=request.user,
-                               buyer=BuyerInfo.objects.get(user=request.user))
-    to_seller = cart.first().product.seller.business_phone_number.as_e164
-    to_buyer = userdetails.user.phone.as_e164
-    send_message_to_seller(to_seller)
-    send_message_to_buyer(to_buyer)
-    for i in cart:
-
-        Purchase.objects.create(quantity=i.quantity, seller_price=i.product.price, product=i.product, order=i.order)
-    cart.delete()
-    Order.objects.filter(user=request.user, complete=False).update(complete=True)
-    context = {"userdetails": userdetails, "date": date}
+    # cart = Cart.objects.filter(order=Order.objects.get(user=request.user, complete=False), user=request.user,
+    #                            buyer=BuyerInfo.objects.get(user=request.user))
+    # to_seller = cart.first().product.seller.business_phone_number.as_e164
+    # to_buyer = userdetails.user.phone.as_e164
+    # send_message_to_seller(to_seller)
+    # send_message_to_buyer(to_buyer)
+    # for i in cart:
+    #
+    #     Purchase.objects.create(quantity=i.quantity, seller_price=i.product.price, product=i.product, order=i.order)
+    # cart.delete()
+    # Order.objects.filter(user=request.user, complete=False).update(complete=True)
+    if Order.objects.filter(user=request.user, complete=False).exists():
+        order = Order.objects.get(user=request.user, complete=False)
+        cartItems = order.get_cart_items
+    else:
+        order = {"get_cart_total": 0, "get_cart_items": 0}
+        cartItems = order["get_cart_items"]
+    context = {"userdetails": userdetails, "date": date, "cartItems": cartItems}
     return render(request, "buyer/Order/success.html", context)
 
 
