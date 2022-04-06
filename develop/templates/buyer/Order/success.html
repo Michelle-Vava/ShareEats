@@ -1,37 +1,45 @@
 {% extends 'base_templates/buyer_dashboard_base.html' %}
 {% block content %}
 <head>
- <link rel="stylesheet" type="text/css" href="../../static/css/cooking-preloader.css" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
-
-
     <div class="container bg-white text-dark border border-dark">
-    <h1>Order in progress</h1>
-      <p>Your payment succeeded.</p>
-    <p>Seller has been notified of your order</p>
-        <br>
+  <br>
+           <div class = "btn-group">
+      <div class="card_zoom" style="background: white; width: 200px; height: 40px;  text-align: center;">
+          <a onclick="location.href='{% url 'buyer dashboard' %}'" ><i class="fa fa-shopping-cart center_res"></i><b>Continue Shopping</b></a>
+      </div>
 
-    <div id="cooking">
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div id=area>
-            <div id="sides">
-                <div id="pan"></div>
-                <div id="handle"></div>
-            </div>
-            <div id="pancake">
-                <div id="pastry"></div>
-            </div>
+        <br>
+         <div class="card_zoom" style="background: white; width: 200px; height: 40px;  text-align: center;">
+          <a onclick="location.href='{% url 'order' %}'" ><i class=" center_res"></i><b>&#x2190; Review Order</b></a>
+      </div>
+      </div>
+
+        <br>
+ <div class="toast fade show justify-content-center" id="myToast">
+        <div class="toast-header">
+            <strong class="me-auto"><i class="bi-check"></i> Order Status</strong>
+            <small>{{ date.time }}</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Your payment succeeded.Seller has been notified of your order.
         </div>
     </div>
-    <br>
-  <a  class="btn btn-outline-dark" href="{% url 'buyer dashboard' %}">&#x2190; Continue Shopping</a>
-        <br>
- <a  class="btn btn-outline-dark" href="{% url 'order' %}">&#x2190; Review Order </a>
+<br>
+
     </div>
+<script>
+$(document).ready(function(){
+    $(".toast").toast({
+    	autohide: false
+    });
+});
+</script>
+
 
 {% endblock %}
