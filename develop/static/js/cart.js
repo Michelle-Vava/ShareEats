@@ -85,6 +85,7 @@ function updateQuantity(productId, quantity) {
 
       //var obj = JSON.parse(data);
       document.getElementById('cart-items').innerHTML = data.cartItems
+      document.getElementById('top-bar-cart-items').innerHTML = "Items: " + data.cartItems
       document.getElementById('cart-total').innerHTML = "$" + data.cartTotal
       document.getElementById(productId).innerHTML = quantity
 
