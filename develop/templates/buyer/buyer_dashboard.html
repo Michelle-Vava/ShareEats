@@ -81,59 +81,62 @@
     <br>
     <br>
 
-    <!-- Modal -->
+
 <div class="modal fade" id="DishModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Product</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-          <img src="" alt="..."  name="product_image" class="img-thumbnail">
-            <div class="container">
-  <div class="row">
-    <div class="col">
-     Product
-    </div>
-    <div class="col">
-      <strong><p id="output"></p></strong>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      Quantity :
-    </div>
-    <div class="col">
-      <strong><p id="quan"></p></strong>
-    </div>
-
-  </div>
-                <div class="row">
-    <div class="col">
-      Price :
-    </div>
-    <div class="col">
-      <strong><p id="p"></p></strong>
-    </div>
-
-  </div>
-</div>
-
-
-            <p id="response"></p>
-           <button type="button"  class="btn btn-success update-cart" id="cart">Add to Cart</button>
+      <div class="modal-body" style="text-align: center">
+          <img src="" alt="..."  name="product_image" class="img-thumbnail center_res" >
+          <div class="container">
+              <br>
+              <div class="row">
+                  <div class="col" style="text-align: right; font-weight: bold; ">
+                      Product :
+                  </div>
+                  <div class="col" id="output" style="text-align: left;">
+                  </div>
+              </div>
+              <p></p>
+              <div class="row">
+                  <div class="col" style="text-align: right; font-weight: bold ">
+                      Servings :
+                  </div>
+                  <div class="col" id="quan" style="text-align: left;">
+                  </div>
+              </div>
+              <p></p>
+              <div class="row">
+                  <div class="col" style="text-align: right; font-weight: bold ">
+                      Price :
+                  </div>
+                  <div class="col" id="p" style="text-align: left;">
+                  </div>
+              </div>
+              <br>
+              <p id="response"></p>
+           <button type="button"  class="btn btn-success update-cart card_zoom" id="cart"
+                   style="background: #FBC226; border-color: #FBC226; color: white; font-size: 15px; font-weight: bold">
+               Add to Cart
+           </button>
       </div>
+      </div>
+          <p></p>
       <div class="modal-footer">
-
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary card_zoom" data-dismiss="modal"
+                 style="background: #e44725; border-color: #e44725; color: white; font-size: 15px; font-weight: bold">
+            Close
+        </button>
 
       </div>
     </div>
   </div>
 </div>
+
 <script type="text/javascript" src="../../static/js/cart.js "></script>
 
 {% endblock %}

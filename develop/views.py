@@ -41,7 +41,7 @@ def CreateCheckoutSessionView(request):
             {"price": i.product.stripe_price_id, "quantity": i.quantity}
         )
 
-    YOUR_DOMAIN = "http://127.0.0.1:7000"  # change in production #changes to 8000
+    YOUR_DOMAIN = "http://127.0.0.1:8000"  # change in production #changes to 8000
     checkout_session = stripe.checkout.Session.create(
         payment_method_types=["card"],
         line_items=line_items_list,
