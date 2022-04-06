@@ -23,7 +23,7 @@ def check(phone, code):
 def send_message_to_seller(to):
     # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     client.messages.create(
-        body='Hi,user has just purchased an item from you',
+        body='Hi,a ShareEats user has just purchased an item from you.',
         to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
 
