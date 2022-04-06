@@ -239,31 +239,48 @@ def delete_food_item(request, id):
 
 # edit item on the edit menu page
 def item(request):
-    token = request.session["product_item"]  # get 'token' from the session
-    # renew session : request.session.pop('token', None)
-    print(token)
-    if request.method != "POST":
-        food_item = Product.objects.get(product=token)
-        p = food_item.product
-        price = food_item.price
-        category = food_item.category
-        servings = food_item.servings
-        image = food_item.image
-        context = {
-            "product": p,
-            "servings": servings,
-            "price": price,
-            "category": category,
-            "image": image,
-        }
-        form = DishInfoForm(initial=context)
-        context = {"editingform": form}
-        return render(request, "seller/editmenu.html", context)
-    else:
-        # Purchase.objects.create(quantity=i.quantity, seller_price=i.product.price, product=i.product, order=i.order)
-        # cart.delete()
-        # Order.objects.filter(user=request.user, complete=False).update(complete=True)
-        return HttpResponseRedirect("/seller/editmenu")
+    stripe_update = False
+    if request.method == "POST":
+        filled_form = EditDishInfoForm(request.POST, request.FILES)
+        filled_form.fields["image"].required = False
+        if filled_form.is_valid():
+            token = filled_form.cleaned_data["id"]
+            dish = Product.objects.get(Q(user=request.user), Q(id=token))
+
+            if dish.product != filled_form.cleaned_data["product"]:
+                dish.product = filled_form.cleaned_data["product"]
+                stripe_update = True
+            dish.seller = SellerInfo.objects.get(user=request.user)
+            if filled_form.cleaned_data["image"]:
+                dish.image = filled_form.cleaned_data["image"]
+                stripe_update = True
+            dish.servings = filled_form.cleaned_data["servings"]
+            dish.category = filled_form.cleaned_data["category"]
+            if dish.price != filled_form.cleaned_data["price"]:
+                dish.price = filled_form.cleaned_data["price"]
+                stripe_update = True
+
+            if stripe_update:
+
+                product = stripe.Product.modify(
+                    dish.stripe_product_id, name=dish.product, images=[dish.image]
+                )
+                # activate new price
+                unit_price = float(dish.price) * 100
+                stripe_price = stripe.Price.create(
+                    unit_amount=int(unit_price),
+                    currency="cad",
+                    product=product.id,
+                    transfer_lookup_key=True,
+                )
+                dish.stripe_price_id = stripe_price.id
+
+            dish.save()
+
+            return HttpResponseRedirect("/seller/editmenu")
+        else:
+            for msg in filled_form.errors:
+                print(filled_form.errors[msg])
 
 
 # seller page settings
