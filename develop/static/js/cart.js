@@ -51,7 +51,7 @@
         console.log(data)
           $('#DishModal').modal('show')
          // location.reload()
-          document.getElementById('response').innerHTML = data ;
+          document.getElementById('response').innerHTML = "Item added" ;
       })
    }
 
