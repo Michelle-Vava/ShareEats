@@ -1,3 +1,4 @@
+import datetime
 import json
 
 import stripe
@@ -57,13 +58,10 @@ class CancelView(TemplateView):
 # for successful the order
 def Success(request):
     userdetails = BuyerInfo.objects.get(user=request.user)
-    to = "+19023188172"
+    cart = Cart.objects.filter(order=Order.objects.get(user=request.user, complete=False), user=request.user,
+                               buyer=BuyerInfo.objects.get(user=request.user))
+    to = cart.first().product.seller.business_phone_number.as_e164
     send_message_to_seller(to)
-    cart = Cart.objects.filter(
-        order=Order.objects.get(user=request.user, complete=False),
-        user=request.user,
-        buyer=BuyerInfo.objects.get(user=request.user),
-    )
     for i in cart:
         Purchase.objects.create(
             quantity=i.quantity,
@@ -145,7 +143,6 @@ def verify_code(request):
 
 # buyer dashboard
 def buyer_dashboard(request):
-
     if request.method != "POST":
         dishes = Product.objects.all()
         unfilledform = searching_dishes()
@@ -174,10 +171,8 @@ def buyer_dashboard(request):
             ):
                 disheslist = Product.objects.all()
             else:
-                disheslist = Product.objects.filter(
-                    product__icontains=filledform["dishname"].value(),
-                    category__icontains=filledform["category"].value(),
-                )
+                disheslist = Product.objects.filter(product__icontains=filledform["dishname"].value(),
+                                                    category__icontains=filledform["category"].value())
 
         userdetails = BuyerInfo.objects.get(user=request.user)
         if Order.objects.filter(user=request.user, complete=False).exists():
@@ -299,27 +294,177 @@ def seller_settings(request):
             return render(request, "seller/seller_settings.html", context)
 
 
+# seller page personalsettings
+def seller_personalsettings(request):
+    user_details = SellerInfo.objects.get(user=request.user)
+
+    if request.method != "POST":
+        seller = SellerInfo.objects.get(user=request.user)
+        businessname = seller.businessname
+        phone = seller.business_phone_number
+        address = seller.address
+        description = seller.description
+        context = {
+            "businessname": businessname,
+            "business_phone_number": phone,
+            "address": address,
+            "description": description,
+            "userdetails": user_details
+        }
+
+        form = SellerSettings(initial=context)
+        context = {"userdetails": user_details, "form": form}
+        return render(request, "seller/seller_personalsettings.html", context)
+
+    else:
+        filled_form = SellerSettings(request.POST)
+        if filled_form.is_valid():
+            seller = SellerInfo()
+            seller.user = request.user
+            seller.id = SellerInfo.objects.get(user=request.user).id
+            seller.businessname = filled_form.cleaned_data["businessname"]
+            seller.business_phone_number = filled_form.cleaned_data["business_phone_number"]
+            seller.address = filled_form.cleaned_data["address"]
+            seller.description = filled_form.cleaned_data["description"]
+            seller.membership = True
+            seller.save()
+
+            return HttpResponseRedirect("/seller/dashboard")
+        else:
+            context = {"userdetails": user_details, "form": filled_form}
+            return render(request, "seller/seller_personalsettings.html", context)
+
+
 # order page
 def order(request):
-    userdetails = BuyerInfo.objects.get(user=request.user)
-    orders = Order.objects.filter(
-        user=request.user, buyer=BuyerInfo.objects.get(user=request.user), complete=True
-    )
-    recent = Purchase.objects.filter(order=orders)
+    userdetails = BuyerInfo.objects.filter(user=request.user)
+    info_dict_current = {}
+
+    current = datetime.datetime.now()
+    today = current.day
+
+    all_orders = Order.objects.filter(user=request.user, buyer=BuyerInfo.objects.get(user=request.user), complete=True,status=False)
+
+    current_orders = []
+
+    for orders in all_orders:
+        if orders.timestamp.day == today:
+            current_orders.append(orders)
+
+    # For current orders
+    for order_object in current_orders:
+
+        current_productid = []
+        purchasequery = Purchase.objects.filter(
+            order_id=order_object.id,
+            order_status="seller notified")  # filtered purchase queryset for orderid 8,9,10,11
+
+        current_purchaseobjects = []
+        for purchase_object in purchasequery:
+            current_purchaseobjects.append(purchase_object)
+            current_productid.append(purchase_object.product_id)
+
+        current_productobjects = []
+
+        for j in current_productid:  # [3, 5, 5, 1, 4]
+            productobject = Product.objects.get(
+                id=j
+            )  # filtered queryset list where product id = filtered product ids
+            current_productobjects.append(productobject)
+
+        info_dict_current[order_object.id] = zip(current_purchaseobjects, current_productobjects)
+
+    # For returning 0 items if there are no incomplete orders
     if Order.objects.filter(user=request.user, complete=False).exists():
         order = Order.objects.get(user=request.user, complete=False)
         cartItems = order.get_cart_items
     else:
         order = {"get_cart_total": 0, "get_cart_items": 0}
         cartItems = order["get_cart_items"]
+
     context = {
         "userdetails": userdetails,
-        "orders": orders,
-        "recent": recent,
         "cartItems": cartItems,
+        "info_obj_current": info_dict_current,
+        "curr_ord": current_orders,
+        "today": today
     }
 
-    return render(request, "buyer/Order/order.html", context)
+    return render(request, "buyer/Order/Order History/order.html", context)
+
+
+def complete_order(request):
+    info_dict_complete = {}
+    userdetails = BuyerInfo.objects.get(user=request.user)
+
+    all_orders = Order.objects.filter(user=request.user, buyer=BuyerInfo.objects.get(user=request.user), complete=True,status=True)
+
+    # For complete orders
+    for order_object in all_orders:
+
+        all_productid = []
+        purchasequery = Purchase.objects.filter(
+            order_id=order_object.id,order_status="completed")  # filtered purchase queryset for orderid 8,9,10,11
+
+        all_purchaseobjects = []
+        for purchase_object in purchasequery:
+            all_purchaseobjects.append(purchase_object)
+            all_productid.append(purchase_object.product_id)
+
+        all_productobjects = []
+
+        for j in all_productid:  # [3, 5, 5, 1, 4]
+            productobject = Product.objects.get(
+                id=j
+            )  # filtered queryset list where product id = filtered product ids
+            all_productobjects.append(productobject)
+
+        info_dict_complete[order_object.id] = zip(all_purchaseobjects, all_productobjects)
+
+        # For returning 0 items if there are no incomplete orders
+    if Order.objects.filter(user=request.user, complete=False).exists():
+        order = Order.objects.get(user=request.user, complete=False)
+        cartItems = order.get_cart_items
+    else:
+        order = {"get_cart_total": 0, "get_cart_items": 0}
+        cartItems = order["get_cart_items"]
+
+    context = {"userdetails": userdetails, "info_obj_complete": info_dict_complete, "cartItems": cartItems}
+    return render(request, "buyer/Order/Order History/completed_order.html", context)
+
+
+def incomplete_order(request):
+    info_dict_incomplete = {}
+    userdetails = BuyerInfo.objects.get(user=request.user)
+    incomplete_orders = Order.objects.filter(user=request.user, buyer=BuyerInfo.objects.get(user=request.user),
+                                             complete=False)
+    # For incomplete orders
+    for order_object in incomplete_orders:
+
+        productId = []  # product id where foreign key of order matches in product entity
+        cartquery = Cart.objects.filter(order_id=order_object.id)  # filtered purchase queryset for orderid 12
+
+        cartobjects = []  # query objects for purchase entity
+        for cart_object in cartquery:
+            cartobjects.append(cart_object)
+            # orderobjects.append(order_object)
+            productId.append(cart_object.product_id)
+
+        productobjects = []
+        for j in productId:
+            productobjects.append(
+                Product.objects.get(id=j))  # filtered queryset list where product id = filtered product ids
+        info_dict_incomplete[order_object.id] = zip(cartobjects, productobjects)
+        # For returning 0 items if there are no incomplete orders
+    if Order.objects.filter(user=request.user, complete=False).exists():
+        order = Order.objects.get(user=request.user, complete=False)
+        cartItems = order.get_cart_items
+    else:
+        order = {"get_cart_total": 0, "get_cart_items": 0}
+        cartItems = order["get_cart_items"]
+
+    context = {"userdetails": userdetails, "info_obj_incomplete": info_dict_incomplete, "cartItems": cartItems}
+    return render(request, "buyer/Order/Order History/incomplete_order.html", context)
 
 
 # favourites page
@@ -479,24 +624,21 @@ def add_cart(request):
     item = post_data["product"]
     quantity = post_data["quantity"]
     product = Product.objects.get(product=item)
+    currentCart = Cart.objects.filter(user=request.user).first()
+    if currentCart is None or product.seller == currentCart.product.seller:
+        orderdetails, created = Order.objects.get_or_create(user=request.user,
+                                                            buyer=BuyerInfo.objects.get(user=request.user),
+                                                            complete=False)
+        orderItem, created = Cart.objects.get_or_create(user=request.user, order=orderdetails, product=product,
+                                                        buyer=BuyerInfo.objects.get(user=request.user),
+                                                        quantity=quantity
+                                                        )
+        orderItem.save()
 
-    orderdetails, created = Order.objects.get_or_create(
-        user=request.user,
-        buyer=BuyerInfo.objects.get(user=request.user),
-        complete=False,
-    )
+        return JsonResponse({"code": 200})
+    else:
 
-    orderItem, created = Cart.objects.get_or_create(
-        user=request.user,
-        order=orderdetails,
-        product=product,
-        buyer=BuyerInfo.objects.get(user=request.user),
-        quantity=quantity,
-    )
-
-    orderItem.save()
-
-    return JsonResponse({"code": 200})
+        return JsonResponse({"code": 200})
 
 
 # deleting item from card

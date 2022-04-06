@@ -1,0 +1,42 @@
+.modal_dim {
+    width: 621px;
+    height: 363px;
+}
+
+.left_panel {
+    width: 221px;
+    height: 363px;
+    background: #fbc226;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.right_panel {
+    width: 400px;
+    height: 363px;
+    background: white;
+}
+
+
+.modal-dialog {
+    width: 621px;
+    height: 363px;
+}
+
+.button_style {
+    font-size: 25px;
+    font-family: Arial;
+    color: white;
+    border: 1px solid #fbc226;
+    text-align: center;
+    background: #fbc226;
+    width: 259px;
+    height: 63px;
+}
+
+.element_align {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

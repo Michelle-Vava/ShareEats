@@ -1,0 +1,49 @@
+
+{% extends 'base_templates/buyer_dashboard_base.html' %}
+{% block content %}
+
+
+<h1>ORDERS</h1>
+<br>
+
+<ul class="nav justify-content-center">
+  <li class="nav-item">
+    <a class="nav-link active" href="{% url 'order' %}">Current Orders</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'complete order' %}">Past Completed Orders</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'incomplete order' %}">Incomplete Orders</a>
+  </li>
+</ul>
+
+
+<h3>Incomplete Orders</h3>
+  <div class="row mt-5 justify-content-center", id = "Incomplete">
+    <br>
+    {% for id, details in info_obj_incomplete.items %}
+    <div class="card-deck mx-2 mb-3">
+      <div class="card border-primary rounded mb-3" style="max-width: 18rem;">
+        <div class="card-body">
+
+          <!-- <h5 class="card-title">Order# {{ id }}</h5> -->
+          {% for cart_obj, prod_obj in details %}
+            
+            <img class="card-img-top" src="{{ prod_obj.image.url }}" alt="Card image cap">
+            <p class="card-text">{{ prod_obj.product }}</p>
+            <p class="card-text">Qty: {{ cart_obj.quantity }}</p>
+            <p class="card-text">$ {{ prod_obj.price }}</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+
+</div>
+
+
+
+{% endblock %}

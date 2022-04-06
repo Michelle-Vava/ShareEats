@@ -1,0 +1,269 @@
+/* screen - buyer-sign-in */
+
+.buyer-sign-in {
+  background-color: var(--white);
+  height: 600px;
+  position: relative;
+  width: 1366px;
+}
+
+.buyer-sign-in .overlap-group1 {
+  height: 522px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 1366px;
+}
+
+.buyer-sign-in .banner-template {
+  background-color: var(--lightning-yellow-2);
+  height: 141px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 1366px;
+}
+
+.buyer-sign-in .rectangle-128 {
+  background-color: var(--white);
+  box-shadow: 0px 20px 40px #fbc22633;
+  height: 443px;
+  left: 355px;
+  position: absolute;
+  top: 79px;
+  width: 656px;
+}
+
+.buyer-sign-in .rectangle-129 {
+  background-color: var(--white);
+  border: 3px solid var(--lightning-yellow);
+  height: 415px;
+  left: 371px;
+  position: absolute;
+  top: 94px;
+  width: 625px;
+}
+
+.buyer-sign-in .sign-up-now {
+  cursor: pointer;
+  left: 691px;
+  letter-spacing: 0;
+  line-height: 9px;
+  position: absolute;
+  text-decoration: underline;
+  top: 432px;
+  white-space: nowrap;
+}
+
+.buyer-sign-in .dont-have-an-account {
+  color: #828282;
+  font-family: var(--font-family-segoeui-regular);
+  font-size: var(--font-size-m);
+  font-weight: 400;
+  left: 591px;
+  letter-spacing: 0;
+  line-height: 9px;
+  position: absolute;
+  top: 432px;
+  white-space: nowrap;
+}
+
+.buyer-sign-in .email-field {
+  align-items: flex-end;
+  background-color: var(--white);
+  display: flex;
+  height: 35px;
+  left: 482px;
+  position: absolute;
+  top: 218px;
+  width: 402px;
+}
+
+.buyer-sign-in .icon-email {
+  height: 17px;
+  margin-bottom: -8.4px;
+  margin-left: 7.7px;
+  object-fit: cover;
+  width: 18px;
+}
+
+.buyer-sign-in .email {
+  height: 17px;
+  letter-spacing: 0;
+  line-height: 11px;
+  margin-bottom: -5.5px;
+  margin-left: 6px;
+  white-space: nowrap;
+  width: 28px;
+}
+
+.buyer-sign-in .login-button {
+  align-items: flex-end;
+  background-color: var(--lightning-yellow);
+  box-shadow: 0px 10px 20px #fbc22633;
+  cursor: pointer;
+  display: flex;
+  height: 34px;
+  justify-content: flex-end;
+  left: 482px;
+  min-width: 402px;
+  padding: 4.0px 180px;
+  position: absolute;
+  top: 366px;
+  transition: all 0.2s ease;
+}
+
+.buyer-sign-in .login-button:hover {
+  transform: scale(0.9); 
+}
+
+.buyer-sign-in .log-in {
+  color: var(--white);
+  font-family: var(--font-family-segoeui-bold);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 13px;
+  min-height: 19px;
+  min-width: 40px;
+  white-space: nowrap;
+}
+
+.buyer-sign-in .sign-in {
+  color: var(--black);
+  font-family: var(--font-family-timesnew_roman-bold);
+  font-size: var(--font-size-xxxxl);
+  font-weight: 700;
+  left: 655px;
+  letter-spacing: 0;
+  line-height: 39px;
+  position: absolute;
+  top: 120px;
+  white-space: nowrap;
+}
+
+.buyer-sign-in .for-buyers {
+  color: var(--black);
+  font-family: var(--font-family-segoeprint-bold);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  left: 687px;
+  letter-spacing: 0;
+  line-height: 13px;
+  position: absolute;
+  top: 164px;
+  white-space: nowrap;
+}
+
+.buyer-sign-in .forget-password {
+  left: 810px;
+  letter-spacing: 0;
+  line-height: 9px;
+  position: absolute;
+  top: 324px;
+  white-space: nowrap;
+}
+
+.buyer-sign-in .password-field {
+  align-items: center;
+  background-color: var(--white);
+  display: flex;
+  height: 33px;
+  left: 482px;
+  min-width: 402px;
+  padding: 6.0px 7px;
+  position: absolute;
+  top: 284px;
+}
+
+.buyer-sign-in .ezgifcom-gif-maker {
+  height: 14px;
+  margin-bottom: 1.0px;
+  object-fit: cover;
+  width: 14px;
+}
+
+.buyer-sign-in .password {
+  align-self: flex-end;
+  color: var(--gray);
+  font-family: var(--font-family-segoeui-regular);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 10px;
+  margin-left: 7px;
+  min-height: 16px;
+  min-width: 43px;
+  white-space: nowrap;
+}
+
+.buyer-sign-in .ezgif-5-d6237d1fb4 {
+  height: 13px;
+  margin-bottom: 2.0px;
+  margin-left: 306px;
+  object-fit: cover;
+  width: 14px;
+}
+
+.buyer-sign-in .buyer-icon {
+  height: 70px;
+  left: 585px;
+  object-fit: cover;
+  position: absolute;
+  top: 118px;
+  width: 70px;
+}
+
+.buyer-sign-in .home-button {
+  align-items: flex-start;
+  background-color: var(--lightning-yellow);
+  border-radius: 18px;
+  box-shadow: 0px 3px 6px #fbc226cc;
+  cursor: pointer;
+  display: flex;
+  height: 36px;
+  justify-content: flex-end;
+  left: 48px;
+  min-width: 36px;
+  padding: 11.2px 7.8px;
+  position: absolute;
+  top: 160px;
+  transition: all 0.2s ease;
+}
+
+.buyer-sign-in .home-button:hover {
+  transform: scale(1.1);
+}
+
+.buyer-sign-in .home-icon {
+  align-items: flex-start;
+  display: flex;
+  height: 14px;
+  min-width: 20px;
+}
+
+.buyer-sign-in .path-container {
+  height: 17px;
+  margin-left: -1px;
+  margin-top: -1.76px;
+  position: relative;
+  width: 22px;
+}
+
+.buyer-sign-in .path-1 {
+  height: 9px;
+  left: 0;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  width: 22px;
+}
+
+.buyer-sign-in .path-2 {
+  height: 12px;
+  left: 4px;
+  object-fit: cover;
+  position: absolute;
+  top: 5px;
+  width: 13px;
+}

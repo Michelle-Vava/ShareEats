@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'develop',
     'crispy_forms',
     'phonenumber_field',
+    'storages',
 
 ]
 
@@ -162,6 +163,18 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, '/develop/static')
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / 'develop/static/'
 
+AWS_STORAGE_BUCKET_NAME = 'shareeats-storage-bucket'
+AWS_S3_REGION_NAME = 'us-east-1'  # e.g. us-east-2
+AWS_ACCESS_KEY_ID = 'AKIA5GS4IHOTZBGIYTDA'
+AWS_SECRET_ACCESS_KEY = 'vpun0x8v1W38bgIZ76YqFIbjPoZamV9H+o3AHU0j'
+
+# Tell django-storages the domain to use to refer to static files.
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_DEFAULT_ACL = None
+STATICFILES_LOCATION ='staitc/'
+STATICFILES_STORAGE = 'custom_storages.StaticStorage'
+MEDIAFILES_LOCATION ='media/'
+DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
 # stripe
 STRIPE_PUBLIC_KEY = 'pk_test_51KLzyLC6KJdG6nXQ5xuYYYKndAYSYW9mSc9SFDTglJaxbJfizQ8xG1m3n2jT9VaiXKFOI8FpuseEFvdyLAphuFS600UjVEBK4b'
 STRIPE_SECRET_KEY = 'sk_test_51KLzyLC6KJdG6nXQ5nPCdw37zF1BY7YzzQsDLsOjKTSVT0DtkXg3FSX3L9UGeQfMTbLxsIxjcBHoZs1N8ZN5N3tD00wVwOEHRE'
