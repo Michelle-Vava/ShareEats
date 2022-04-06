@@ -5,10 +5,11 @@ import stripe
 from django.conf import settings
 from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
+from django.db.models import Q
 
 from develop import verify
 from develop.forms import (
@@ -19,6 +20,7 @@ from develop.forms import (
     SellerSettings,
     VerifyForm,
     UserCreationForm,
+    EditDishInfoForm,
 )
 from develop.models import BuyerInfo, SellerInfo, Product, Order, Cart, Purchase
 from .forms import searching_restaurants, searching_dishes
@@ -39,7 +41,7 @@ def CreateCheckoutSessionView(request):
             {"price": i.product.stripe_price_id, "quantity": i.quantity}
         )
 
-    YOUR_DOMAIN = "http://127.0.0.1:7000"  # change in production #changes to 8000
+    YOUR_DOMAIN = "http://127.0.0.1:8000"  # change in production #changes to 8000
     checkout_session = stripe.checkout.Session.create(
         payment_method_types=["card"],
         line_items=line_items_list,
@@ -215,44 +217,74 @@ def editmenu(request):
     dishes = Product.objects.filter(user=request.user).order_by("product")
 
     form = DishInfoForm
-    context = {"dishes": dishes, "addform": form, "userdetails": user_details}
+    edit_form = EditDishInfoForm
+    context = {
+        "dishes": dishes,
+        "addform": form,
+        "editform": edit_form,
+        "userdetails": user_details,
+    }
     return render(request, "seller/editmenu.html", context)
 
 
 # remove item from edit menu page
-def delete_food_item(request):
-    token = request.session["product_item"]  # get 'token' from the session
-    Product.objects.get(product=token).delete()
-    return render(request, "seller/editmenu.html")
+def delete_food_item(request, id):
+    
+    user_details = SellerInfo.objects.get(user=request.user)
+    try:
+        Product.objects.get(user=user_details.user, id=id).delete()
+    except:
+        return HttpResponseRedirect("/seller/editmenu")
+
+     # get 'token' from the session
+    #Product.objects.get(product=token).delete()
+    return HttpResponseRedirect("/seller/editmenu")
 
 
 # edit item on the edit menu page
 def item(request):
-    token = request.session["product_item"]  # get 'token' from the session
-    # renew session : request.session.pop('token', None)
-    print(token)
-    if request.method != "POST":
-        food_item = Product.objects.get(product=token)
-        p = food_item.product
-        price = food_item.price
-        category = food_item.category
-        servings = food_item.servings
-        image = food_item.image
-        context = {
-            "product": p,
-            "servings": servings,
-            "price": price,
-            "category": category,
-            "image": image,
-        }
-        form = DishInfoForm(initial=context)
-        context = {"editingform": form}
-        return render(request, "seller/editmenu.html", context)
-    else:
-        # Purchase.objects.create(quantity=i.quantity, seller_price=i.product.price, product=i.product, order=i.order)
-        # cart.delete()
-        # Order.objects.filter(user=request.user, complete=False).update(complete=True)
-        return HttpResponseRedirect("/seller/editmenu")
+    stripe_update = False
+    if request.method == "POST":
+        filled_form = EditDishInfoForm(request.POST, request.FILES)
+        filled_form.fields["image"].required = False
+        if filled_form.is_valid():
+            token = filled_form.cleaned_data["id"]
+            dish = Product.objects.get(Q(user=request.user), Q(id=token))
+
+            if dish.product != filled_form.cleaned_data["product"]:
+                dish.product = filled_form.cleaned_data["product"]
+                stripe_update = True
+            dish.seller = SellerInfo.objects.get(user=request.user)
+            if filled_form.cleaned_data["image"]:
+                dish.image = filled_form.cleaned_data["image"]
+                stripe_update = True
+            dish.servings = filled_form.cleaned_data["servings"]
+            dish.category = filled_form.cleaned_data["category"]
+            if dish.price != filled_form.cleaned_data["price"]:
+                dish.price = filled_form.cleaned_data["price"]
+                stripe_update = True
+
+            if stripe_update:
+
+                product = stripe.Product.modify(
+                    dish.stripe_product_id, name=dish.product, images=[dish.image]
+                )
+                # activate new price
+                unit_price = float(dish.price) * 100
+                stripe_price = stripe.Price.create(
+                    unit_amount=int(unit_price),
+                    currency="cad",
+                    product=product.id,
+                    transfer_lookup_key=True,
+                )
+                dish.stripe_price_id = stripe_price.id
+
+            dish.save()
+
+            return HttpResponseRedirect("/seller/editmenu")
+        else:
+            for msg in filled_form.errors:
+                print(filled_form.errors[msg])
 
 
 # seller page settings
@@ -327,7 +359,9 @@ def seller_personalsettings(request):
             seller.user = request.user
             seller.id = SellerInfo.objects.get(user=request.user).id
             seller.businessname = filled_form.cleaned_data["businessname"]
-            seller.business_phone_number = filled_form.cleaned_data["business_phone_number"]
+            seller.business_phone_number = filled_form.cleaned_data[
+                "business_phone_number"
+            ]
             seller.address = filled_form.cleaned_data["address"]
             seller.description = filled_form.cleaned_data["description"]
             seller.membership = True
@@ -577,10 +611,39 @@ def add_dish(request):
 # ability to edit food item on seller page/edit menu
 @csrf_exempt
 def edit_item(request):
-    post_data = json.loads(request.body.decode("utf-8"))
-    productname = post_data["productname"]
-    request.session["product_item"] = productname  # set 'businessname' in the session
-    return JsonResponse({"code": 200})
+    user_details = SellerInfo.objects.get(user=request.user)
+    if request.method == "GET":
+        return item(request)
+
+    else:
+        filled_form = DishInfoForm(request.POST, request.FILES)
+        if filled_form.is_valid():
+            dish = Product()
+
+            # TODO : add price from Price Table
+            dish.user = request.user
+            dish.price = filled_form.cleaned_data["price"]
+            unit_price = float(dish.price) * 100
+            dish.product = filled_form.cleaned_data["product"]
+            dish.seller = SellerInfo.objects.get(user=request.user)
+            dish.image = filled_form.cleaned_data["image"]
+            dish.servings = filled_form.cleaned_data["servings"]
+            dish.category = filled_form.cleaned_data["category"]
+            product = stripe.Product.create(name=dish.product, images=[dish.image])
+            dish.stripe_product_id = product.id
+            stripe_price = stripe.Price.create(
+                unit_amount=int(unit_price),
+                currency="cad",
+                product=product.id,
+            )
+            dish.stripe_price_id = stripe_price.id
+            dish.save()
+
+            return HttpResponseRedirect("/seller/editmenu")
+        else:
+
+            for msg in filled_form.errors:
+                print(filled_form.errors[msg])
 
 
 # settings for buyer page
