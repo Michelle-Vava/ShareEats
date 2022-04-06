@@ -21,12 +21,12 @@ table.table td a.delete {
             <tr>
                 <th>
                     <h5>
-                        Number of Items: <strong>{{ order.get_cart_items }}</strong>
+                        Number of Items: <strong id = "cart-items">{{ order.get_cart_items }}</strong>
                     </h5>
                 </th>
                 <th>
                     <h5>
-                        Total:<strong>${{ order.get_cart_total }}</strong>
+                        Total:<strong id="cart-total">${{ order.get_cart_total }}</strong>
                     </h5>
                 </th>
                 <th>
@@ -72,11 +72,26 @@ table.table td a.delete {
                 </th>
                 <th>{{ item.product.product }}</th>
                 <th>${{ item.product.price }}</th>
-                <th>
-                    {{ item.quantity }}
-                    <a class="add" title="Increase" data-toggle="tooltip"><i class="material-icons">&#xE316;</i></a>
-                    <a class="delete" title="Decrease" data-toggle="tooltip"><i class="material-icons">&#xE313;</i></a>
-                </th>
+                <div>
+                    <th>
+                        {% comment %} <form> {% endcomment %}
+                        <link rel="stylesheet" type="text/css" href="../../static/css/cart.css" />
+                        {% comment %} <div class="col">
+                        <div class="button" onclick=increaseValue({{ item.id }})>-</a><a href="#" class="border">{{ item.quantity }}</a><div class="button" onclick=decreaseValue({{ item.id }})>+</a>
+                        </div> {% endcomment %}
+                        <div class="value-button"
+                             id="decrease+{{ item.id }}"
+                             onclick="decreaseValue({{ item.id }})"
+                             value="Decrease Value">
+                            -
+                        </div>
+                        <a id = "{{ item.id }}">{{ item.quantity }}</a>
+                        <div class="value-button"
+                             id="increase"
+                             onclick="increaseValue({{ item.id }})"
+                             value="Increase Value">+</div>
+                    </th>
+                </div>
             </th>
             <th>
                 <a class="btn btn-danger btn-sm rounded-0" id="remove-item" type="button" data-toggle="tooltip" data-placement="top" title="Delete" href="{% url "cart-item-del" item.id %}""><i class="fa fa-trash"></i></a>
@@ -88,7 +103,5 @@ table.table td a.delete {
     </tbody>
 </table>
 </div>
-{% comment %} 
 <script type="text/javascript" src="../../static/js/cart.js "></script>
-{% endcomment %}
 {% endblock %}

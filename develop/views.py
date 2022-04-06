@@ -661,15 +661,27 @@ def delete_cart(request):
 @csrf_exempt
 def modify_cart(request):
     post_data = json.loads(request.body.decode("utf-8"))
-    item_id = post_data["item_id"]
+    item_id = post_data["product"]
     user_id = request.user.id
-    quantity = post_data["servings"]
+    quantity = post_data["quantity"]
 
-    c = Cart.objects.get(user_id=user_id, item_id=item_id)
-    c.servings = quantity
+    c = Cart.objects.get(user_id=user_id, id=item_id)
+    c.quantity = quantity
     c.save()
+    if request.user.is_authenticated:
+        customer = request.user
+        order, _ = Order.objects.get_or_create(
+            user=customer,
+            buyer=BuyerInfo.objects.get(user=request.user),
+            complete=False,
+        )
+        cartTotal = order.get_cart_total 
+        cartItems = order.get_cart_items
+    else:
+        cartItems = 0
+        cartTotal = 0
 
-    return JsonResponse({"code": 200})
+    return JsonResponse({"code": 200, "cartTotal":cartTotal, "cartItems":cartItems })
 
 
 # cart page
