@@ -31,7 +31,6 @@ class SellerInfo(models.Model):
     image = models.ImageField(upload_to='images', null=True, blank=True)
 
 
-
 # buyer table
 class BuyerInfo(models.Model):
     firstname = models.CharField(max_length=20)
@@ -61,6 +60,7 @@ class Order(models.Model):
     buyer = models.ForeignKey(BuyerInfo, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False)
+    status = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.id)

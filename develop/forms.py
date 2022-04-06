@@ -39,6 +39,7 @@ class SellerInfoForm(forms.ModelForm):
         widget=forms.Textarea, help_text="Enter the description of the business"
     )
     address = forms.CharField(help_text="Enter the address of the business/house")
+    image = forms.ImageField(help_text="Optional.", required=False)
 
     class Meta:
         model = SellerInfo
@@ -172,15 +173,9 @@ class searching_restaurants(forms.Form):
 
 
 class searching_dishes(forms.Form):
-    dishname = forms.CharField(
-        max_length=100,
-        widget=forms.TextInput(attrs={"placeholder": "Dish Name"}),
-        required=False,
-        label="",
-    )
-    category = forms.CharField(
-        max_length=100,
-        widget=forms.TextInput(attrs={"placeholder": "Category"}),
-        required=False,
-        label="",
-    )
+    dishname = forms.CharField(max_length=100,
+                               widget=forms.TextInput
+                               (attrs={'placeholder': 'Dish Name'}), required=False, label='')
+    category = forms.CharField(max_length=100,
+                               widget=forms.TextInput
+                               (attrs={'placeholder': 'Category'}), required=False, label='')
