@@ -1,13 +1,16 @@
+import datetime
 import json
 
 import stripe
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
+from django.db.models import Q
 
 from develop import verify
 from develop.forms import (
@@ -15,10 +18,14 @@ from develop.forms import (
     SellerInfoForm,
     BuyerInfoForm,
     DishInfoForm,
-    SellerSettings, VerifyForm, UserCreationForm
+    SellerSettings,
+    VerifyForm,
+    UserCreationForm,
+    EditDishInfoForm,
 )
 from develop.models import BuyerInfo, SellerInfo, Product, Order, Cart, Purchase
-from .forms import searchrestaurant
+from .forms import searching_restaurants, searching_dishes
+from .verify import send_message_to_seller, send_message_to_buyer
 
 """
 """
@@ -31,17 +38,17 @@ def CreateCheckoutSessionView(request):
     order = Cart.objects.filter(user=request.user)
     line_items_list = []
     for i in order:
-        line_items_list.append({'price': i.product.stripe_price_id,
-                                'quantity': i.quantity})
+        line_items_list.append(
+            {"price": i.product.stripe_price_id, "quantity": i.quantity}
+        )
 
     YOUR_DOMAIN = "https://shareeats-app.herokuapp.com"  # change in production #changes to 8000
     checkout_session = stripe.checkout.Session.create(
-        payment_method_types=['card'],
-
+        payment_method_types=["card"],
         line_items=line_items_list,
-        mode='payment',
-        success_url=YOUR_DOMAIN + '/success/',
-        cancel_url=YOUR_DOMAIN + '/cancel/',
+        mode="payment",
+        success_url=YOUR_DOMAIN + "/success/",
+        cancel_url=YOUR_DOMAIN + "/cancel/",
     )
     return redirect(checkout_session.url)
 

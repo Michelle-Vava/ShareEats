@@ -13,11 +13,14 @@ import os
 import sys
 from pathlib import Path
 import django_heroku
+from os.path import dirname, abspath
+BASE_DIR = Path(__file__).resolve().parent.parent #dirname(dirname(abspath(__file__)))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from django.views import static
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -41,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'develop',
     'crispy_forms',
+    'phonenumber_field',
+    'storages',
 
 ]
 
@@ -118,6 +123,8 @@ else:
         }
     }
 
+
+
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -151,16 +158,31 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(PROJECT_ROOT, '/develop/static')
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / 'develop/static/'
 
+AWS_STORAGE_BUCKET_NAME = 'shareeats-storage-bucket'
+AWS_S3_REGION_NAME = 'us-east-1'  # e.g. us-east-2
+AWS_ACCESS_KEY_ID = 'AKIA5GS4IHOTZBGIYTDA'
+AWS_SECRET_ACCESS_KEY = 'vpun0x8v1W38bgIZ76YqFIbjPoZamV9H+o3AHU0j'
+
+# Tell django-storages the domain to use to refer to static files.
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_DEFAULT_ACL = None
+STATICFILES_LOCATION ='staitc/'
+STATICFILES_STORAGE = 'custom_storages.StaticStorage'
+MEDIAFILES_LOCATION ='media/'
+DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
 # stripe
 STRIPE_PUBLIC_KEY = 'pk_test_51KLzyLC6KJdG6nXQ5xuYYYKndAYSYW9mSc9SFDTglJaxbJfizQ8xG1m3n2jT9VaiXKFOI8FpuseEFvdyLAphuFS600UjVEBK4b'
-STRIPE_SECRET_KEY ='sk_test_51KLzyLC6KJdG6nXQ5nPCdw37zF1BY7YzzQsDLsOjKTSVT0DtkXg3FSX3L9UGeQfMTbLxsIxjcBHoZs1N8ZN5N3tD00wVwOEHRE'
+STRIPE_SECRET_KEY = 'sk_test_51KLzyLC6KJdG6nXQ5nPCdw37zF1BY7YzzQsDLsOjKTSVT0DtkXg3FSX3L9UGeQfMTbLxsIxjcBHoZs1N8ZN5N3tD00wVwOEHRE'
 STRIPE_WEBHOOK_SECRET = ''
 
+TWILIO_ACCOUNT_SID = 'ACf91579ced56697582b00416541947683'
+TWILIO_AUTH_TOKEN = '9a2f8474b329324195b3ec3432f23eba'
+TWILIO_PHONE_NUMBER = '+15134343957'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -171,3 +193,12 @@ LOGIN_REDIRECT_URL = '/loginverification'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 AUTH_USER_MODEL = 'develop.User'
 django_heroku.settings(locals())
+
+#SMTP Configuration
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'shareeats88@gmail.com'
+EMAIL_HOST_PASSWORD = 'jinja@348'

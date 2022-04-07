@@ -1,0 +1,146 @@
+{% extends 'base_templates/buyer_dashboard_base.html' %}
+{% block content %}
+
+
+<h1 style="font-family: Arial; font-size: 40px"><b>  ORDERS</b></h1>
+
+
+<div class="container justify-content-center">
+    <div class="row">
+        <div class="col">
+            <div class="card_zoom" style="background: white; width: 200px; height: 40px;  text-align: center;">
+            <a onclick="location.href='{% url 'order' %}'" ><i class="fa fa-bars center_res"></i>
+                <b> Currents Orders</b></a>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card_zoom" style="background: white; width: 230px; height: 40px;  text-align: center;">
+            <a onclick="location.href='{% url 'complete order' %}'" ><i class="fa fa-rotate-left center_res"></i>
+                <b> Past Completed Orders</b></a>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card_zoom" style="background: white; width: 200px; height: 40px;  text-align: center;">
+            <a onclick="location.href='{% url 'incomplete order' %}'" ><i class="fa fa-caret-square-o-down center_res"></i>
+                <b> Incomplete Orders</b></a>
+            </div>
+        </div>
+    </div>
+</div>
+    <br>
+
+<div class="container-fluid justify-content-center", id = "Current">
+  <br>
+  <div style="background: white; width: 200px; height: 40px;  text-align: center;">
+              <b style="position: relative; top: 6px"> Current Orders Made</b></a>
+      </div>
+    <br>
+  <div class="row justify-content-center">
+    {% for id, info in info_obj_current.items %}
+    <div class="card-deck mx-2 mb-3">
+      <div class="card card_style mb-3 card_zoom" style="width: 19rem;">
+        <div class="card-body">
+
+          <h5 class="card-title" style="font-weight: bold; color: #FBC226">Order# {{ id }}</h5>
+          {% for purchase, product in info %}
+
+            <img class="card-img-top"
+                 src="{{ product.image.url }}" alt="Card image cap">
+            <p></p>
+            <p class="card-text" style="font-weight: bold; font-size: 18px">{{ product.product }}</p>
+            <div class="row" >
+                <div class="col">
+                    <p class="card-text" style="font-weight: bold; color: #FBC226">$ {{ purchase.seller_price }}</p>
+                </div>
+                <div class="col">
+                    <p class="card-text" style="font-weight: bold; color: #666666; text-align: right">
+                            Qty: {{ purchase.quantity }}
+                            </p>
+                </div>
+            </div>
+              <hr style="border: 1px solid #FBC226">
+            <div class="row">
+                <div class="col">
+                </div>
+                <div class="col">
+                    <div style="background: #ffffe6; border: 2px solid #FBC226; width: 105px; height: 45px;
+                        color: #FBC226; text-align: center; margin-left: 15px">
+                        <b style="position: relative; top: 6px"> In Progress</b></a>
+                    </div>
+                </div>
+            </div>
+              <hr>
+              <p></p>
+          {% endfor %}
+            <br>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+  <br>
+
+
+
+
+
+</div>
+</div>
+
+<!--
+<div class="container-fluid border card_container justify-content-center">
+    <div class="row justify-content-center">
+        {% for id, info in info_obj_current.items %}
+            <div class="card-deck mx-2 mb-3">
+                <div class="card card_style mb-3 card_zoom" style="width: 19rem;">
+                    <p class="card-text">
+                        Order# {{ id }}
+                    </p>
+                    {% for purchase, product in info %}
+                    <div>
+                        {% if item.image %}
+                            <img src= "{{ item.image.url }}">
+                        {% else %}
+                        {% load static %}
+                            <img src={% static 'img/Food Item Deafult.png' %}>
+                        {% endif %}
+                    </div>
+                     <div class="card-body">
+                         {% if item.image %}
+                            <img src= "{{ product.image.url }}">
+                         {% else %}
+                         {% load static %}
+                            <img src={% static 'img/Food Item Deafult.png' %}>
+                        {% endif %}
+                        <div class="row card-title">
+                            <h5 class="col" style="color: #FBC226; font-weight: bold">
+                                {{ product.product }}
+                            </h5>
+                            <h5 class="col" style="text-align: right; font-weight: bold; color: #666666">
+                                <span style="color: #FBC226"> $ </span>  {{ purchase.seller_price }}
+                            </h5>
+                        </div>
+                        <p class="card-text">
+                            Qty: {{ purchase.quantity }}
+                        </p>
+                        <p class="card-text">
+                            Seller: {{ item.seller.businessname }}
+                        </p>
+                        <div class="row">
+                            <div class="col">
+                                <i class="fa fa-user"></i> Servings : {{ item.servings }}
+                            </div>
+                            <div class="col" style="text-align: right">
+                                {{ purchase.order_status }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+-->
+
+{% endblock %}

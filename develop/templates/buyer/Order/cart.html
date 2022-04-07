@@ -1,7 +1,6 @@
 {% extends 'base_templates/buyer_dashboard_base.html' %}
 {% block content %}
     <style>
-
 table.table td a.add {
     color: #27C46B;
 }
@@ -12,56 +11,99 @@ table.table td a.delete {
     color: #E34724;
 }
 
-</style>
-<div class="container bg-white text-dark border border-dark">
-<br>
-    <a  class="btn btn-outline-dark" href="{% url 'buyer dashboard' %}">&#x2190; Continue Shopping</a>
-
-				<br>
-				<br>
-				<table class="table">
-					<tr>
-						<th><h5>Number of Items: <strong>{{order.get_cart_items}}</strong></h5></th>
-						<th><h5>Total:<strong> ${{order.get_cart_total}}</strong></h5></th>
-						<th>
-							<a  style="float:right; margin:5px;" class="btn btn-warning createcheckout " href="{% url 'create-checkout-session' %}"   >Checkout</a>
-						</th>
-					</tr>
-				</table>
+    </style>
+    <div class="container bg-white text-dark border border-dark">
+        <br>
+        <div class="card_zoom" style="background: white; width: 250px; height: 40px;  text-align: center; border: 2px solid black; margin-left: 20px;">
+        <a onclick="location.href='{% url 'buyer dashboard' %}'" ><i class="fa fa-arrow-left center_res"></i><b> Continue Shopping</b></a>
+    </div>
+        <br>
+        <br>
+        <table class="table">
+            <tr>
+                <th>
+                    <h5>
+                        Number of Items: <strong id = "cart-items">{{ order.get_cart_items }}</strong>
+                    </h5>
+                </th>
+                <th>
+                    <h5>
+                        Total:<strong id="cart-total">${{ order.get_cart_total }}</strong>
+                    </h5>
+                </th>
+                <th>
+                    <a style="float:right;
+                              margin:5px;"
+                       class="btn btn-warning createcheckout "
+                       href="{% url 'create-checkout-session' %}">Checkout</a>
+                </th>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <div class="container bg-white text-dark border border-dark">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        <strong></strong>
+                    </th>
+                    <th scope="col">
+                        <strong>Item</strong>
+                    </th>
+                    <th scope="col">
+                        <strong>Price</strong>
+                    </th>
+                    <th scope="col">
+                        <strong>Quantity</strong>
+                    </th>
+                    <th scope="col">
+                        <strong>Remove</strong>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                </tr>
+                <th>
+                    <div class="card" style="width: 18rem;">
+                        <img class="card-img-top"
+                             src="{{ item.product.image.url }}"
+                             alt="Card image cap">
+                    </div>
+                </th>
+                <th>{{ item.product.product }}</th>
+                <th>${{ item.product.price }}</th>
+                <div>
+                    <th>
+                        {% comment %} <form> {% endcomment %}
+                        <link rel="stylesheet" type="text/css" href="../../static/css/cart.css" />
+                        {% comment %} <div class="col">
+                        <div class="button" onclick=increaseValue({{ item.id }})>-</a><a href="#" class="border">{{ item.quantity }}</a><div class="button" onclick=decreaseValue({{ item.id }})>+</a>
+                        </div> {% endcomment %}
+                        <div class="value-button"
+                             id="decrease+{{ item.id }}"
+                             onclick="decreaseValue({{ item.id }})"
+                             value="Decrease Value">
+                            -
+                        </div>
+                        <a id = "{{ item.id }}">{{ item.quantity }}</a>
+                        <div class="value-button"
+                             id="increase"
+                             onclick="increaseValue({{ item.id }})"
+                             value="Increase Value">+</div>
+                    </th>
+                </div>
+            </th>
+            <th>
+                <a class="btn btn-danger btn-sm rounded-0" id="remove-item" type="button" data-toggle="tooltip" data-placement="top" title="Delete" href="{% url "cart-item-del" item.id %}""><i class="fa fa-trash"></i></a>
+                {% comment %} <a class="btn btn-sm btn-primary" id="remove-item" href="#" role="button">RemoveLink</a></th> {% endcomment %}
+                {% comment %} <li class="list-inline-item"></li> {% endcomment %}
+                {% comment %} <button class="btn btn-sm btn-primary" id="remove-item">Remove</button></th> {% endcomment %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
 </div>
-   <br>
-<div class="container bg-white text-dark border border-dark">
-    <table class="table table-hover">
-        <thead>
-    <tr>
-        <th scope="col"><strong></strong></th>
-      <th scope="col"><strong>Item</strong></th>
-      <th scope="col"><strong>Price</strong></th>
-      <th scope="col"><strong>Quantity</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for item in items %}
-  </tr><th>
-  <div class="card" style="width: 18rem;">
-  <img class="card-img-top" src="{{item.product.image.url}}" alt="Card image cap">
-
-</div>
-  </th>
-      <th>{{ item.product.product }}</th>
-       <th>${{item.product.price}}</th>
-       <th>{{item.quantity}}
-       <a class="add" title="Increase" data-toggle="tooltip"><i class="material-icons">&#xE316;</i></a>
-                            <a class="delete" title="Decrease" data-toggle="tooltip"><i class="material-icons">&#xE313;</i></a> </th>
-</th>
-
-      </tr>
-  {% endfor %}
-  </tbody>
-    </table>
-</div>
-<script>
-
-</script>
-
+<script type="text/javascript" src="../../static/js/cart.js "></script>
 {% endblock %}

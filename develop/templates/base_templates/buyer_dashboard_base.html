@@ -24,6 +24,8 @@
     crossorigin="anonymous"></script>
   <link rel="stylesheet" type="text/css" href="../../static/css/sidebar.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="../../static/css/buyer-dashboard.css" />
+  
 </head>
 <div id="mySidebar" class="sidebar bg-white text-dark">
 
@@ -64,7 +66,7 @@
 
     <span class="navbar-item">
         <button type="button" class="btn btn-light" onclick="location.href='{% url 'cart' %}'">
-  Cart <i class="fa fa-shopping-cart"></i> <span class="badge badge-light">Items: {{ cartItems }}</span>
+  Cart <i class="fa fa-shopping-cart"></i> <span class="badge badge-light" id="top-bar-cart-items">Items: {{ cartItems }}</span>
 </button>
 
     </span>

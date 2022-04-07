@@ -1,85 +1,95 @@
-{%  extends 'base_templates/seller_dashboard_base.html' %}
+{% extends 'base_templates/seller_dashboard_base.html' %}
 {% block content %}
 <br>
-     <h1>Seller Dashboard</h1>
+<h1>Seller Dashboard</h1>
 <br>
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
   <strong>Page currently in Progress!</strong>
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-    <br>
-    <div class="container border border-warning">
+<br>
+<div class="container border border-warning">
 
   <div class="row justify-content-between ">
+    <br>
+    <div class="col-4 border border-warning">
       <br>
-    <div class="col-4 border border-warning">
-        <br>
-        <h3> Data Analytics</h3>
-           <figure class="figure">
-  <img src="../static/img/graph.png"  class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
-  <figcaption class="figure-caption">Seller sales.</figcaption>
-</figure>
-        <figure class="figure">
-  <img src="../static/img/graph2.png"  class="figure-img img-fluid rounded" alt="A generic square placeholder image with rounded corners in a figure.">
-  <figcaption class="figure-caption">Seller sales.</figcaption>
-</figure>
+      <h3> Data Analytics</h3>
+      <figure class="figure">
+        <img src="../static/img/graph.png" class="figure-img img-fluid rounded"
+          alt="A generic square placeholder image with rounded corners in a figure.">
+        <figcaption class="figure-caption">Seller sales.</figcaption>
+      </figure>
+      <figure class="figure">
+        <img src="../static/img/graph2.png" class="figure-img img-fluid rounded"
+          alt="A generic square placeholder image with rounded corners in a figure.">
+        <figcaption class="figure-caption">Seller sales.</figcaption>
+      </figure>
     </div>
     <div class="col-4 border border-warning">
-         <br>
-        <h3>Seller Profile </h3>
-       <div class="card" style="width: 18rem;">
-  <img class="card-img-top" src="../static/img/219969-1x-png@1x.png" alt="Card image">
-  <div class="card-body">
-    <h4 class="card-title">{{ userdetails.businessname }}</h4>
-      <h6 class="card-text">Description </h6>
-    <p class="card-text">{{ userdetails.description }}</p>
+      <br>
+      <h3>Seller Profile </h3>
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="../static/img/default_profile.png" alt="Card image">
+        <div class="card-body">
+          <h4 class="card-title">{{ userdetails.businessname }}</h4>
+          <h6 class="card-text">Description </h6>
+          <p class="card-text">{{ userdetails.description }}</p>
+          <h6 class="card-text">Business Number </h6>
+          <p class="card-text">{{ userdetails.business_phone_number }}</p>
+          <h6 class="card-text">Business Address </h6>
+          <p class="card-text">{{ userdetails.address }}</p>
+          <h6 class="card-text">Business Hours </h6>
+          <p class="card-text">Enter Business hours</p>
 
-  </div>
-</div>
+        </div>
+      </div>
     </div>
   </div>
-    <br>
+  <br>
 </div>
-    <br>
-    <div class="container border border-warning">
+<br>
+<div class="container border border-warning">
   <!-- Content here -->
-    <h3> Order History </h3>
-    <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Ordered</th>
+  <h3> Order History </h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">First</th>
+        <th scope="col">Last</th>
+        <th scope="col">Ordered</th>
         <th scope="col">Price</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>pizza</td>
-         <td>$5.00</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>chicken</td>
-         <td>$10.97</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>beef</td>
+        <th scope="col">Order Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td>Mark</td>
+        <td>Otto</td>
+        <td>pizza</td>
+        <td>$5.00</td>
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>Jacob</td>
+        <td>Thornton</td>
+        <td>chicken</td>
+        <td>$10.97</td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td>Larry</td>
+        <td>the Bird</td>
+        <td>beef</td>
         <td>$4.56</td>
-    </tr>
-  </tbody>
-</table>
+      </tr>
+    </tbody>
+  </table>
 </div>
+
 
 {% endblock %}

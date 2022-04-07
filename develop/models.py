@@ -3,6 +3,8 @@ from django.core.validators import RegexValidator
 from django.db import models
 
 #  this is where we will add the tables for our database
+from phonenumber_field.modelfields import PhoneNumberField
+
 """
 
 """
@@ -11,20 +13,22 @@ from django.db import models
 # commands to remember :
 # python manage.py migrate
 # python  manage.py makemigrations
+# get phone number as string : client.phone.as_e164
 class User(AbstractUser):
-    phone = models.TextField(max_length=11, blank=False)
+    phone = PhoneNumberField(unique=False, null=False, blank=False)  # Here
     is_verified = models.BooleanField(default=False)
 
 
 # seller table
 class SellerInfo(models.Model):
     businessname = models.CharField(max_length=20)
-    phoneNumberRegex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
-    business_phone_number = models.CharField(validators=[phoneNumberRegex], max_length=16)
+    # phoneNumberRegex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
+    business_phone_number = PhoneNumberField(unique=False, null=True, blank=False)  # Here
     address = models.CharField(max_length=30)
     description = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     membership = models.BooleanField(default=False)
+    image = models.ImageField(upload_to='images', null=True, blank=True)
 
 
 # buyer table
@@ -56,6 +60,7 @@ class Order(models.Model):
     buyer = models.ForeignKey(BuyerInfo, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False)
+    status = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.id)
@@ -64,7 +69,7 @@ class Order(models.Model):
     def get_cart_total(self):
         orderitems = self.cart_set.all()
         total = sum([item.get_total for item in orderitems])
-        return total
+        return f'{total:.2f}'
 
     @property
     def get_cart_items(self):
@@ -82,7 +87,7 @@ class Cart(models.Model):
 
     @property
     def get_total(self):
-        total = float(self.product.price) * self.quantity
+        total = round(float(self.product.price) * self.quantity, 2)
         return total
 
 

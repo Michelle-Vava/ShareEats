@@ -1,0 +1,63 @@
+.banner_template {
+	background: #FBC226;
+	opacity:  0.9;
+	width: 1920px;
+	height: 289px;
+	position: relative;
+	z-index: 1;
+}
+
+.outer_rectangle {
+	background: #FFFFFF;
+	width: 1017px;
+	height: 688px ;
+	box-shadow:  0px 20px 40px #FFF7DD;
+	position: relative;
+	top: -70px;
+	right: -450px;
+	z-index: 2;
+}
+
+.inner_rectangle {
+	background: #FFFFFF;
+	width: 970px;
+	height: 643px;
+	border: 3px solid #FBC226;
+	position: relative;
+	top: -736px;
+	right: -474px;
+	z-index: 3;
+}
+
+.logo_position {
+	position: relative;
+	top: -1300px;
+	right: -748px;
+	z-index: 4;
+}
+
+.input_position {
+	position: relative;
+	top: -1280px;
+	right: -350px;
+	z-index: 5;
+}
+
+.login_style{
+	width:612px;
+	height: 53px;
+	border: 2px solid #707070;
+}
+
+.login_button{
+	width:612px;
+	height: 53px;
+	background: #FBC226;
+	border: 2px solid #FBC226;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+body {
+	overflow: hidden;
+}
