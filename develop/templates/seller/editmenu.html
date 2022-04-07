@@ -10,7 +10,7 @@
         You can add items that the buyers can view and purchase from you.
     </p>
     <div class="container-fluid card_container justify-content-center">
-        <div class="card card_style mx-2 mb-3 card_zoom" style="width: 8rem;">
+        <div class="card card_style mx-2 card_zoom" style="width: 8rem;">
             <img class="card-img-top"
                  src="../static/img/add_item.png"
                  alt="Card image cap">
@@ -62,7 +62,7 @@
         <div class="row justify-content-left">
             {% for item in dishes %}
                 <div class="card-deck mx-2 mb-3">
-                    <div class="card_style mr-5 mt-5"  style="width: 18rem;">
+                    <div class="card_style mr-5 mt-5"  style="width: 15rem;">
                         <img class="card-img-top card-img-new "
                              src="{{ item.image.url }}"
                              alt="Card image cap">
@@ -77,13 +77,13 @@
                             <p class="card-text">
                                 Category : {{ item.category }}
                             </p>
-                            {% comment %} <p class="card-text">
+                            <p class="card-text">
                                 Availability :
                                 <label class="switch">
                                     <input type="checkbox">
                                     <span class="slider round"></span>
                                 </label>
-                            </p> {% endcomment %}
+                            </p>
                             <div style="padding:10px; position: relative; bottom: 0">
                                 <button type="button"
                                         class="btn btn-warning get-food-item space"
