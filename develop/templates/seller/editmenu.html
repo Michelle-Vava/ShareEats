@@ -63,7 +63,9 @@
             <div class="card-deck">
                 <div class="card card_style mx-2 mb-3 mt-2 mr-5 card_zoom"
                      style="max-width: 18rem;">
-                    <img class="card-img-top" src="{{ item.image.url }}" alt="Card image cap">
+                    <img class="card-img-top card-img-new "
+                         src="{{ item.image.url }}"
+                         alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title "style="color: #FBC226; font-weight: bold">{{ item.product }}</h5>
                         <p class="card-text">
@@ -74,6 +76,13 @@
                         </p>
                         <p class="card-text">
                             Category : {{ item.category }}
+                        </p>
+                        <p class="card-text">
+                            Availability :
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
                         </p>
                         <div style="padding:10px; position: relative; bottom: 0">
                             <button type="button"
