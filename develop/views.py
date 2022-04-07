@@ -201,12 +201,14 @@ def seller_dashboard(request):
     user_details = SellerInfo.objects.get(
         user=request.user
     )  # seller object for user logged in
+    seller_id = user_details.id
+
+    
     products = Product.objects.filter(
         seller_id=user_details.id
     )  # query set of all product objects with same seller id
 
-    purchase_obj = []  # all purchase objects with same seller
-
+    purchase_obj = []
     for productobject in products:
         purchase = Purchase.objects.filter(
             product_id=productobject.id
@@ -221,21 +223,48 @@ def seller_dashboard(request):
         product_obj.append(Product.objects.get(id = obj.product_id))
 
     buyerinfo_obj = []
-    
-    for object in order_obj:
-        buyerinfo_obj.append(BuyerInfo.objects.get(id=object.buyer_id))
-        
+    for order in order_obj:
+        buyerinfo_obj.append(BuyerInfo.objects.get(id = order.buyer_id))
 
+    
+    # for seller card
+    # seller_dict = {}
+
+    # for object in order_obj:
+
+    #     if object.id not in seller_dict.keys():
+    #         dict_purchase_obj = []  # all purchase objects with same seller
+    #         for productobject in products:
+    #             purchase = Purchase.objects.filter(
+    #                 product_id=productobject.id
+    #             )  # all purchase objects with same product ids
+    #             for i in purchase:
+    #                 dict_purchase_obj.append(i)
+
+    #         dict_order_obj = []
+    #         dict_product_obj = []
+    #         for obj in dict_purchase_obj:
+    #             dict_order_obj.append(Order.objects.get(id=obj.order_id))
+    #             dict_product_obj.append(Product.objects.get(id = obj.product_id))
+            
+    #         dict_buyerinfo_obj = []
+    #         for object in dict_order_obj:
+    #             dict_buyerinfo_obj.append(BuyerInfo.objects.get(id=object.buyer_id))
+            
+    #         seller_dict[object.id] = [zip(dict_order_obj, dict_buyerinfo_obj, dict_purchase_obj, dict_product_obj)]
+    #     else:
+    #         seller_dict[object.id].append(zip(dict_order_obj, dict_buyerinfo_obj, dict_purchase_obj, dict_product_obj))
     
     
     all_list = zip(order_obj, buyerinfo_obj, purchase_obj, product_obj)
     context = {
-        "userdetails": user_details,
-        "purchase": purchase_obj,
-        "products": products,
-        "orders": order_obj,
-        "buyerinfo": buyerinfo_obj,
-        "all": all_list
+        "userdetails"   : user_details,
+        "purchase"      : purchase_obj,
+        "products"      : products,
+        "orders"        : order_obj,
+        "buyerinfo"     : buyerinfo_obj,
+        "all"           : all_list,
+        # "all_dict"      : seller_dict
     }
     return render(request, "seller/seller_dashboard.html", context)
 
