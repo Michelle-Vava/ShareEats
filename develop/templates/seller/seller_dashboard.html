@@ -10,24 +10,44 @@
   </button>
 </div>
 <br>
+
 <div class="container border border-warning">
 
   <div class="row justify-content-between ">
     <br>
-    <div class="col-4 border border-warning">
+
+    <div class="border border-warning">
       <br>
-      <h3> Data Analytics</h3>
-      <figure class="figure">
-        <img src="../static/img/graph.png" class="figure-img img-fluid rounded"
-          alt="A generic square placeholder image with rounded corners in a figure.">
-        <figcaption class="figure-caption">Seller sales.</figcaption>
-      </figure>
-      <figure class="figure">
-        <img src="../static/img/graph2.png" class="figure-img img-fluid rounded"
-          alt="A generic square placeholder image with rounded corners in a figure.">
-        <figcaption class="figure-caption">Seller sales.</figcaption>
-      </figure>
+      <h3>Order History</h3>
+      <div class= "table-wrapper-scroll-y my-custom-scrollbar">
+        <table class="table table-striped">
+          <thead class = "table-dark">
+            <tr>
+              <th scope="col">OrderID #</th>
+              <th scope="col">First</th>
+              <th scope="col">Last</th>
+              <th scope="col">Ordered Item</th>
+              <th scope="col">Price</th>
+              <th scope="col">Order Date/Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order, buyer, purchase, product in all %}
+            <tr>
+              <td scope="row">{{ order.id }}</td>
+              <td>{{buyer.firstname}}</td>
+              <td>{{buyer.lastname}}</td>
+              <td>{{product.product}}</td>
+              <td>$ {{purchase.seller_price}}</td>
+              <td>{{order.timestamp}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
+
+
     <div class="col-4 border border-warning">
       <br>
       <h3>Seller Profile </h3>
@@ -51,44 +71,10 @@
   <br>
 </div>
 <br>
+<h3> Order History </h3>
 <div class="container border border-warning">
-  <!-- Content here -->
-  <h3> Order History </h3>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">First</th>
-        <th scope="col">Last</th>
-        <th scope="col">Ordered</th>
-        <th scope="col">Price</th>
-        <th scope="col">Order Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>pizza</td>
-        <td>$5.00</td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>Thornton</td>
-        <td>chicken</td>
-        <td>$10.97</td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td>Larry</td>
-        <td>the Bird</td>
-        <td>beef</td>
-        <td>$4.56</td>
-      </tr>
-    </tbody>
-  </table>
+  
+  
 </div>
 
 
