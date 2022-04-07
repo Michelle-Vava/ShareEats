@@ -3,49 +3,82 @@
 {% block content %}
 
 
-<h1>ORDERS</h1>
-<br>
+<h1 style="font-family: Arial; font-size: 40px"><b>  ORDERS</b></h1>
 
-<ul class="nav justify-content-center">
-  <li class="nav-item">
-    <a class="nav-link active" href="{% url 'order' %}">Current Orders</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="{% url 'complete order' %}">Past Completed Orders</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="{% url 'incomplete order' %}">Incomplete Orders</a>
-  </li>
-</ul>
-<h3>Past Completed Orders</h3>
-  <div class="row mt-5 justify-content-center", id = "Past">
 
+<div class="container justify-content-center">
+    <div class="row">
+        <div class="col">
+            <div class="card_zoom" style="background: white; width: 200px; height: 40px;  text-align: center;">
+            <a onclick="location.href='{% url 'order' %}'" ><i class="fa fa-bars center_res"></i>
+                <b> Currents Orders</b></a>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card_zoom" style="background: white; width: 230px; height: 40px;  text-align: center;">
+            <a onclick="location.href='{% url 'complete order' %}'" ><i class="fa fa-rotate-left center_res"></i>
+                <b> Past Completed Orders</b></a>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card_zoom" style="background: white; width: 200px; height: 40px;  text-align: center;">
+            <a onclick="location.href='{% url 'incomplete order' %}'" ><i class="fa fa-caret-square-o-down center_res"></i>
+                <b> Incomplete Orders</b></a>
+            </div>
+        </div>
+    </div>
+</div>
+    <br>
+<div class="container-fluid justify-content-center", id = "Current">
+  <br>
+  <div style="background: white; width: 200px; height: 40px;  text-align: center;">
+              <b style="position: relative; top: 6px"> Current Orders Made</b></a>
+      </div>
+    <br>
+  <div class="row justify-content-center">
     {% for orderid, info in info_obj_complete.items %}
     <div class="card-deck mx-2 mb-3">
-      <div class="card border-primary rounded mb-3" style="max-width: 18rem;">
+      <div class="card card_style mb-3 card_zoom" style="width: 19rem;">
         <div class="card-body">
 
-          <h5 class="card-title">Order# {{ orderid }}</h5>
+          <h5 class="card-title" style="font-weight: bold; color: #FBC226">Order# {{ orderid }}</h5>
           {% for purchase, product in info %}
-            
-            <img class="card-img-top" src="{{ product.image.url }}" alt="Card image cap">
-            <p class="card-text">{{ product.product }}</p>
-            <p class="card-text">Qty: {{ purchase.quantity }}</p>
-            <p class="card-text">$ {{ purchase.seller_price }}</p>
-            <p class="card-text">{{ purchase.order_status }}</p>
-            
+
+            <img class="card-img-top"
+                 src="{{ product.image.url }}" alt="Card image cap">
+            <p></p>
+            <p class="card-text" style="font-weight: bold; font-size: 18px">{{ product.product }}</p>
+            <div class="row" >
+                <div class="col">
+                    <p class="card-text" style="font-weight: bold; color: #FBC226">$ {{ purchase.seller_price }}</p>
+                </div>
+                <div class="col">
+                    <p class="card-text" style="font-weight: bold; color: #666666; text-align: right">
+                            Qty: {{ purchase.quantity }}
+                            </p>
+                </div>
+            </div>
+              <hr style="border: 1px solid #FBC226">
+            <div class="row">
+                <div class="col">
+                </div>
+                <div class="col">
+                    <div style="background: #e6ffe6; border: 2px solid #00b300; width: 105px; height: 45px;
+                        color: #00b300; text-align: center; margin-left: 15px">
+                        <b style="position: relative; top: 6px"> Completed</b></a>
+                    </div>
+                </div>
+            </div>
+              <hr>
+              <p></p>
           {% endfor %}
+            <br>
         </div>
       </div>
     </div>
     {% endfor %}
-  </div>
 
-    <br>
+  <br>
 
-
-</div>
-
-</div>
 
 {% endblock %}
