@@ -69,13 +69,13 @@
                         <div class="card-body">
                             <h5 class="card-title "style="color: #FBC226; font-weight: bold">{{ item.product }}</h5>
                             <p class="card-text">
-                                Price : $ {{ item.price|floatformat:2 }}
+                              <i class="fa fa-money"></i>    Price : $ {{ item.price|floatformat:2 }}
                             </p>
                             <p class="card-text">
-                                Quantity : {{ item.servings }}
+                               <i class="fa fa-user"></i>   Servings : {{ item.servings }}
                             </p>
                             <p class="card-text">
-                                Category : {{ item.category }}
+                              <i class="fa fa-filter"></i>    Category : {{ item.category }}
                             </p>
                             <p class="card-text">
                                 Availability :
