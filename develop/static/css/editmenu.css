@@ -99,6 +99,6 @@ input:checked+.slider:before {
 
 .card-img-new {
     width: 100%;
-    height: 20vw;
-    object-fit: fill;
+    height: 15vw;
+    object-fit: cover;
 }

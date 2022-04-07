@@ -10,163 +10,96 @@
         You can add items that the buyers can view and purchase from you.
     </p>
     <div class="container-fluid card_container justify-content-center">
-        <div class="row">
-            <div class="card card_style mx-2 mb-3 card_zoom" style="width: 8rem;">
-                <img class="card-img-top"
-                     src="../static/img/add_item.png"
-                     alt="Card image cap">
-                <div class="card d-flex">
-                    <!-- Button trigger modal -->
-                    <button type="button"
-                            class="btn btn-warning btn-sm stretched-link"
-                            data-toggle="modal"
-                            data-target="#additem">
-                        Add
-                    </button >
+        <div class="card card_style mx-2 mb-3 card_zoom" style="width: 8rem;">
+            <img class="card-img-top"
+                 src="../static/img/add_item.png"
+                 alt="Card image cap">
+            <div class="card d-flex">
+                <!-- Button trigger modal -->
+                <button type="button"
+                        class="btn btn-warning btn-sm stretched-link"
+                        data-toggle="modal"
+                        data-target="#additem">
+                    Add
+                </button >
+            </div>
+        </div>
+    </div>
+    <!-- Add food Item Modal -->
+    <div class="modal fade"
+         id="additem"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning"   role="alert">
+                        **Please make sure your food item image is in a .png or .jpg format!
+                    </div>
+                    <form enctype="multipart/form-data"
+                          class='form-control '
+                          action="{% url 'add product' %}"
+                          method="post">
+                        {% csrf_token %}
+                        {{ addform | crispy  }}
+                        <input class="btn btn-warning" type="submit" value="Add">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
-        <!-- Add food Item Modal -->
-        <div class="modal fade"
-             id="additem"
-             tabindex="-1"
-             role="dialog"
-             aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-warning"   role="alert">
-                            **Please make sure your food item image is in a .png or .jpg format!
-                        </div>
-                        <form enctype="multipart/form-data"
-                              class='form-control '
-                              action="{% url 'add product' %}"
-                              method="post">
-                            {% csrf_token %}
-                            {{ addform | crispy  }}
-                            <input class="btn btn-warning" type="submit" value="Add">
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% for item in dishes %}
-            <div class="card-deck">
-                <div class="card card_style mx-2 mb-3 mt-2 mr-5 card_zoom"
-                     style="max-width: 18rem;">
-                    <img class="card-img-top card-img-new "
-                         src="{{ item.image.url }}"
-                         alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title "style="color: #FBC226; font-weight: bold">{{ item.product }}</h5>
-                        <p class="card-text">
-                            Price : $ {{ item.price|floatformat:2 }}
-                        </p>
-                        <p class="card-text">
-                            Quantity : {{ item.servings }}
-                        </p>
-                        <p class="card-text">
-                            Category : {{ item.category }}
-                        </p>
-                        <p class="card-text">
-                            Availability :
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
-                        </p>
-                        <div style="padding:10px; position: relative; bottom: 0">
-                            <button type="button"
-                                    class="btn btn-warning get-food-item space"
-                                    data-toggle="modal"
-                                    data-productname="{{ item.product }} {{ item.servings }} {{ item.price }} {{ item.category }} {{ item.image.url }} {{ item.id }}"
-                                    data-target="#editItem">
-                                Edit Item
-                            </button>
-                            <a class="btn btn-danger btn-sm space "
-                               id="remove-item"
-                               type="button"
-                               data-toggle="tooltip"
-                               data-placement="top"
-                               title="Delete"
-                               style="margin-right: 0; position: absolute;right:0"
-                               href="{% url "delete food" item.id %}"><i class="fa fa-trash"></i></a>
-                        </div>
-                        <!-- Modal -->
-                        <div class="modal fade"
-                             id="editItem"
-                             tabindex="-1"
-                             role="dialog"
-                             aria-labelledby="exampleModalLabel"
-                             aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Edit Menu</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="alert alert-warning"   role="alert">
-                                            **Please make sure your food item image is in a .png or .jpg format!
-                                        </div>
-                                        <form enctype="multipart/form-data"
-                                              class='form-control'
-                                              action="{% url 'item editing' %}"
-                                              method="post">
-                                            {% csrf_token %}
-                                            {% comment %} <h2>Edit Details</h2> {% endcomment %}
-                                            {{ editform.non_field_errors }}
-                                            <div class="fieldWrapper" id="product">
-                                                {{ editform.product.errors }}
-                                                <label for="{{ form.produt.id_for_label }}"></label>
-                                                {{ editform.product | as_crispy_field   }}
-                                            </div>
-                                            <div class="fieldWrapper" id ="servings">
-                                                {{ editform.servings.errors }}
-                                                <label for="{{ form.servings.id_for_label }}"></label>
-                                                {{ editform.servings | as_crispy_field   }}
-                                            </div>
-                                            <div class="fieldWrapper" id ="price">
-                                                {{ editform.price.errors }}
-                                                <label for="{{ form.price.id_for_label }}"></label>
-                                                {{ editform.price | as_crispy_field   }}
-                                            </div>
-                                            <div class="fieldWrapper" id = "category">
-                                                {{ editform.category.errors }}
-                                                <label for="{{ form.category.id_for_label }}"></label>
-                                                {{ editform.category | as_crispy_field   }}
-                                            </div>
-                                            <div class="fieldWrapper" id = "image">
-                                                {{ editform.image.errors }}
-                                                <label for="{{ form.image.id_for_label }}"></label>
-                                                {{ editform.image | as_crispy_field   }}
-                                            </div>
-                                            <div class="fieldWrapper" id = "id">
-                                                {{ editform.id.errors }}
-                                                <label for="{{ form.image.id_for_label }}"></label>
-                                                {{ editform.id.as_hidden  }}
-                                            </div>
-                                            {% comment %} {{ addform | crispy  }} {% endcomment %}
-                                            {% comment %} <input class="btn btn-warning" type="submit" value="Edit Product"> {% endcomment %}
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <input type="submit" class="btn btn-warning" value = "Save"
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+    </div>
+    <div class="container-fluid card_container justify-center card-group">
+        <div class="row justify-content-left">
+            {% for item in dishes %}
+                <div class="card-deck mx-2 mb-3">
+                    <div class="card_style mr-5 mt-5"  style="width: 18rem;">
+                        <img class="card-img-top card-img-new "
+                             src="{{ item.image.url }}"
+                             alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title "style="color: #FBC226; font-weight: bold">{{ item.product }}</h5>
+                            <p class="card-text">
+                                Price : $ {{ item.price|floatformat:2 }}
+                            </p>
+                            <p class="card-text">
+                                Quantity : {{ item.servings }}
+                            </p>
+                            <p class="card-text">
+                                Category : {{ item.category }}
+                            </p>
+                            {% comment %} <p class="card-text">
+                                Availability :
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </p> {% endcomment %}
+                            <div style="padding:10px; position: relative; bottom: 0">
+                                <button type="button"
+                                        class="btn btn-warning get-food-item space"
+                                        data-toggle="modal"
+                                        data-productname="{{ item.product }} {{ item.servings }} {{ item.price }} {{ item.category }} {{ item.image.url }} {{ item.id }}"
+                                        data-target="#editItem">
+                                    Edit Item
+                                </button>
+                                <a class="btn btn-danger btn-sm space "
+                                   id="remove-item"
+                                   type="button"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="Delete"
+                                   style="margin-right: 0; position: absolute;right:0"
+                                   href="{% url "delete food" item.id %}"><i class="fa fa-trash"></i></a>
                             </div>
                         </div>
                     </div>
@@ -174,5 +107,76 @@
             {% endfor %}
         </div>
     </div>
-    <script type="text/javascript" src="../../static/js/editmenu.js "></script>
+</div>
+<ul class= "nav justify-content-center">
+    <!-- Modal -->
+    <div class="modal fade"
+         id="editItem"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Menu</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning"   role="alert">
+                        **Please make sure your food item image is in a .png or .jpg format!
+                    </div>
+                    <form enctype="multipart/form-data"
+                          class='form-control'
+                          action="{% url 'item editing' %}"
+                          method="post">
+                        {% csrf_token %}
+                        {% comment %} <h2>Edit Details</h2> {% endcomment %}
+                        {{ editform.non_field_errors }}
+                        <div class="fieldWrapper" id="product">
+                            {{ editform.product.errors }}
+                            <label for="{{ form.produt.id_for_label }}"></label>
+                            {{ editform.product | as_crispy_field   }}
+                        </div>
+                        <div class="fieldWrapper" id ="servings">
+                            {{ editform.servings.errors }}
+                            <label for="{{ form.servings.id_for_label }}"></label>
+                            {{ editform.servings | as_crispy_field   }}
+                        </div>
+                        <div class="fieldWrapper" id ="price">
+                            {{ editform.price.errors }}
+                            <label for="{{ form.price.id_for_label }}"></label>
+                            {{ editform.price | as_crispy_field   }}
+                        </div>
+                        <div class="fieldWrapper" id = "category">
+                            {{ editform.category.errors }}
+                            <label for="{{ form.category.id_for_label }}"></label>
+                            {{ editform.category | as_crispy_field   }}
+                        </div>
+                        <div class="fieldWrapper" id = "image">
+                            {{ editform.image.errors }}
+                            <label for="{{ form.image.id_for_label }}"></label>
+                            {{ editform.image | as_crispy_field   }}
+                        </div>
+                        <div class="fieldWrapper" id = "id">
+                            {{ editform.id.errors }}
+                            <label for="{{ form.image.id_for_label }}"></label>
+                            {{ editform.id.as_hidden  }}
+                        </div>
+                        {% comment %} {{ addform | crispy  }} {% endcomment %}
+                        {% comment %} <input class="btn btn-warning" type="submit" value="Edit Product"> {% endcomment %}
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-warning" value = "Save"
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</ul>
+<script type="text/javascript" src="../../static/js/editmenu.js "></script>
 {% endblock %}
