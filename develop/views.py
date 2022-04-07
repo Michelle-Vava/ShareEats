@@ -3,6 +3,7 @@ import json
 
 import stripe
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -68,7 +69,6 @@ def Success(request):
     send_message_to_seller(to_seller)
     send_message_to_buyer(to_buyer)
     for i in cart:
-
         Purchase.objects.create(quantity=i.quantity, seller_price=i.product.price, product=i.product, order=i.order)
     cart.delete()
     Order.objects.filter(user=request.user, complete=False).update(complete=True)
@@ -138,6 +138,12 @@ def verify_code(request):
                 request.user.is_verified = True
                 request.user.save()
                 return redirect("option")
+            else:
+                messages.error(request, "Incorrect Code.Try Again")
+                form = VerifyForm()
+                context = {"form": form}
+            return render(request, "twilio/verify.html", context)
+
         else:
             form = VerifyForm()
             context = {"form": form}
@@ -172,8 +178,8 @@ def buyer_dashboard(request):
         if filledform.is_valid():
             print(filledform["dishname"].value(), filledform["category"].value())
             if (
-                filledform["dishname"].value() == ""
-                and filledform["category"].value() == ""
+                    filledform["dishname"].value() == ""
+                    and filledform["category"].value() == ""
             ):
                 disheslist = Product.objects.all()
             else:
@@ -229,15 +235,14 @@ def editmenu(request):
 
 # remove item from edit menu page
 def delete_food_item(request, id):
-    
     user_details = SellerInfo.objects.get(user=request.user)
     try:
         Product.objects.get(user=user_details.user, id=id).delete()
     except:
         return HttpResponseRedirect("/seller/editmenu")
 
-     # get 'token' from the session
-    #Product.objects.get(product=token).delete()
+    # get 'token' from the session
+    # Product.objects.get(product=token).delete()
     return HttpResponseRedirect("/seller/editmenu")
 
 
@@ -265,7 +270,6 @@ def item(request):
                 stripe_update = True
 
             if stripe_update:
-
                 product = stripe.Product.modify(
                     dish.stripe_product_id, name=dish.product, images=[dish.image]
                 )
@@ -750,7 +754,7 @@ def modify_cart(request):
         cartItems = 0
         cartTotal = 0
 
-    return JsonResponse({"code": 200, "cartTotal":cartTotal, "cartItems":cartItems })
+    return JsonResponse({"code": 200, "cartTotal": cartTotal, "cartItems": cartItems})
 
 
 # cart page

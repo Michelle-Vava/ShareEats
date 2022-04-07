@@ -12,12 +12,17 @@ def send(phone):
 
 
 def check(phone, code):
-    try:
-        result = verify.verification_checks.create(to=phone, code=code)
-    except TwilioRestException:
-        print('no')
+    result = verify.verification_checks.create(to=phone, code=code)
+    if result.status == "approved":
+        return True
+    else:
         return False
-    return result.status == 'approved'
+    # try:
+
+    # except TwilioRestException:
+    #     print('no')
+    #     return False
+    # return result.status == 'approved'
 
 
 def send_message_to_seller(to):
