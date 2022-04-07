@@ -3,140 +3,144 @@
 {% block content %}
     {% load static %}
     {% load crispy_forms_tags %}
-    <h1 style="font-family: Arial; font-size: 40px"><b>  Hello, {{ userdetails.firstname }}</b></h1>
-
-<br>
-      <div class="card_zoom" style="background: white; width: 200px; height: 40px;  text-align: center;">
-          <a onclick="location.href='{% url 'buyer restaurants' %}'" ><i class="fa fa-building center_res"></i><b> Restaurants</b></a>
-      </div>
+    <h1 style="font-family: Arial; font-size: 40px">
+        <b>  Hello, {{ userdetails.firstname }}</b>
+    </h1>
     <br>
- <div class="nav-item" style="margin-left: -14px;">
-     <form class="form-inline my-2 my-lg-0", method="post">
-         {% for field in form %}
-        {% csrf_token %}
-        <label>
-        <div class="fieldWrapper", style = "padding: 10px 15px;">
-            {{ field }}
-        </div>
-        </label>
-        {% endfor %}
-         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
-  </div>
-
-<br>
-<div class="container-fluid border card_container justify-content-center">
-    <div class="row justify-content-center">
-        {% for item in dishes %}
-            <div class="card-deck mx-2 mb-3">
-                <div class="card card_style mb-3 card_zoom" style="width: 19rem;">
-                    {% if item.image %}
-                        <img src= "{{ item.image.url }}">
-                    {% else %}
-                        {% load static %}
-                        <img src={% static 'img/Food Item Deafult.png' %}>
-                    {% endif %}
-        <div class="card-body">
-            <div class="row card-title">
-                <h5 class="col" style="color: #FBC226; font-weight: bold">
-                    {{ item.product }}
-                </h5>
-                <h5 class="col" style="text-align: right; font-weight: bold; color: #666666">
-                    <span style="color: #FBC226"> $ </span>  {{ item.price }}
-                </h5>
-            </div>
-            <p class="card-text">
-                Category: {{ item.category }}
-            </p>
-            <p class="card-text">
-                Seller: {{ item.seller.businessname }}
-            </p>
-            <div class="row">
-                <div class="col">
-                    <i class="fa fa-user"></i> Servings : {{ item.servings }}
+    <div class="card_zoom"
+         style="background: white;
+                width: 200px;
+                height: 40px;
+                text-align: center;">
+        <a onclick="location.href='{% url 'buyer restaurants' %}'"><i class="fa fa-building center_res"></i><b> Restaurants</b></a>
+    </div>
+    <br>
+    <div class="nav-item" style="margin-left: -14px;">
+        <form class="form-inline my-2 my-lg-0", method="post">
+            {% for field in form %}
+                {% csrf_token %}
+                <label>
+                    <div class="fieldWrapper", style = "padding: 10px 15px;">{{ field }}</div>
+                </label>
+            {% endfor %}
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+    <br>
+    <div class="container-fluid border card_container justify-content-center">
+        <div class="row justify-content-center">
+            {% for item in dishes %}
+                <div class="card-deck mx-2 mb-3">
+                    <div class="card card_style mb-3 card_zoom" style="width: 19rem;">
+                        {% if item.image %}
+                            <img src= "{{ item.image.url }}">
+                        {% else %}
+                            {% load static %}
+                            <img src={% static 'img/Food Item Deafult.png' %}>
+                        {% endif %}
+                        <div class="card-body">
+                            <div class="row card-title">
+                                <h5 class="col" style="color: #FBC226; font-weight: bold">{{ item.product }}</h5>
+                                <h5 class="col"
+                                    style="text-align: right; font-weight: bold; color: #666666">
+                                    <span style="color: #FBC226">$</span>  {{ item.price | floatformat:2 }}
+                            </h5>
+                        </div>
+                        <p class="card-text">
+                            Category: {{ item.category }}
+                        </p>
+                        <p class="card-text">
+                            Seller: {{ item.seller.businessname }}
+                        </p>
+                        <div class="row">
+                            <div class="col">
+                                <i class="fa fa-user"></i> Servings : {{ item.servings }}
+                        </div>
+                        <div class="col" style="text-align: right">
+                            <a id="buy"
+                               data-image="{{ item.image.url }}"
+                               data-product="{{ item.product }}"
+                               data-action="add"
+                               data-price="{{ item.price }}"
+                               data-quantity="{{ item.servings }}"
+                               data-toggle="modal"
+                               data-target="#DishModal"
+                               class="btn btn-success update-modal buy_button card_zoom"
+                               style="background: #FBC226; border-color: #FBC226; color: white; font-size: 15px; font-weight: bold">
+                                Buy
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="col" style="text-align: right">
-                   <a id="buy" data-image="{{ item.image.url }}" data-product="{{ item.product }}" data-action="add"
-                      data-price="{{ item.price }}" data-quantity="{{ item.servings }}" data-toggle="modal"
-                      data-target="#DishModal" class="btn btn-success update-modal buy_button card_zoom"
-                      style="background: #FBC226; border-color: #FBC226; color: white; font-size: 15px; font-weight: bold">
-                       Buy
-                   </a>
-                </div>
             </div>
         </div>
-    </div>
-    </div>
-
-        {% endfor %}
-    </div>
+    {% endfor %}
 </div>
-
-
-
+</div>
 <br>
-    <br>
+<br>
 <ul class="nav justify-content-center">
-
     <br>
     <br>
-
-
-<div class="modal fade" id="DishModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body" style="text-align: center">
-          <img src="" alt="..."  name="product_image" class="img-thumbnail center_res" >
-          <div class="container">
-              <br>
-              <div class="row">
-                  <div class="col" style="text-align: right; font-weight: bold; ">
-                      Product :
-                  </div>
-                  <div class="col" id="output" style="text-align: left;">
-                  </div>
-              </div>
-              <p></p>
-              <div class="row">
-                  <div class="col" style="text-align: right; font-weight: bold ">
-                      Servings :
-                  </div>
-                  <div class="col" id="quan" style="text-align: left;">
-                  </div>
-              </div>
-              <p></p>
-              <div class="row">
-                  <div class="col" style="text-align: right; font-weight: bold ">
-                      Price :
-                  </div>
-                  <div class="col" id="p" style="text-align: left;">
-                  </div>
-              </div>
-              <br>
-              <p id="response"></p>
-           <button type="button"  class="btn btn-success update-cart card_zoom" id="cart"
-                   style="background: #FBC226; border-color: #FBC226; color: white; font-size: 15px; font-weight: bold">
-               Add to Cart
-           </button>
-      </div>
-      </div>
-          <p></p>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary card_zoom" data-dismiss="modal"
-                 style="background: #e44725; border-color: #e44725; color: white; font-size: 15px; font-weight: bold">
-            Close
-        </button>
-
-      </div>
+    <div class="modal fade"
+         id="DishModal"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="text-align: center">
+                    <img src=""
+                         alt="..."
+                         name="product_image"
+                         class="img-thumbnail center_res">
+                    <div class="container">
+                        <br>
+                        <div class="row">
+                            <div class="col" style="text-align: right; font-weight: bold; ">Product :</div>
+                            <div class="col" id="output" style="text-align: left;"></div>
+                        </div>
+                        <p>
+                        </p>
+                        <div class="row">
+                            <div class="col" style="text-align: right; font-weight: bold ">Servings :</div>
+                            <div class="col" id="quan" style="text-align: left;"></div>
+                        </div>
+                        <p>
+                        </p>
+                        <div class="row">
+                            <div class="col" style="text-align: right; font-weight: bold ">Price :</div>
+                            <div class="col" id="p" style="text-align: left;"></div>
+                        </div>
+                        <br>
+                        <p id="response">
+                        </p>
+                        <button type="button"
+                                class="btn btn-success update-cart card_zoom"
+                                id="cart"
+                                style="background: #FBC226; border-color: #FBC226; color: white; font-size: 15px; font-weight: bold">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+                <p>
+                </p>
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-primary card_zoom"
+                            data-dismiss="modal"
+                            style="background: #e44725; border-color: #e44725; color: white; font-size: 15px; font-weight: bold">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-
-<script type="text/javascript" src="../../static/js/cart.js "></script>
-
+    <script type="text/javascript" src="../../static/js/cart.js "></script>
 {% endblock %}
