@@ -53,20 +53,23 @@
                     <p class="card-text" style="font-weight: bold; color: #FBC226">$ {{ purchase.seller_price }}</p>
                 </div>
                 <div class="col">
-                    <p class="card-text">Qty: {{ purchase.quantity }}</p>
+                    <p class="card-text" style="font-weight: bold; color: #666666; text-align: right">
+                            Qty: {{ purchase.quantity }}
+                            </p>
                 </div>
             </div>
-            <br>
+              <hr style="border: 1px solid #FBC226">
             <div class="row">
                 <div class="col">
                 </div>
                 <div class="col">
                     <div style="background: #ffffe6; border: 2px solid #FBC226; width: 105px; height: 45px;
                         color: #FBC226; text-align: center; margin-left: 15px">
-                        <b style="position: relative; top: 6px"> In Progress</b></a>
+                        <b style="position: relative; top: 6px"> Completed</b></a>
                     </div>
                 </div>
             </div>
+              <hr>
               <p></p>
           {% endfor %}
             <br>
