@@ -3,12 +3,14 @@ import json
 
 import stripe
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
+from django.db.models import Q
 
 from develop import verify
 from develop.forms import (
@@ -19,10 +21,11 @@ from develop.forms import (
     SellerSettings,
     VerifyForm,
     UserCreationForm,
+    EditDishInfoForm,
 )
 from develop.models import BuyerInfo, SellerInfo, Product, Order, Cart, Purchase
 from .forms import searching_restaurants, searching_dishes
-from .verify import send_message_to_seller
+from .verify import send_message_to_seller, send_message_to_buyer
 
 """
 """
@@ -58,13 +61,13 @@ class CancelView(TemplateView):
 # for successful the order
 def Success(request):
     userdetails = BuyerInfo.objects.get(user=request.user)
-    cart = Cart.objects.filter(
-        order=Order.objects.get(user=request.user, complete=False),
-        user=request.user,
-        buyer=BuyerInfo.objects.get(user=request.user),
-    )
-    to = cart.first().product.seller.business_phone_number.as_e164
-    send_message_to_seller(to)
+    date = datetime.datetime.now()
+    cart = Cart.objects.filter(order=Order.objects.get(user=request.user, complete=False), user=request.user,
+                               buyer=BuyerInfo.objects.get(user=request.user))
+    to_seller = cart.first().product.seller.business_phone_number.as_e164
+    to_buyer = userdetails.user.phone.as_e164
+    send_message_to_seller(to_seller)
+    send_message_to_buyer(to_buyer)
     for i in cart:
         Purchase.objects.create(
             quantity=i.quantity,
@@ -74,8 +77,13 @@ def Success(request):
         )
     cart.delete()
     Order.objects.filter(user=request.user, complete=False).update(complete=True)
-
-    context = {"userdetails": userdetails}
+    if Order.objects.filter(user=request.user, complete=False).exists():
+        order = Order.objects.get(user=request.user, complete=False)
+        cartItems = order.get_cart_items
+    else:
+        order = {"get_cart_total": 0, "get_cart_items": 0}
+        cartItems = order["get_cart_items"]
+    context = {"userdetails": userdetails, "date": date, "cartItems": cartItems}
     return render(request, "buyer/Order/success.html", context)
 
 
@@ -135,6 +143,12 @@ def verify_code(request):
                 request.user.is_verified = True
                 request.user.save()
                 return redirect("option")
+            else:
+                messages.error(request, "Incorrect Code.Try Again")
+                form = VerifyForm()
+                context = {"form": form}
+            return render(request, "twilio/verify.html", context)
+
         else:
             form = VerifyForm()
             context = {"form": form}
@@ -169,8 +183,8 @@ def buyer_dashboard(request):
         if filledform.is_valid():
             print(filledform["dishname"].value(), filledform["category"].value())
             if (
-                filledform["dishname"].value() == ""
-                and filledform["category"].value() == ""
+                    filledform["dishname"].value() == ""
+                    and filledform["category"].value() == ""
             ):
                 disheslist = Product.objects.all()
             else:
@@ -282,44 +296,72 @@ def editmenu(request):
     dishes = Product.objects.filter(user=request.user).order_by("product")
 
     form = DishInfoForm
-    context = {"dishes": dishes, "addform": form, "userdetails": user_details}
+    edit_form = EditDishInfoForm
+    context = {
+        "dishes": dishes,
+        "addform": form,
+        "editform": edit_form,
+        "userdetails": user_details,
+    }
     return render(request, "seller/editmenu.html", context)
 
 
 # remove item from edit menu page
-def delete_food_item(request):
-    token = request.session["product_item"]  # get 'token' from the session
-    Product.objects.get(product=token).delete()
-    return render(request, "seller/editmenu.html")
+def delete_food_item(request, id):
+    user_details = SellerInfo.objects.get(user=request.user)
+    try:
+        Product.objects.get(user=user_details.user, id=id).delete()
+    except:
+        return HttpResponseRedirect("/seller/editmenu")
+
+    # get 'token' from the session
+    # Product.objects.get(product=token).delete()
+    return HttpResponseRedirect("/seller/editmenu")
 
 
 # edit item on the edit menu page
 def item(request):
-    token = request.session["product_item"]  # get 'token' from the session
-    # renew session : request.session.pop('token', None)
-    print(token)
-    if request.method != "POST":
-        food_item = Product.objects.get(product=token)
-        p = food_item.product
-        price = food_item.price
-        category = food_item.category
-        servings = food_item.servings
-        image = food_item.image
-        context = {
-            "product": p,
-            "servings": servings,
-            "price": price,
-            "category": category,
-            "image": image,
-        }
-        form = DishInfoForm(initial=context)
-        context = {"editingform": form}
-        return render(request, "seller/editmenu.html", context)
-    else:
-        # Purchase.objects.create(quantity=i.quantity, seller_price=i.product.price, product=i.product, order=i.order)
-        # cart.delete()
-        # Order.objects.filter(user=request.user, complete=False).update(complete=True)
-        return HttpResponseRedirect("/seller/editmenu")
+    stripe_update = False
+    if request.method == "POST":
+        filled_form = EditDishInfoForm(request.POST, request.FILES)
+        filled_form.fields["image"].required = False
+        if filled_form.is_valid():
+            token = filled_form.cleaned_data["id"]
+            dish = Product.objects.get(Q(user=request.user), Q(id=token))
+
+            if dish.product != filled_form.cleaned_data["product"]:
+                dish.product = filled_form.cleaned_data["product"]
+                stripe_update = True
+            dish.seller = SellerInfo.objects.get(user=request.user)
+            if filled_form.cleaned_data["image"]:
+                dish.image = filled_form.cleaned_data["image"]
+                stripe_update = True
+            dish.servings = filled_form.cleaned_data["servings"]
+            dish.category = filled_form.cleaned_data["category"]
+            if dish.price != filled_form.cleaned_data["price"]:
+                dish.price = filled_form.cleaned_data["price"]
+                stripe_update = True
+
+            if stripe_update:
+                product = stripe.Product.modify(
+                    dish.stripe_product_id, name=dish.product, images=[dish.image]
+                )
+                # activate new price
+                unit_price = float(dish.price) * 100
+                stripe_price = stripe.Price.create(
+                    unit_amount=int(unit_price),
+                    currency="cad",
+                    product=product.id,
+                    transfer_lookup_key=True,
+                )
+                dish.stripe_price_id = stripe_price.id
+
+            dish.save()
+
+            return HttpResponseRedirect("/seller/editmenu")
+        else:
+            for msg in filled_form.errors:
+                print(filled_form.errors[msg])
 
 
 # seller page settings
@@ -426,8 +468,7 @@ def order(request):
     current_orders = []
 
     for orders in all_orders:
-        if orders.timestamp.day == today:
-            current_orders.append(orders)
+        current_orders.append(orders)
 
     # For current orders
     for order_object in current_orders:
@@ -675,10 +716,39 @@ def add_dish(request):
 # ability to edit food item on seller page/edit menu
 @csrf_exempt
 def edit_item(request):
-    post_data = json.loads(request.body.decode("utf-8"))
-    productname = post_data["productname"]
-    request.session["product_item"] = productname  # set 'businessname' in the session
-    return JsonResponse({"code": 200})
+    user_details = SellerInfo.objects.get(user=request.user)
+    if request.method == "GET":
+        return item(request)
+
+    else:
+        filled_form = DishInfoForm(request.POST, request.FILES)
+        if filled_form.is_valid():
+            dish = Product()
+
+            # TODO : add price from Price Table
+            dish.user = request.user
+            dish.price = filled_form.cleaned_data["price"]
+            unit_price = float(dish.price) * 100
+            dish.product = filled_form.cleaned_data["product"]
+            dish.seller = SellerInfo.objects.get(user=request.user)
+            dish.image = filled_form.cleaned_data["image"]
+            dish.servings = filled_form.cleaned_data["servings"]
+            dish.category = filled_form.cleaned_data["category"]
+            product = stripe.Product.create(name=dish.product, images=[dish.image])
+            dish.stripe_product_id = product.id
+            stripe_price = stripe.Price.create(
+                unit_amount=int(unit_price),
+                currency="cad",
+                product=product.id,
+            )
+            dish.stripe_price_id = stripe_price.id
+            dish.save()
+
+            return HttpResponseRedirect("/seller/editmenu")
+        else:
+
+            for msg in filled_form.errors:
+                print(filled_form.errors[msg])
 
 
 # settings for buyer page
@@ -744,10 +814,10 @@ def add_cart(request):
         )
         orderItem.save()
 
-        return JsonResponse({"code": 200})
+        return JsonResponse({'status': 'success'})
     else:
 
-        return JsonResponse({"code": 200})
+        return JsonResponse({'status': 'error'})
 
 
 # deleting item from card
@@ -770,15 +840,27 @@ def delete_cart(request):
 @csrf_exempt
 def modify_cart(request):
     post_data = json.loads(request.body.decode("utf-8"))
-    item_id = post_data["item_id"]
+    item_id = post_data["product"]
     user_id = request.user.id
-    quantity = post_data["servings"]
+    quantity = post_data["quantity"]
 
-    c = Cart.objects.get(user_id=user_id, item_id=item_id)
-    c.servings = quantity
+    c = Cart.objects.get(user_id=user_id, id=item_id)
+    c.quantity = quantity
     c.save()
+    if request.user.is_authenticated:
+        customer = request.user
+        order, _ = Order.objects.get_or_create(
+            user=customer,
+            buyer=BuyerInfo.objects.get(user=request.user),
+            complete=False,
+        )
+        cartTotal = order.get_cart_total
+        cartItems = order.get_cart_items
+    else:
+        cartItems = 0
+        cartTotal = 0
 
-    return JsonResponse({"code": 200})
+    return JsonResponse({"code": 200, "cartTotal": cartTotal, "cartItems": cartItems})
 
 
 # cart page
@@ -808,6 +890,14 @@ def cart(request):
         "cartItems": cartItems,
     }
     return render(request, "buyer/Order/cart.html", context)
+
+
+def delete_cart_item(request, id):
+    try:
+        Cart.objects.filter(user_id=request.user, id=id).delete()
+    except:
+        return HttpResponseRedirect("/cart")
+    return HttpResponseRedirect("/cart")
 
 
 @csrf_exempt
