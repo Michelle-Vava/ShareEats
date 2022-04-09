@@ -41,12 +41,14 @@ class BuyerInfo(models.Model):
 
 # product table
 class Product(models.Model):
+    BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
+
     product = models.CharField(max_length=30)
     stripe_product_id = models.CharField(max_length=100)
     servings = models.IntegerField()
     stripe_price_id = models.CharField(max_length=100)
     price = models.CharField(max_length=5)
-    availability = models.BooleanField(default=True) # bool to check product availability
+    availability = models.BooleanField(choices=BOOL_CHOICES, default=True) # bool to check product availability
     category = models.CharField(max_length=20)
     # file will be uploaded to MEDIA_ROOT / uploads
     image = models.ImageField(upload_to='images')
