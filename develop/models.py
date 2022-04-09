@@ -46,7 +46,7 @@ class Product(models.Model):
     servings = models.IntegerField()
     stripe_price_id = models.CharField(max_length=100)
     price = models.CharField(max_length=5)
-    availability = models.CharField(max_length=15)
+    availability = models.BooleanField(default=True) # bool to check product availability
     category = models.CharField(max_length=20)
     # file will be uploaded to MEDIA_ROOT / uploads
     image = models.ImageField(upload_to='images')
