@@ -1,3 +1,5 @@
+
+
 {%  extends 'base_templates/seller_dashboard_base.html' %}
 {% load crispy_forms_filters %}
 
@@ -9,12 +11,13 @@
         <div class="col-4 border" style="height: 850px; padding: 25px;  background: white">
             <br>
             <div class="container py-3 p_profile" style="background: #FBC226; height: 131px">
-                <a style="font-family: Arial; font-size: 20px">&nbsp;<i class="fa fa-building"></i><b>&nbsp; Business Profile & Payment</b></a>
+                <i class="fa fa-building"></i><b>&nbsp; Business Profile & Payment</b>
                 <div class="container-fluid">
                     <p style="font-size: 17px; color: #666666; word-break: break-word"> Edit business profiles/payments.<br> Update your changes.</p>
                 </div>
             </div>
             <br>
+
             <div class="container py-3 p_profile" style="background: white; height: 131px">
                 <a onclick="location.href='{% url 'seller personalsettings' %}'" style="font-family: Arial; font-size: 20px">
                     &nbsp;<i class="fa fa-user"></i><b>&nbsp; Personal Profile</b>
@@ -23,6 +26,7 @@
                 </div>
                 </a>
             </div>
+
         </div>
         <div class="col border" style="background: #f5f5f5; padding: 50px">
             <p style="font-family: Arial; font-size: 30px;"><b>Business Profile and Payment</b></p>
@@ -62,7 +66,7 @@
         <div class="col-auto">
 
         </div>
-      
+
     </div>
     </div>
 {% endblock %}
@@ -86,19 +90,16 @@
 <div class="fieldWrapper">
     {{ settings.business_phone_number.errors }}
     <label for="{{ settings.business_phone_number.id_for_label }}"></label>
-    
+
     {{ settings.business_phone_number | as_crispy_field }}
 </div>
 <link rel="stylesheet" type="text/css" href="../static/css/button.css" />
     <input id = "save" type="submit" value="Update">
-    
+
     <a id="cancel" href="dashboard"> Cancel </a>
 </form>
-        
+
 
     </div>
 -->
-
-
-
 
