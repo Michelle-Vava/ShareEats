@@ -12,18 +12,23 @@ def send(phone):
 
 
 def check(phone, code):
-    try:
-        result = verify.verification_checks.create(to=phone, code=code)
-    except TwilioRestException:
-        print('no')
+    result = verify.verification_checks.create(to=phone, code=code)
+    if result.status == "approved":
+        return True
+    else:
         return False
-    return result.status == 'approved'
+    # try:
+
+    # except TwilioRestException:
+    #     print('no')
+    #     return False
+    # return result.status == 'approved'
 
 
 def send_message_to_seller(to):
     # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     client.messages.create(
-        body='Hi,user has just purchased an item from you',
+        body='Hi,a ShareEats user has just purchased an item from you.',
         to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
 
