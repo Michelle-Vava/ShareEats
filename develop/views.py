@@ -391,8 +391,7 @@ def order(request):
     current_orders = []
 
     for orders in all_orders:
-        if orders.timestamp.day == today:
-            current_orders.append(orders)
+        current_orders.append(orders)
 
     # For current orders
     for order_object in current_orders:
