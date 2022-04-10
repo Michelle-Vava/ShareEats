@@ -16,27 +16,54 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        <link rel="stylesheet" type="text/css" href="../../static/css/sidebar.css" />
+        <link rel="stylesheet" type="text/css" href="../../static/css/sidebar2.css" />
         <link rel="stylesheet"
               href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="../../static/css/editmenu.css" />
 
         <title></title>
     </head>
-    <div id="mySidebar"  class="sidebar">
-        <a>
-            <img src="../../static/img/Share%20Eats%20Logo%20-%20Words%20Only.png"
-                 width="160"
-                 height="35">
-        </a>
-        <a onclick="location.href='{% url 'seller dashboard' %}'"><i class="fa fa-dashboard"></i> Dashboard</a>
-        <a onclick="location.href='{% url 'edit menu' %}'"><i class="fa fa-cutlery"></i> Edit Menu</a>
-        <a onclick="location.href='{% url 'report' %}'"><i class="fa fa-pie-chart"></i> Reports </a>
-        <a onclick="location.href='{% url 'seller settings' %}'"><i class="fa fa-gear"></i>  Settings</a>
+
+    <div id="mySidebar" class="sidebar bg-white text-dark sidebar_new"
+     style="text-align: center; font-size: 20px; z-index: 2">
+    <a><img src="../../static/img/Share%20Eats%20Logo%20-%20Words%20Only.png"  width="160"
+     height="35"></a>
+  <ul class="nav nav-sidebar list-group " style="color: #585858;">
+    <div class="container" style="padding: 18px;">
+        <li {% if request.resolver_match.url_name == 'seller dashboard' %}class="active" style="color: white" {% endif %}>
+            <a onclick="location.href='{% url 'seller dashboard' %}'" style="height: 50px;">
+                <i class="fa fa-dashboard" style="position: relative; top: -6px"></i>
+                <b style="position: relative; top: -5px">Dashboard</b></a>
+        </li>
     </div>
+    <div class="container" style="padding: 18px">
+        <li {% if request.resolver_match.url_name == 'edit menu' %}class="active" style="color: white" {% endif %}>
+            <a onclick="location.href='{% url 'edit menu' %}'" style="height: 50px;">
+                <i class="fa fa-bars" style="position: relative; top: -6px"></i>
+                <b style="position: relative; top: -5px">Edit Menu</b></a>
+        </li>
+    </div>
+    <div class="container " style="padding: 18px">
+        <li {% if request.resolver_match.url_name == 'report' %}class="active" style="color: white" {% endif %}>
+            <a onclick="location.href='{% url 'report' %}'" style="height: 50px;">
+                <i class="fa fa-pie-chart" style="position: relative; top: -6px"></i>
+                <b style="position: relative; top: -5px">Reports</b></a>
+        </li>
+    </div>
+    <div class="container " style="padding: 18px">
+        <li {% if request.resolver_match.url_name == 'seller settings' %}class="active" style="color: white" {% endif %}>
+            <a onclick="location.href='{% url 'seller settings' %}'" style="height: 50px;">
+                <i class="fa fa-gear" style="position: relative; top: -6px"></i>
+                <b style="position: relative; top: -5px">Settings</b></a>
+        </li>
+    </div>
+
+  </ul>
+</div>
+
     <body style="margin: 0; background: #fffcef">
         <!-- Page content -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-white text-black" style="z-index: 1">
             <button class="navbar-toggler"
                     type="button"
                     data-toggle="collapse"
@@ -48,16 +75,20 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav mr-auto">
-                    <a class="navbar-brand" href='{% url "seller dashboard" %}'>Hello,{{ userdetails.businessname }}</a>
+                    <a class="navbar-brand" href='{% url "seller dashboard" %}' >Hello,{{ userdetails.businessname }}</a>
                 </ul>
                 <span class="navbar-item">
-                    <a class="nav-link" href='{% url 'buyer info' %}'>Switch to Buyer Account</a>
-                </span>
+                    <br>
+                    <div style="background: white; width: 200px; height: 40px;  text-align: center;">
+                    <a onclick="location.href='{% url 'buyer info' %}'" ><b style="position: relative; top: 6px"> Switch to Buyer Account</b></a>
+                </div>
+                    <p></p>
+                    <p></p>
+                    </span>
                 <span class="navbar-item">
-                    <button class="btn" onclick="location.href='{% url 'logout' %}'">
-                        <i class="fa fa-sign-out"></i>Logout
-                </button>
-            </span>
+                    &emsp;<button class="btn" onclick="location.href='{% url 'logout' %}'" style="background: white">
+                <i class="fa fa-sign-out"></i>Logout</button>
+                </span>
         </div>
     </nav>
     <br>
