@@ -29,7 +29,8 @@ from develop.forms import (
 )
 from develop.models import BuyerInfo, SellerInfo, Product, Order, Cart, Purchase
 from .forms import searching_restaurants, searching_dishes
-from .verify import send_message_to_buyer_complete, send_message_to_buyer_progress, send_message_to_seller, send_message_to_buyer
+from .verify import send_message_to_seller, send_message_to_buyer, send_message_to_seller_inprogress,\
+    send_message_to_buyer_inprogress, send_message_to_buyer_completed
 
 """
 """
@@ -46,7 +47,7 @@ def CreateCheckoutSessionView(request):
             line_items_list.append(
                 {"price": i.product.stripe_price_id, "quantity": i.quantity}
             )
-        YOUR_DOMAIN = "http://127.0.0.1:7000"  # change in production #changes to 8000
+        YOUR_DOMAIN = "http://127.0.0.1:8000"  # change in production #changes to 8000
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=["card"],
             line_items=line_items_list,
@@ -250,7 +251,8 @@ def seller_dashboard(request):
     for productobject in products:
         purchase = Purchase.objects.filter(
             product_id=productobject.id
-        ).exclude(order_status="completed")  # all purchase objects with same product ids and is either "seller notified" or "in progress"
+        ).exclude(
+            order_status="completed")  # all purchase objects with same product ids and is either "seller notified" or "in progress"
         for i in purchase:
             purchase_obj.append(i)
             # only filtering completed purchases
@@ -282,35 +284,55 @@ def seller_dashboard(request):
     for order in order_obj:
         buyerinfo_obj.append(BuyerInfo.objects.get(id=order.buyer_id))
 
-    all_completed_orders_list = zip(completed_order_obj, completed_buyerinfo_obj, completed_purchase_obj, completed_product_obj)
+
+    # filtering orders by orderid
+    order_dict = {}
+
+    for object in purchase_obj:
+        id = object.order
+        if id in order_dict.keys():
+            order_dict[id].append(object)
+        else:
+            order_dict[id] = [object]
+        
+
+    # zip of all list
+    all_completed_orders_list = zip(completed_order_obj, completed_buyerinfo_obj, completed_purchase_obj,
+                                    completed_product_obj)
     all_list = zip(order_obj, buyerinfo_obj, purchase_obj, product_obj)
     context = {
-        "userdetails": user_details,
-        "purchase": purchase_obj,
-        "products": products,
-        "orders": order_obj,
-        "buyerinfo": buyerinfo_obj,
-        "all": all_list,
-        "all_completed": all_completed_orders_list
-        # "all_dict"      : seller_dict
+        "userdetails"   : user_details,
+        "purchase"      : purchase_obj,
+        "products"      : products,
+        "orders"        : order_obj,
+        "buyerinfo"     : buyerinfo_obj,
+        "all"           : all_list,
+        "all_completed" : all_completed_orders_list,
+        "order_dict"    : order_dict
     }
     return render(request, "seller/seller_dashboard.html", context)
 
 
-def update_order_status(request,id):
-    user_details = SellerInfo.objects.get(
-        user=request.user
-    )
-    #print(id)
+def send_message_to_seller_completed(to_seller):
+    pass
+
+
+def update_order_status(request, id):
+    user_details = SellerInfo.objects.get(user=request.user)
+    to_seller = user_details.business_phone_number.as_e164
+
     product = Purchase.objects.get(id=id)
     order_id = product.order_id
     if product.order_status == "seller notified":
-        Purchase.objects.filter(id=id).update(order_status = "In Progress")
-        
+        Purchase.objects.filter(id=id).update(order_status="In Progress")
+
+        # send_message_to_seller_inprogress(to_seller)
+        # send_message_to_buyer_inprogress(to_buyer)
     elif product.order_status == "In Progress":
-        Purchase.objects.filter(id=id).update(order_status = "completed")
-    
-    status = True
+        Purchase.objects.filter(id=id).update(order_status="completed")
+        #send_message_to_seller_completed(to_seller)
+        # 
+
     product_list = Purchase.objects.filter(order_id=order_id)
     for products in product_list:
         if products.order_status == "seller notified":
@@ -319,8 +341,9 @@ def update_order_status(request,id):
     if status:
         buyer_id = Order.objects.get(id=order_id).user_id
         userdetails = BuyerInfo.objects.get(user_id = buyer_id)
-        phone = userdetails.user.phone.as_e164
-        send_message_to_buyer_progress(phone)
+        to_buyer = userdetails.user.phone.as_e164
+        send_message_to_buyer_inprogress(to_buyer)
+        send_message_to_seller_inprogress(to_seller)
 
     status = True
     for products in product_list:
@@ -330,8 +353,10 @@ def update_order_status(request,id):
     if status:
         buyer_id = Order.objects.get(id=order_id).user_id
         userdetails = BuyerInfo.objects.get(user_id = buyer_id)
-        phone = userdetails.user.phone.as_e164
-        send_message_to_buyer_complete(phone)
+        to_buyer = userdetails.user.phone.as_e164
+        send_message_to_buyer_completed(to_buyer)
+        send_message_to_seller_completed(to_seller)
+
         Order.objects.filter(id =order_id).update(status=True)
 
 
