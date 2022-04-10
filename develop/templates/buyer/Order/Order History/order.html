@@ -87,60 +87,6 @@
 </div>
 </div>
 
-<!--
-<div class="container-fluid border card_container justify-content-center">
-    <div class="row justify-content-center">
-        {% for id, info in info_obj_current.items %}
-            <div class="card-deck mx-2 mb-3">
-                <div class="card card_style mb-3 card_zoom" style="width: 19rem;">
-                    <p class="card-text">
-                        Order# {{ id }}
-                    </p>
-                    {% for purchase, product in info %}
-                    <div>
-                        {% if item.image %}
-                            <img src= "{{ item.image.url }}">
-                        {% else %}
-                        {% load static %}
-                            <img src={% static 'img/Food Item Deafult.png' %}>
-                        {% endif %}
-                    </div>
-                     <div class="card-body">
-                         {% if item.image %}
-                            <img src= "{{ product.image.url }}">
-                         {% else %}
-                         {% load static %}
-                            <img src={% static 'img/Food Item Deafult.png' %}>
-                        {% endif %}
-                        <div class="row card-title">
-                            <h5 class="col" style="color: #FBC226; font-weight: bold">
-                                {{ product.product }}
-                            </h5>
-                            <h5 class="col" style="text-align: right; font-weight: bold; color: #666666">
-                                <span style="color: #FBC226"> $ </span>  {{ purchase.seller_price }}
-                            </h5>
-                        </div>
-                        <p class="card-text">
-                            Qty: {{ purchase.quantity }}
-                        </p>
-                        <p class="card-text">
-                            Seller: {{ item.seller.businessname }}
-                        </p>
-                        <div class="row">
-                            <div class="col">
-                                <i class="fa fa-user"></i> Servings : {{ item.servings }}
-                            </div>
-                            <div class="col" style="text-align: right">
-                                {{ purchase.order_status }}
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-</div>
--->
+
 
 {% endblock %}

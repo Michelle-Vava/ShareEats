@@ -3,20 +3,12 @@
 <br>
 <h1>Seller Dashboard</h1>
 <br>
-<!-- <div class="alert alert-warning alert-dismissible fade show" role="alert">
-  <strong>Page currently in Progress!</strong>
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div> -->
-<br>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-lg-6">
-            Container Left
+        <div class="col-lg-10">
                 <div class="border border-warning">
       <br>
-      <h3>Order History</h3>
+      <h3>Completed Orders</h3>
       <div class= "table-wrapper-scroll-y my-custom-scrollbar">
         <table class="table table-striped">
           <thead class = "table-dark">
@@ -45,13 +37,17 @@
       </div>
     </div>
         </div>
-        <div class="col-lg-6">
-            Container Right
+        <div class="col-lg-2">
             <div class="border border-warning">
       <br>
       <h3>Seller Profile </h3>
       <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src="../static/img/default_profile.png" alt="Card image">
+           {% if item.image %}
+                            <img class="card-img-top" src= "{{ userdetails.image.url }}">
+                        {% else %}
+                            {% load static %}
+                            <img class="card-img-top" src="../static/img/default_profile.png" %}>
+                        {% endif %}
         <div class="card-body">
           <h4 class="card-title">{{ userdetails.businessname }}</h4>
           <h6 class="card-text">Description </h6>
@@ -73,34 +69,32 @@
 
 <br>
 
-<h3>Orders </h3>
-<div class="container border border-warning">
+
+<div class="container-fluid border border-warning">
+<h3>Current Orders Made</h3>
   <div class="row mt-5 justify-content-center">
+
     {% for pur in purchase %}
 
-    <div class="card" style="width: 18rem;">
-
+      <div class="card-deck mx-2 mb-3">
+      <div class="card card_style mb-3 card_zoom" style="width: 19rem;">
       <div class="card-body">
-        <h4 class="card-title">Order# {{ pur.order.id }}</h4>
+        <h4 class="card-title"  style="font-weight: bold; color: #FBC226">Order# {{ pur.order.id }}</h4>
+        <img class="card-img-top"
+                 src="{{ pur.product.image.url }}" alt="Card image cap">
+        <p class="card-text" ><strong>Buyer Name:</strong> {{ pur.order.buyer.firstname }} {{ pur.order.buyer.lastname }}</p>
+        <p class="card-text" ><strong>Product: </strong> {{ pur.product.product }}</p>
+        <p class="card-text" ><strong>Price:</strong><a style="font-weight: bold; color: #FBC226"> $ {{ pur.seller_price }}</a> </p>
+        <p class="card-text" ><strong>Qty:</strong> {{ pur.quantity }}</p>
+        <p class="card-text" ><strong>Status:</strong>  {{ pur.order_status }}</p>
 
-        <p class="card-text">Buyer Name: {{ pur.order.buyer.firstname }} {{ pur.order.buyer.lastname }}</p>
-        <p class="card-text">Product: {{ pur.product.product }}</p>
-        <p class="card-text">Price: ${{ pur.seller_price }}</p>
-        <p class="card-text">Qty: {{ pur.quantity }}</p>
-        <p class="card-text">
          <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Dropdown button
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="#">Action</a>
-    <a class="dropdown-item" href="#">Another action</a>
-    <a class="dropdown-item" href="#">Something else here</a>
-  </div>
+  <button type="button" class="btn btn-light">Update Order Status</button>
 </div>
         </p>
     </div>
   </div>
+      </div>
   {% endfor %}
   </div>
 
