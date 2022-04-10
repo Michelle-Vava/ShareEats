@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
-#from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from develop.models import User
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
@@ -38,21 +38,22 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 # take user to stripe checkout
 def CreateCheckoutSessionView(request):
     order = Cart.objects.filter(user=request.user)
-    line_items_list = []
-    for i in order:
-        line_items_list.append(
-            {"price": i.product.stripe_price_id, "quantity": i.quantity}
-        )
-
-    YOUR_DOMAIN = "http://127.0.0.1:8000"  # change in production #changes to 8000
-    checkout_session = stripe.checkout.Session.create(
-        payment_method_types=["card"],
-        line_items=line_items_list,
-        mode="payment",
-        success_url=YOUR_DOMAIN + "/success/",
-        cancel_url=YOUR_DOMAIN + "/cancel/",
-    )
-    return redirect(checkout_session.url)
+    if order:
+        line_items_list = []
+        for i in order:
+            line_items_list.append(
+                {"price": i.product.stripe_price_id, "quantity": i.quantity}
+            )
+        YOUR_DOMAIN = "http://127.0.0.1:7000"  # change in production #changes to 8000
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            line_items=line_items_list,
+            mode="payment",
+            success_url=YOUR_DOMAIN + "/success/",
+            cancel_url=YOUR_DOMAIN + "/cancel/", )
+        return redirect(checkout_session.url)
+    else:
+        return redirect("cart")
 
 
 # for canceling the order
@@ -71,7 +72,12 @@ def Success(request):
     send_message_to_seller(to_seller)
     send_message_to_buyer(to_buyer)
     for i in cart:
-        Purchase.objects.create(quantity=i.quantity, seller_price=i.product.price, product=i.product, order=i.order)
+        Purchase.objects.create(
+            quantity=i.quantity,
+            seller_price=i.product.price,
+            product=i.product,
+            order=i.order,
+        )
     cart.delete()
     Order.objects.filter(user=request.user, complete=False).update(complete=True)
     if Order.objects.filter(user=request.user, complete=False).exists():
@@ -154,6 +160,7 @@ def verify_code(request):
         form = VerifyForm()
         return render(request, "twilio/verify.html", {"form": form})
 
+
 @login_required
 def verify_code_usernamechange(request):
     User = request.user
@@ -204,8 +211,10 @@ def buyer_dashboard(request):
             ):
                 disheslist = Product.objects.all()
             else:
-                disheslist = Product.objects.filter(product__icontains=filledform["dishname"].value(),
-                                                    category__icontains=filledform["category"].value())
+                disheslist = Product.objects.filter(
+                    product__icontains=filledform["dishname"].value(),
+                    category__icontains=filledform["category"].value(),
+                )
 
         userdetails = BuyerInfo.objects.get(user=request.user)
         if Order.objects.filter(user=request.user, complete=False).exists():
@@ -226,8 +235,53 @@ def buyer_dashboard(request):
 
 # seller dashboard page
 def seller_dashboard(request):
-    user_details = SellerInfo.objects.get(user=request.user)
-    context = {"userdetails": user_details}
+    user_details = SellerInfo.objects.get(
+        user=request.user
+    )  # seller object for user logged in
+    seller_id = user_details.id
+
+    products = Product.objects.filter(
+        seller_id=user_details.id
+    )  # query set of all product objects with same seller id
+
+    purchase_obj = []
+    for productobject in products:
+        purchase = Purchase.objects.filter(
+            product_id=productobject.id
+        ).exclude(order_status="completed")  # all purchase objects with same product ids and is either "seller notified" or "in progress"
+        for i in purchase:
+            purchase_obj.append(i)
+            # only filtering completed purchases
+    completed_purchase_obj = []
+    for productobject in products:
+        purchase = Purchase.objects.filter(
+            product_id=productobject.id, order_status="completed"
+        )  # all purchase objects with same product ids and are completed
+        for i in purchase:
+            completed_purchase_obj.append(i)
+
+    order_obj = []
+    product_obj = []
+    for obj in purchase_obj:
+        order_obj.append(Order.objects.get(id=obj.order_id))
+        product_obj.append(Product.objects.get(id=obj.product_id))
+
+    buyerinfo_obj = []
+    for order in order_obj:
+        buyerinfo_obj.append(BuyerInfo.objects.get(id=order.buyer_id))
+
+    all_completed_orders_list = zip(order_obj, buyerinfo_obj, completed_purchase_obj, product_obj)
+    all_list = zip(order_obj, buyerinfo_obj, purchase_obj, product_obj)
+    context = {
+        "userdetails": user_details,
+        "purchase": purchase_obj,
+        "products": products,
+        "orders": order_obj,
+        "buyerinfo": buyerinfo_obj,
+        "all": all_list,
+        "all_completed": all_completed_orders_list
+        # "all_dict"      : seller_dict
+    }
     return render(request, "seller/seller_dashboard.html", context)
 
 
@@ -316,6 +370,7 @@ def item(request):
 # seller page settings
 def seller_settings(request):
     user_details = SellerInfo.objects.get(user=request.user)
+
     if request.method != "POST":
         seller = SellerInfo.objects.get(user=request.user)
         businessname = seller.businessname
@@ -395,8 +450,8 @@ def seller_personalsettings(request):
             user = filled_form.save()
             verify.send(filled_form.cleaned_data.get('phone'))
             login(request, user)
-            SellerInfo_obj = SellerInfo.objects.get(user = old_user)
-            List = Product.objects.filter(seller = SellerInfo_obj)
+            SellerInfo_obj = SellerInfo.objects.get(user=old_user)
+            List = Product.objects.filter(seller=SellerInfo_obj)
             for product in List:
                 product.user = user
                 product.save()
@@ -405,7 +460,7 @@ def seller_personalsettings(request):
             Buyer_obj = BuyerInfo.objects.get(user=old_user)
             Buyer_obj.user = user
             Buyer_obj.save()
-            User.objects.filter(username = old_user.username).delete()
+            User.objects.filter(username=old_user.username).delete()
             transaction.commit()
             return redirect('verify change')
 
@@ -418,7 +473,6 @@ def seller_personalsettings(request):
             return render(request, "seller/seller_personalsettings.html", context)
 
 
-
 # order page
 def order(request):
     userdetails = BuyerInfo.objects.filter(user=request.user)
@@ -427,8 +481,12 @@ def order(request):
     current = datetime.datetime.now()
     today = current.day
 
-    all_orders = Order.objects.filter(user=request.user, buyer=BuyerInfo.objects.get(user=request.user), complete=True,
-                                      status=False)
+    all_orders = Order.objects.filter(
+        user=request.user,
+        buyer=BuyerInfo.objects.get(user=request.user),
+        complete=True,
+        status=False,
+    )
 
     current_orders = []
 
@@ -440,8 +498,8 @@ def order(request):
 
         current_productid = []
         purchasequery = Purchase.objects.filter(
-            order_id=order_object.id,
-            order_status="seller notified")  # filtered purchase queryset for orderid 8,9,10,11
+            order_id=order_object.id, order_status="seller notified"
+        )  # filtered purchase queryset for orderid 8,9,10,11
 
         current_purchaseobjects = []
         for purchase_object in purchasequery:
@@ -456,7 +514,9 @@ def order(request):
             )  # filtered queryset list where product id = filtered product ids
             current_productobjects.append(productobject)
 
-        info_dict_current[order_object.id] = zip(current_purchaseobjects, current_productobjects)
+        info_dict_current[order_object.id] = zip(
+            current_purchaseobjects, current_productobjects
+        )
 
     # For returning 0 items if there are no incomplete orders
     if Order.objects.filter(user=request.user, complete=False).exists():
@@ -481,15 +541,20 @@ def complete_order(request):
     info_dict_complete = {}
     userdetails = BuyerInfo.objects.get(user=request.user)
 
-    all_orders = Order.objects.filter(user=request.user, buyer=BuyerInfo.objects.get(user=request.user), complete=True,
-                                      status=True)
+    all_orders = Order.objects.filter(
+        user=request.user,
+        buyer=BuyerInfo.objects.get(user=request.user),
+        complete=True,
+        status=True,
+    )
 
     # For complete orders
     for order_object in all_orders:
 
         all_productid = []
         purchasequery = Purchase.objects.filter(
-            order_id=order_object.id, order_status="completed")  # filtered purchase queryset for orderid 8,9,10,11
+            order_id=order_object.id, order_status="completed"
+        )  # filtered purchase queryset for orderid 8,9,10,11
 
         all_purchaseobjects = []
         for purchase_object in purchasequery:
@@ -504,7 +569,9 @@ def complete_order(request):
             )  # filtered queryset list where product id = filtered product ids
             all_productobjects.append(productobject)
 
-        info_dict_complete[order_object.id] = zip(all_purchaseobjects, all_productobjects)
+        info_dict_complete[order_object.id] = zip(
+            all_purchaseobjects, all_productobjects
+        )
 
         # For returning 0 items if there are no incomplete orders
     if Order.objects.filter(user=request.user, complete=False).exists():
@@ -514,20 +581,31 @@ def complete_order(request):
         order = {"get_cart_total": 0, "get_cart_items": 0}
         cartItems = order["get_cart_items"]
 
-    context = {"userdetails": userdetails, "info_obj_complete": info_dict_complete, "cartItems": cartItems}
+    context = {
+        "userdetails": userdetails,
+        "info_obj_complete": info_dict_complete,
+        "cartItems": cartItems,
+    }
     return render(request, "buyer/Order/Order History/completed_order.html", context)
 
 
 def incomplete_order(request):
     info_dict_incomplete = {}
     userdetails = BuyerInfo.objects.get(user=request.user)
-    incomplete_orders = Order.objects.filter(user=request.user, buyer=BuyerInfo.objects.get(user=request.user),
-                                             complete=False)
+    incomplete_orders = Order.objects.filter(
+        user=request.user,
+        buyer=BuyerInfo.objects.get(user=request.user),
+        complete=False,
+    )
     # For incomplete orders
     for order_object in incomplete_orders:
 
-        productId = []  # product id where foreign key of order matches in product entity
-        cartquery = Cart.objects.filter(order_id=order_object.id)  # filtered purchase queryset for orderid 12
+        productId = (
+            []
+        )  # product id where foreign key of order matches in product entity
+        cartquery = Cart.objects.filter(
+            order_id=order_object.id
+        )  # filtered purchase queryset for orderid 12
 
         cartobjects = []  # query objects for purchase entity
         for cart_object in cartquery:
@@ -538,7 +616,8 @@ def incomplete_order(request):
         productobjects = []
         for j in productId:
             productobjects.append(
-                Product.objects.get(id=j))  # filtered queryset list where product id = filtered product ids
+                Product.objects.get(id=j)
+            )  # filtered queryset list where product id = filtered product ids
         info_dict_incomplete[order_object.id] = zip(cartobjects, productobjects)
         # For returning 0 items if there are no incomplete orders
     if Order.objects.filter(user=request.user, complete=False).exists():
@@ -548,7 +627,11 @@ def incomplete_order(request):
         order = {"get_cart_total": 0, "get_cart_items": 0}
         cartItems = order["get_cart_items"]
 
-    context = {"userdetails": userdetails, "info_obj_incomplete": info_dict_incomplete, "cartItems": cartItems}
+    context = {
+        "userdetails": userdetails,
+        "info_obj_incomplete": info_dict_incomplete,
+        "cartItems": cartItems,
+    }
     return render(request, "buyer/Order/Order History/incomplete_order.html", context)
 
 
@@ -742,13 +825,18 @@ def add_cart(request):
     product = Product.objects.get(product=item)
     currentCart = Cart.objects.filter(user=request.user).first()
     if currentCart is None or product.seller == currentCart.product.seller:
-        orderdetails, created = Order.objects.get_or_create(user=request.user,
-                                                            buyer=BuyerInfo.objects.get(user=request.user),
-                                                            complete=False)
-        orderItem, created = Cart.objects.get_or_create(user=request.user, order=orderdetails, product=product,
-                                                        buyer=BuyerInfo.objects.get(user=request.user),
-                                                        quantity=quantity
-                                                        )
+        orderdetails, created = Order.objects.get_or_create(
+            user=request.user,
+            buyer=BuyerInfo.objects.get(user=request.user),
+            complete=False,
+        )
+        orderItem, created = Cart.objects.get_or_create(
+            user=request.user,
+            order=orderdetails,
+            product=product,
+            buyer=BuyerInfo.objects.get(user=request.user),
+            quantity=quantity,
+        )
         orderItem.save()
 
         return JsonResponse({'status': 'success'})
