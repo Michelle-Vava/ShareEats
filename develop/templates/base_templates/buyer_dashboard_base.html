@@ -90,7 +90,7 @@
         <a class="navbar-brand" href='{% url "buyer dashboard" %}'> Hello,{{ userdetails.firstname }} </a>
 
       </ul>
-      <span class="navbar-item">
+      <span class=" button_zoom navbar-item">
           <br>
           <div style="background: white; width: 200px; height: 40px;  text-align: center;">
             <a onclick="location.href='{% url 'seller info' %}'" ><b style="position: relative; top: 6px"> Switch to Seller Account</b></a>
@@ -104,14 +104,14 @@
     </span>
 
 
-    <span class="navbar-item">
+    <span class="navbar-item button_zoom">
         &emsp;<button type="button" class="btn btn-light" onclick="location.href='{% url 'cart' %}'" style="background: white">
   Cart <i class="fa fa-shopping-cart"></i> <span class="badge badge-light" id="top-bar-cart-items">Items: {{ cartItems }}</span>
 </button>
 
     </span>
 
-    <span class="navbar-item">
+    <span class="navbar-item button_zoom">
 
       &emsp;<button class="btn" onclick="location.href='{% url 'logout' %}'" style="background: white">
           <i class="fa fa-sign-out"></i>Logout</button>

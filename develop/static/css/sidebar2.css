@@ -27,6 +27,14 @@ li.active a{
   color: white;
 }
 
+.button_zoom {
+    transition: transform .2s;
+}
+
+.button_zoom:hover {
+    transform: scale(0.85);
+}
+
 div.content {
   margin-left: 230px;
   padding: 1px 16px;
