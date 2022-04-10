@@ -7,7 +7,7 @@
         <b>Edit Menu</b>
     </h1>
     <p style="font-family: Arial; font-size: 20px">
-        You can add items that the buyers can view and purchase from you.
+        You can add/edit/delete items you want like to sell to Share Eats buyers.
     </p>
     <div class="container-fluid card_container justify-content-center">
         <div class="card card_style mx-2 card_zoom" style="width: 8rem;">
@@ -40,9 +40,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-warning"   role="alert">
-                        **Please make sure your food item image is in a .png or .jpg format!
-                    </div>
                     <form enctype="multipart/form-data"
                           class='form-control '
                           action="{% url 'add product' %}"
@@ -122,9 +119,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-warning"   role="alert">
-                        **Please make sure your food item image is in a .png or .jpg format!
-                    </div>
+
                     <form enctype="multipart/form-data"
                           class='form-control'
                           action="{% url 'item editing' %}"
@@ -154,9 +149,11 @@
                         </div>
                         <div class="fieldWrapper" id = "availability">
                             {{ editform.availability.errors }}
-                            <label for="{{ form.availability.id_for_label }}">Availabile: &emsp;</label>
+                            <span class="help-block"><strong>Item will not be displayed to buyer if "No" is selected.</strong></span>
+                            <br>
+                            <label for="{{ form.availability.id_for_label }}">Availabile:&emsp;</label>
                             {{ editform.availability }}
-                            <span class="help-block">&emsp; Item will not be displayed to buyer if selected "No"</span>
+
                         </div>
                         <div class="fieldWrapper" id = "image">
                             {{ editform.image.errors }}
