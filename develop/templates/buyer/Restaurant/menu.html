@@ -47,7 +47,7 @@
                                     <a id="buy"
                                        data-product="{{ t.product }}"
                                        data-action="add"
-                                       data-price="{{ t.price }}"
+                                       data-price="{{ t.price | floatformat:2 }}"
                                        data-image="{{ t.image.url }}"
                                        data-quantity="{{ t.servings }}"
                                        data-toggle="modal"
