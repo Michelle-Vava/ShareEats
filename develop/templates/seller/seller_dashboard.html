@@ -1,15 +1,14 @@
 {% extends 'base_templates/seller_dashboard_base.html' %}
 {% block content %}
  <h1 style="font-family: Arial; font-size: 40px">
-        <b>  Seller Dashboard</b>
+        <b>  Hello, {{ userdetails.businessname }}</b>
     </h1>
-<br>
 
-    <div class="container-fluid border">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-9 border" style="height: 550px; padding: 15px">
-                <h3 style="background: white">Completed Orders</h3>
-                <div class="container" style="background: white; height: 460px">
+            <div class="col-9 " style="height: 550px; padding: 15px">
+                <div class="container" style="background: white; height: 500px">
+                    <br><h3 style="font-weight: bold">Completed Orders</h3><br>
                     <div class="container border table-wrapper-scroll-y my-custom-scrollbar" >
                         <table class="table table-striped">
                             <thead class="table-dark">
@@ -27,7 +26,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col border" style="height: 550px; padding: 10px">
+            <div class="col" style="height: 550px; padding: 10px">
                 <div class="justify-content-center card container border" style="width: 20rem;">
                       {% if userdetails.image %}
                       <img class="card-img-top" src="{{ userdetails.image.url }}">
@@ -60,9 +59,9 @@
         </div>
         <div class="row">
             <div class="col" style="padding: 15px">
-                <div class="container-fluid border">
-                  <h3>Current Orders Made</h3>
-                  <div class="row mt-5 justify-content-center" style="background: white">
+                <div class="container-fluid border" style="background: white">
+                    &emsp;<h3 style="font-weight: bold">Current Orders Made</h3>
+                  <div class="row mt-5">
                     {% for orderid, purchaseobj in order_dict.items %}
                     <div class="card-deck mx-2 mb-3" >
                       <div class="card card_style mb-3 " style="width: 19rem;">
