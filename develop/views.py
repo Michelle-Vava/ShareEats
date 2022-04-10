@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
-#from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from develop.models import User
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
@@ -42,15 +42,15 @@ def CreateCheckoutSessionView(request):
         line_items_list = []
         for i in order:
             line_items_list.append(
-            {"price": i.product.stripe_price_id, "quantity": i.quantity}
-        )
+                {"price": i.product.stripe_price_id, "quantity": i.quantity}
+            )
         YOUR_DOMAIN = "http://127.0.0.1:7000"  # change in production #changes to 8000
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=["card"],
             line_items=line_items_list,
             mode="payment",
             success_url=YOUR_DOMAIN + "/success/",
-            cancel_url=YOUR_DOMAIN + "/cancel/",)
+            cancel_url=YOUR_DOMAIN + "/cancel/", )
         return redirect(checkout_session.url)
     else:
         return redirect("cart")
@@ -160,6 +160,7 @@ def verify_code(request):
         form = VerifyForm()
         return render(request, "twilio/verify.html", {"form": form})
 
+
 @login_required
 def verify_code_usernamechange(request):
     User = request.user
@@ -239,7 +240,6 @@ def seller_dashboard(request):
     )  # seller object for user logged in
     seller_id = user_details.id
 
-
     products = Product.objects.filter(
         seller_id=user_details.id
     )  # query set of all product objects with same seller id
@@ -248,58 +248,38 @@ def seller_dashboard(request):
     for productobject in products:
         purchase = Purchase.objects.filter(
             product_id=productobject.id
-        )  # all purchase objects with same product ids
+        ).exclude(order_status="completed")  # all purchase objects with same product ids and is either "seller notified" or "in progress"
         for i in purchase:
             purchase_obj.append(i)
+            # only filtering completed purchases
+    completed_purchase_obj = []
+    for productobject in products:
+        purchase = Purchase.objects.filter(
+            product_id=productobject.id, order_status="completed"
+        )  # all purchase objects with same product ids and are completed
+        for i in purchase:
+            completed_purchase_obj.append(i)
 
     order_obj = []
     product_obj = []
     for obj in purchase_obj:
         order_obj.append(Order.objects.get(id=obj.order_id))
-        product_obj.append(Product.objects.get(id = obj.product_id))
+        product_obj.append(Product.objects.get(id=obj.product_id))
 
     buyerinfo_obj = []
     for order in order_obj:
-        buyerinfo_obj.append(BuyerInfo.objects.get(id = order.buyer_id))
+        buyerinfo_obj.append(BuyerInfo.objects.get(id=order.buyer_id))
 
-
-    # for seller card
-    # seller_dict = {}
-
-    # for object in order_obj:
-
-    #     if object.id not in seller_dict.keys():
-    #         dict_purchase_obj = []  # all purchase objects with same seller
-    #         for productobject in products:
-    #             purchase = Purchase.objects.filter(
-    #                 product_id=productobject.id
-    #             )  # all purchase objects with same product ids
-    #             for i in purchase:
-    #                 dict_purchase_obj.append(i)
-
-    #         dict_order_obj = []
-    #         dict_product_obj = []
-    #         for obj in dict_purchase_obj:
-    #             dict_order_obj.append(Order.objects.get(id=obj.order_id))
-    #             dict_product_obj.append(Product.objects.get(id = obj.product_id))
-
-    #         dict_buyerinfo_obj = []
-    #         for object in dict_order_obj:
-    #             dict_buyerinfo_obj.append(BuyerInfo.objects.get(id=object.buyer_id))
-
-    #         seller_dict[object.id] = [zip(dict_order_obj, dict_buyerinfo_obj, dict_purchase_obj, dict_product_obj)]
-    #     else:
-    #         seller_dict[object.id].append(zip(dict_order_obj, dict_buyerinfo_obj, dict_purchase_obj, dict_product_obj))
-
-
+    all_completed_orders_list = zip(order_obj, buyerinfo_obj, completed_purchase_obj, product_obj)
     all_list = zip(order_obj, buyerinfo_obj, purchase_obj, product_obj)
     context = {
-        "userdetails"   : user_details,
-        "purchase"      : purchase_obj,
-        "products"      : products,
-        "orders"        : order_obj,
-        "buyerinfo"     : buyerinfo_obj,
-        "all"           : all_list,
+        "userdetails": user_details,
+        "purchase": purchase_obj,
+        "products": products,
+        "orders": order_obj,
+        "buyerinfo": buyerinfo_obj,
+        "all": all_list,
+        "all_completed": all_completed_orders_list
         # "all_dict"      : seller_dict
     }
     return render(request, "seller/seller_dashboard.html", context)
@@ -470,8 +450,8 @@ def seller_personalsettings(request):
             user = filled_form.save()
             verify.send(filled_form.cleaned_data.get('phone'))
             login(request, user)
-            SellerInfo_obj = SellerInfo.objects.get(user = old_user)
-            List = Product.objects.filter(seller = SellerInfo_obj)
+            SellerInfo_obj = SellerInfo.objects.get(user=old_user)
+            List = Product.objects.filter(seller=SellerInfo_obj)
             for product in List:
                 product.user = user
                 product.save()
@@ -480,7 +460,7 @@ def seller_personalsettings(request):
             Buyer_obj = BuyerInfo.objects.get(user=old_user)
             Buyer_obj.user = user
             Buyer_obj.save()
-            User.objects.filter(username = old_user.username).delete()
+            User.objects.filter(username=old_user.username).delete()
             transaction.commit()
             return redirect('verify change')
 
@@ -491,7 +471,6 @@ def seller_personalsettings(request):
             form = UserCreationForm(instance=user_details)
             context = {"userdetails": user_details, "form": filled_form}
             return render(request, "seller/seller_personalsettings.html", context)
-
 
 
 # order page
