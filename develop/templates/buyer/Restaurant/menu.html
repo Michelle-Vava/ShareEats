@@ -34,7 +34,7 @@
                                 <div class="row card-title">
                                     <h5 class="col" style="color: #FBC226; font-weight: bold">{{ t.product }}</h5>
                                     <h5 class="col"
-                                        style="text-align: right; font-weight: bold; color: #666666">$ {{ t.price }}</h5>
+                                        style="text-align: right; font-weight: bold; color: #666666">$ {{ t.price | floatformat:2 }}</h5>
                                 </div>
                                 <p class="card-text">
                                     Category: {{ t.category }}
