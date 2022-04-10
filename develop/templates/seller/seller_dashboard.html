@@ -72,9 +72,6 @@
     </div>
   </div>
 </div>
-</div>
-</div>
-
 
 <br>
 
@@ -115,52 +112,58 @@
   <h3>Current Orders Made</h3>
   <div class="row mt-5 justify-content-center">
     {% for orderid, purchaseobj in order_dict.items %}
-    
     <div class="card-deck mx-2 mb-3">
       <div class="card card_style mb-3 " style="width: 19rem;">
         <h4 class="card-title" style="font-weight: bold; color: #FBC226">Order# {{ orderid }}</h4>
         <div class="card-body">
           {% for pur in purchaseobj %}
-          {% if pur.order_status != "completed" %}
-          <img class="card-img-top" src="{{ pur.product.image.url }}" alt="Card image cap">
-          <p class="card-text">
-            <strong>Buyer Name:</strong> {{ pur.order.buyer.firstname }} {{ pur.order.buyer.lastname }}
-          </p>
-          <p class="card-text">
-            <strong>Product:</strong> {{ pur.product.product }}
-          </p>
-          <p class="card-text">
-            <strong>Price:</strong><a style="font-weight: bold; color: #FBC226">$ {{ pur.seller_price | floatformat:2
-              }}</a>
-          </p>
-          <p class="card-text">
-            <strong>Qty:</strong> {{ pur.quantity }}
-          </p>
-          <p class="card-text" style="text-transform: capitalize;">
-            <strong>Status:</strong> {{ pur.order_status }}
-          </p>
-          {% if pur.order_status != "In Progress" %}
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            Update Order status
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="{% url 'up-order-status' pur.id %}">In Progress</a>
-          </div>
-          {% else %}
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            Update Order status
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="{% url 'up-order-status' pur.id %}">Completed</a>
-          </div>
-          {% endif %}
-          </p>
+
+            {% if pur.order_status != "completed" %}
+            <img class="card-img-top" src="{{ pur.product.image.url }}" alt="Card image cap">
+            <p class="card-text">
+              <strong>Buyer Name:</strong> {{ pur.order.buyer.firstname }} {{ pur.order.buyer.lastname }}
+            </p>
+            <p class="card-text">
+              <strong>Product:</strong> {{ pur.product.product }}
+            </p>
+            <p class="card-text">
+              <strong>Price:</strong><a style="font-weight: bold; color: #FBC226">$ {{ pur.seller_price | floatformat:2 }}</a>
+            </p>
+            <p class="card-text">
+              <strong>Qty:</strong> {{ pur.quantity }}
+            </p>
+            <p class="card-text" style="text-transform: capitalize;">
+              <strong>Status:</strong> {{ pur.order_status }}
+            </p>
+
+            {% if pur.order_status != "In Progress" %}
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Update Order status
+            </button>
+            
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="{% url 'up-order-status' pur.id %}">In Progress</a>
+            </div>
+            <br>
+
+            {% else %}
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Update Order status
+            </button>
+            
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="{% url 'up-order-status' pur.id %}">Completed</a>
+            </div>
+            <br>
+            {% endif %}
+            {% endif %}
+
+          {% endfor %}
         </div>
       </div>
     </div>
-    {% endif %}
     {% endfor %}
   </div>
 </div>

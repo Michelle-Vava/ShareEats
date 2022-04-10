@@ -297,7 +297,6 @@ def seller_dashboard(request):
         
 
     # zip of all list
-    
     all_completed_orders_list = zip(completed_order_obj, completed_buyerinfo_obj, completed_purchase_obj,
                                     completed_product_obj)
     all_list = zip(order_obj, buyerinfo_obj, purchase_obj, product_obj)
