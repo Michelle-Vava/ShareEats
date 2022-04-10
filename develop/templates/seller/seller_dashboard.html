@@ -69,52 +69,42 @@
         </div>
     </div>
 </div>
-<div class="container border border-warning">
-
-
-    <br>
-
-
-
-
-  </div>
-  <br>
 
 
 <br>
 
 <h3>Orders </h3>
-{#<div class="container border border-warning">#}
-{#  <div class="row mt-5 justify-content-center">#}
-{#    {% for pur in purchase %} #}
-{##}
-{#    <div class="card" style="width: 18rem;">#}
-{#    #}
-{#      <div class="card-body">#}
-{#        <h4 class="card-title">Order# {{ pur.order.id }}</h4>#}
-{##}
-{#        <p class="card-text">Buyer Name: {{ pur.order.buyer.firstname }} {{ pur.order.buyer.lastname }}</p>#}
-{#        <p class="card-text">Product: {{ pur.product.product }}</p>#}
-{#        <p class="card-text">Price: ${{ pur.seller_price }}</p>#}
-{#        <p class="card-text">Qty: {{ pur.quantity }}</p>#}
-{#        <p class="card-text">#}
-{#         <div class="dropdown">#}
-{#  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
-{#    Dropdown button#}
-{#  </button>#}
-{#  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">#}
-{#    <a class="dropdown-item" href="#">Action</a>#}
-{#    <a class="dropdown-item" href="#">Another action</a>#}
-{#    <a class="dropdown-item" href="#">Something else here</a>#}
-{#  </div>#}
-{#</div>#}
-{#        </p>#}
-{#    </div>   #}
-{#  </div>#}
-{#  {% endfor %}#}
-{#  </div>#}
-{#  #}
-{#</div>#}
+<div class="container border border-warning">
+  <div class="row mt-5 justify-content-center">
+    {% for pur in purchase %}
+
+    <div class="card" style="width: 18rem;">
+
+      <div class="card-body">
+        <h4 class="card-title">Order# {{ pur.order.id }}</h4>
+
+        <p class="card-text">Buyer Name: {{ pur.order.buyer.firstname }} {{ pur.order.buyer.lastname }}</p>
+        <p class="card-text">Product: {{ pur.product.product }}</p>
+        <p class="card-text">Price: ${{ pur.seller_price }}</p>
+        <p class="card-text">Qty: {{ pur.quantity }}</p>
+        <p class="card-text">
+         <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Dropdown button
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" href="#">Action</a>
+    <a class="dropdown-item" href="#">Another action</a>
+    <a class="dropdown-item" href="#">Something else here</a>
+  </div>
+</div>
+        </p>
+    </div>
+  </div>
+  {% endfor %}
+  </div>
+
+</div>
 
 
 {% endblock %}

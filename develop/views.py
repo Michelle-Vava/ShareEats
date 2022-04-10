@@ -36,21 +36,22 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 # take user to stripe checkout
 def CreateCheckoutSessionView(request):
     order = Cart.objects.filter(user=request.user)
-    line_items_list = []
-    for i in order:
-        line_items_list.append(
+    if order:
+        line_items_list = []
+        for i in order:
+            line_items_list.append(
             {"price": i.product.stripe_price_id, "quantity": i.quantity}
         )
-
-    YOUR_DOMAIN = "http://127.0.0.1:8000"  # change in production #changes to 8000
-    checkout_session = stripe.checkout.Session.create(
-        payment_method_types=["card"],
-        line_items=line_items_list,
-        mode="payment",
-        success_url=YOUR_DOMAIN + "/success/",
-        cancel_url=YOUR_DOMAIN + "/cancel/",
-    )
-    return redirect(checkout_session.url)
+        YOUR_DOMAIN = "http://127.0.0.1:7000"  # change in production #changes to 8000
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            line_items=line_items_list,
+            mode="payment",
+            success_url=YOUR_DOMAIN + "/success/",
+            cancel_url=YOUR_DOMAIN + "/cancel/",)
+        return redirect(checkout_session.url)
+    else:
+        return redirect("cart")
 
 
 # for canceling the order
