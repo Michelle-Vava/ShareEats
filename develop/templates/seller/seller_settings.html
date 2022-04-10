@@ -34,7 +34,7 @@
                 You can edit and change your business profile and payment details down below.
             </p>
 
-            <form action="{% url 'seller settings' %}" method="post" >
+            <form enctype="multipart/form-data" class="form-control" action="{% url 'seller settings' %}" method="post" >
                 {% csrf_token %}
                 {{form | crispy }}
 

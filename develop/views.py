@@ -315,19 +315,20 @@ def item(request):
 # seller page settings
 def seller_settings(request):
     user_details = SellerInfo.objects.get(user=request.user)
-
     if request.method != "POST":
         seller = SellerInfo.objects.get(user=request.user)
         businessname = seller.businessname
         phone = seller.business_phone_number
         address = seller.address
         description = seller.description
+        image = seller.image
         context = {
             "businessname": businessname,
             "business_phone_number": phone,
             "address": address,
             "description": description,
             "userdetails": user_details,
+            "image": image,
         }
 
         form = SellerSettings(initial=context)
@@ -335,7 +336,7 @@ def seller_settings(request):
         return render(request, "seller/seller_settings.html", context)
 
     else:
-        filled_form = SellerSettings(request.POST)
+        filled_form = SellerSettings(request.POST, request.FILES)
         if filled_form.is_valid():
             seller = SellerInfo()
             seller.user = request.user
@@ -346,8 +347,19 @@ def seller_settings(request):
             ]
             seller.address = filled_form.cleaned_data["address"]
             seller.description = filled_form.cleaned_data["description"]
+
+            if filled_form.cleaned_data["image"] is None:
+                seller_current = SellerInfo.objects.get(user=request.user)
+                seller.image = seller_current.image
+            else:
+                seller.image = filled_form.cleaned_data["image"]
             seller.membership = True
             seller.save()
+            seller = SellerInfo.objects.get(user=request.user)
+            if seller.image == 'False':
+                seller = SellerInfo.objects.get(user=request.user)
+                seller.image = None
+                seller.save()
 
             return HttpResponseRedirect("/seller/dashboard")
         else:
@@ -589,6 +601,8 @@ def seller_form(request):
                 seller.description = filled_form.cleaned_data["description"]
                 seller.membership = True
                 seller.image = filled_form.cleaned_data["image"]
+
+                print("aklsfjklsadjf", type(seller.image), "when no input is given")
                 seller.save()
                 return HttpResponseRedirect("/seller/dashboard")
 

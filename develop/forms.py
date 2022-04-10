@@ -151,10 +151,10 @@ class SellerSettings(forms.ModelForm):
             }
         ),
     )
-
+    image = forms.ImageField(help_text="Optional.", required=False)
     class Meta:
         model = SellerInfo
-        fields = ["businessname", "business_phone_number", "address", "description"]
+        fields = ["businessname", "business_phone_number", "address", "description", "image"]
 
 
 class searching_restaurants(forms.Form):
