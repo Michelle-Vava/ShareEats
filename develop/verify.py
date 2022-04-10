@@ -43,19 +43,19 @@ def send_message_to_seller_inprogress(to):
 def send_message_to_buyer_inprogress(to):
     # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     client.messages.create(
-        body='the vendor is now currently making your meal.Order status: in progress',
+        body='Hi User, the vendor is now currently making your meal.Order status: in progress',
         to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
 
 def send_message_to_seller_complete(to):
     # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     client.messages.create(
-        body='Hi,a ShareEats user has been notified that order is completed.User should be on the way to pickup the order.',
+        body='Hi,a ShareEats user has been notified that order is completed. User should be on the way to pickup the order.',
         to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
 
 def send_message_to_buyer_completed(to):
     # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     client.messages.create(
-        body='the vendor is completed your order it is now ready for pickup',
+        body='Hi User, the vendor has completed your order. It is now ready for pickup',
         to=to, from_=settings.TWILIO_PHONE_NUMBER)

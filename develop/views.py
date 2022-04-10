@@ -334,6 +334,7 @@ def update_order_status(request, id):
         # 
 
     product_list = Purchase.objects.filter(order_id=order_id)
+    status = True
     for products in product_list:
         if products.order_status == "seller notified":
             status = False
