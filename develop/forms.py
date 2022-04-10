@@ -73,7 +73,7 @@ class EditDishInfoForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ["product", "servings", "price", "category", "image"]
+        fields = ["product", "servings", "price", "category", "availability", "image"]
 
     def __init__(self, *args, **kwargs):
         from django.forms.widgets import HiddenInput
@@ -151,10 +151,10 @@ class SellerSettings(forms.ModelForm):
             }
         ),
     )
-
+    image = forms.ImageField(help_text="Optional.", required=False)
     class Meta:
         model = SellerInfo
-        fields = ["businessname", "business_phone_number", "address", "description"]
+        fields = ["businessname", "business_phone_number", "address", "description", "image"]
 
 
 class searching_restaurants(forms.Form):
