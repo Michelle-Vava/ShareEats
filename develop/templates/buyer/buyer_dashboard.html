@@ -30,51 +30,53 @@
     <div class="container-fluid border card_container justify-content-center ">
         <div class="row justify-content-center">
             {% for item in dishes %}
-                <div class="card-deck mx-2 mb-3">
-                    <div class="card card_style mb-3 card_zoom" style="width: 19rem;">
-                        {% if item.image %}
-                            <img src= "{{ item.image.url }}">
-                        {% else %}
-                            {% load static %}
-                            <img src={% static 'img/Food Item Deafult.png' %}>
-                        {% endif %}
-                        <div class="card-body">
-                            <div class="row card-title">
-                                <h5 class="col" style="color: #FBC226; font-weight: bold">{{ item.product }}</h5>
-                                <h5 class="col"
-                                    style="text-align: right; font-weight: bold; color: #666666">
-                                    <span style="color: #FBC226">$</span>  {{ item.price | floatformat:2 }}
-                            </h5>
-                        </div>
-                        <p class="card-text">
-                          <i class="fa fa-group"></i>    Category: {{ item.category }}
+                {% if item.availability %}
+                    <div class="card-deck mx-2 mb-3">
+                        <div class="card card_style mb-3 card_zoom" style="width: 19rem;">
+                            {% if item.image %}
+                                <img src= "{{ item.image.url }}">
+                            {% else %}
+                                {% load static %}
+                                <img src={% static 'img/Food Item Deafult.png' %}>
+                            {% endif %}
+                            <div class="card-body">
+                                <div class="row card-title">
+                                    <h5 class="col" style="color: #FBC226; font-weight: bold">{{ item.product }}</h5>
+                                    <h5 class="col"
+                                        style="text-align: right; font-weight: bold; color: #666666">
+                                        <span style="color: #FBC226">$</span>  {{ item.price | floatformat:2 }}
+                                </h5>
+                            </div>
+                            <p class="card-text">
+                                <i class="fa fa-group"></i>    Category: {{ item.category }}
                         </p>
                         <p class="card-text">
-                          <i class="fa fa-address-card"></i>    Seller: {{ item.seller.businessname }}
-                        </p>
-                        <div class="row">
-                            <div class="col">
-                                <i class="fa fa-user"></i> Servings : {{ item.servings }}
-                        </div>
-                        <div class="col" style="text-align: right">
-                            <a id="buy"
-                               data-image="{{ item.image.url }}"
-                               data-product="{{ item.product }}"
-                               data-action="add"
-                               data-price="{{ item.price }}"
-                               data-quantity="{{ item.servings }}"
-                               data-toggle="modal"
-                               data-target="#DishModal"
-                               class="btn btn-success update-modal buy_button card_zoom"
-                               style="background: #FBC226; border-color: #FBC226; color: white; font-size: 15px; font-weight: bold">
-                                Buy
-                            </a>
-                        </div>
+                            <i class="fa fa-address-card"></i>    Seller: {{ item.seller.businessname }}
+                    </p>
+                    <div class="row">
+                        <div class="col">
+                            <i class="fa fa-user"></i> Servings : {{ item.servings }}
+                    </div>
+                    <div class="col" style="text-align: right">
+                        <a id="buy"
+                           data-image="{{ item.image.url }}"
+                           data-product="{{ item.product }}"
+                           data-action="add"
+                           data-price="{{ item.price }}"
+                           data-quantity="{{ item.servings }}"
+                           data-toggle="modal"
+                           data-target="#DishModal"
+                           class="btn btn-success update-modal buy_button card_zoom"
+                           style="background: #FBC226; border-color: #FBC226; color: white; font-size: 15px; font-weight: bold">
+                            Buy
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-    {% endfor %}
+    </div>
+{% endif %}
+{% endfor %}
 </div>
 </div>
 <br>
