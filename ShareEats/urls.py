@@ -97,6 +97,7 @@ urlpatterns = [
     path("loginverification", views.login_verify_code, name="verify_login"),
     # 2fa authentication
     path("verify/", views.verify_code, name="verify"),
+    path('verifychange/', views.verify_code_usernamechange, name='verify change'),
     path("menu/", views.menu, name="menu"),
     path("buyer/menu/", views.menu_page, name="menupage"),
     path("add-cart/", views.add_cart),

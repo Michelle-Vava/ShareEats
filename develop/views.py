@@ -6,12 +6,14 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
+#from django.contrib.auth.models import User
+from develop.models import User
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.db.models import Q
-
+from django.db import transaction
 from develop import verify
 from develop.forms import (
     BuyerSettings,
@@ -151,6 +153,25 @@ def verify_code(request):
     else:
         form = VerifyForm()
         return render(request, "twilio/verify.html", {"form": form})
+
+@login_required
+def verify_code_usernamechange(request):
+    User = request.user
+    if request.method == 'POST':
+        form = VerifyForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data.get('code')
+            if verify.check(request.user.phone.as_e164, code):
+                request.user.is_verified = True
+                request.user.save()
+                return redirect('seller personalsettings')
+        else:
+            form = VerifyForm()
+            context = {'form': form}
+            return render(request, 'twilio/verify.html', context)
+    else:
+        form = VerifyForm()
+        return render(request, 'twilio/verify.html', {'form': form})
 
 
 # buyer dashboard
@@ -295,19 +316,20 @@ def item(request):
 # seller page settings
 def seller_settings(request):
     user_details = SellerInfo.objects.get(user=request.user)
-
     if request.method != "POST":
         seller = SellerInfo.objects.get(user=request.user)
         businessname = seller.businessname
         phone = seller.business_phone_number
         address = seller.address
         description = seller.description
+        image = seller.image
         context = {
             "businessname": businessname,
             "business_phone_number": phone,
             "address": address,
             "description": description,
             "userdetails": user_details,
+            "image": image,
         }
 
         form = SellerSettings(initial=context)
@@ -315,7 +337,7 @@ def seller_settings(request):
         return render(request, "seller/seller_settings.html", context)
 
     else:
-        filled_form = SellerSettings(request.POST)
+        filled_form = SellerSettings(request.POST, request.FILES)
         if filled_form.is_valid():
             seller = SellerInfo()
             seller.user = request.user
@@ -326,8 +348,19 @@ def seller_settings(request):
             ]
             seller.address = filled_form.cleaned_data["address"]
             seller.description = filled_form.cleaned_data["description"]
+
+            if filled_form.cleaned_data["image"] is None:
+                seller_current = SellerInfo.objects.get(user=request.user)
+                seller.image = seller_current.image
+            else:
+                seller.image = filled_form.cleaned_data["image"]
             seller.membership = True
             seller.save()
+            seller = SellerInfo.objects.get(user=request.user)
+            if seller.image == 'False':
+                seller = SellerInfo.objects.get(user=request.user)
+                seller.image = None
+                seller.save()
 
             return HttpResponseRedirect("/seller/dashboard")
         else:
@@ -337,45 +370,53 @@ def seller_settings(request):
 
 # seller page personalsettings
 def seller_personalsettings(request):
+    old_user = request.user
     user_details = SellerInfo.objects.get(user=request.user)
 
     if request.method != "POST":
-        seller = SellerInfo.objects.get(user=request.user)
-        businessname = seller.businessname
-        phone = seller.business_phone_number
-        address = seller.address
-        description = seller.description
-        context = {
-            "businessname": businessname,
-            "business_phone_number": phone,
-            "address": address,
-            "description": description,
-            "userdetails": user_details
-        }
+        user_logindetails = User.objects.get(username=request.user)
+        username = user_logindetails.username
+        email = user_logindetails.email
+        phone = user_logindetails.phone
 
-        form = SellerSettings(initial=context)
+        context = {
+            "username": username,
+            "email": email,
+            "phone": phone,
+            "userdetails": user_logindetails
+        }
+        form = UserCreationForm(initial=context)
         context = {"userdetails": user_details, "form": form}
         return render(request, "seller/seller_personalsettings.html", context)
 
     else:
-        filled_form = SellerSettings(request.POST)
+        filled_form = UserCreationForm(request.POST)
         if filled_form.is_valid():
-            seller = SellerInfo()
-            seller.user = request.user
-            seller.id = SellerInfo.objects.get(user=request.user).id
-            seller.businessname = filled_form.cleaned_data["businessname"]
-            seller.business_phone_number = filled_form.cleaned_data[
-                "business_phone_number"
-            ]
-            seller.address = filled_form.cleaned_data["address"]
-            seller.description = filled_form.cleaned_data["description"]
-            seller.membership = True
-            seller.save()
+            user = filled_form.save()
+            verify.send(filled_form.cleaned_data.get('phone'))
+            login(request, user)
+            SellerInfo_obj = SellerInfo.objects.get(user = old_user)
+            List = Product.objects.filter(seller = SellerInfo_obj)
+            for product in List:
+                product.user = user
+                product.save()
+            SellerInfo_obj.user = user
+            SellerInfo_obj.save()
+            Buyer_obj = BuyerInfo.objects.get(user=old_user)
+            Buyer_obj.user = user
+            Buyer_obj.save()
+            User.objects.filter(username = old_user.username).delete()
+            transaction.commit()
+            return redirect('verify change')
 
-            return HttpResponseRedirect("/seller/dashboard")
         else:
+            for msg in filled_form.errors:
+                print(filled_form.errors[msg])
+            # return render(request, "registration/signup.html", {"form": filled_form})
+            form = UserCreationForm(instance=user_details)
             context = {"userdetails": user_details, "form": filled_form}
             return render(request, "seller/seller_personalsettings.html", context)
+
 
 
 # order page
@@ -561,6 +602,8 @@ def seller_form(request):
                 seller.description = filled_form.cleaned_data["description"]
                 seller.membership = True
                 seller.image = filled_form.cleaned_data["image"]
+
+                print("aklsfjklsadjf", type(seller.image), "when no input is given")
                 seller.save()
                 return HttpResponseRedirect("/seller/dashboard")
 
