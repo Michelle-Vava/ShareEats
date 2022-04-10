@@ -30,7 +30,8 @@
         {% for record in Restaurants %}
             <div class="card-deck mx-2 mb-3">
                 <div class="card card_style mb-3 card_zoom" style="width: 19rem;">
-                    {% if record.image %}
+
+                    {% if record.image and record.image != 'False' %}
                         <img src= "{{record.image.url}}">
                     {% else %}
                         {% load static %}

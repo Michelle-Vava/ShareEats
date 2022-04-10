@@ -1,0 +1,60 @@
+.sidebar {
+  margin: 0;
+  padding: 0;
+  width: 230px;
+  background-color: #f1f1f1;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+}
+
+
+.sidebar a {
+  display: block;
+  color: black;
+  padding: 16px;
+  text-decoration: none;
+}
+
+li.active a{
+  background: #FBC226;
+  color: white;
+  box-shadow: 10px 10px 10px  #fffcef;
+}
+
+.sidebar_new a:hover:not(.active) {
+  background-color: #FBC226;
+  color: white;
+}
+
+.button_zoom {
+    transition: transform .2s;
+}
+
+.button_zoom:hover {
+    transform: scale(0.85);
+}
+
+div.content {
+  margin-left: 230px;
+  padding: 1px 16px;
+  height: 1000px;
+}
+
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .sidebar a {float: left;}
+  div.content {margin-left: 0;}
+}
+
+@media screen and (max-width: 400px) {
+  .sidebar a {
+    text-align: center;
+    float: none;
+  }
+}
+

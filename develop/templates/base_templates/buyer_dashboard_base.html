@@ -2,6 +2,7 @@
 <html lang="en">
 <!-- The sidebar -->
 
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=1349, maximum-scale=1.0" />
@@ -22,32 +23,66 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
-  <link rel="stylesheet" type="text/css" href="../../static/css/sidebar.css" />
+  <link rel="stylesheet" type="text/css" href="../../static/css/sidebar2.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="../../static/css/buyer-dashboard.css" />
-  
-</head>
-<div id="mySidebar" class="sidebar bg-white text-dark">
 
-  <a><img src="../../static/img/Share%20Eats%20Logo%20-%20Words%20Only.png"  width="160"
+  <script>
+
+  </script>
+
+
+</head>
+
+<div id="mySidebar" class="sidebar bg-white text-dark sidebar_new"
+     style="text-align: center; font-size: 20px; z-index: 2">
+    <a><img src="../../static/img/Share%20Eats%20Logo%20-%20Words%20Only.png"  width="160"
      height="35"></a>
-  <a onclick="location.href='{% url 'buyer dashboard' %}'"><i class="fa fa-home"></i> Dashboard</a>
-  <a onclick="location.href='{% url 'favourites' %}'"><i class="fa fa-star"></i> Favourites</a>
-  <a onclick="location.href='{% url 'order' %}'"><i class="fa fa-bars"></i> Order</a>
-  <a onclick="location.href='{% url 'buyer settings' %}'"><i class="fa fa-wrench"></i> Settings</a>
-  
+  <ul class="nav nav-sidebar list-group " style="color: #585858;">
+    <div class="container" style="padding: 18px;">
+        <li {% if request.resolver_match.url_name == 'buyer dashboard' %}class="active" style="color: white" {% endif %}>
+            <a onclick="location.href='{% url 'buyer dashboard' %}'" style="height: 50px;">
+                <i class="fa fa-home" style="position: relative; top: -6px"></i>
+                <b style="position: relative; top: -5px">Dashboard</b></a>
+        </li>
+    </div>
+    <div class="container" style="padding: 18px">
+        <li {% if request.resolver_match.url_name == 'favourites' %}class="active" style="color: white" {% endif %}>
+            <a onclick="location.href='{% url 'favourites' %}'" style="height: 50px;">
+                <i class="fa fa-star" style="position: relative; top: -6px"></i>
+                <b style="position: relative; top: -5px">Favourites</b></a>
+        </li>
+    </div>
+    <div class="container " style="padding: 18px">
+        <li {% if request.resolver_match.url_name == 'order' %}class="active" style="color: white" {% endif %}>
+            <a onclick="location.href='{% url 'order' %}'" style="height: 50px;">
+                <i class="fa fa-cutlery" style="position: relative; top: -6px"></i>
+                <b style="position: relative; top: -5px">Order</b></a>
+        </li>
+    </div>
+    <div class="container " style="padding: 18px">
+        <li {% if request.resolver_match.url_name == 'buyer settings' %}class="active" style="color: white" {% endif %}>
+            <a onclick="location.href='{% url 'buyer settings' %}'" style="height: 50px;">
+                <i class="fa fa-gear" style="position: relative; top: -6px"></i>
+                <b style="position: relative; top: -5px">Settings</b></a>
+        </li>
+    </div>
+
+  </ul>
 </div>
+
+
 
 <body style="margin: 0; background: #fffcef">
 
 
   <!-- Page content -->
-
-  <nav class="navbar navbar-expand-lg navbar-white bg-white text-black">
+  <nav class="navbar navbar-expand-lg navbar-white text-black" style="z-index: 1">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
       aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarText">
 
       <ul class="navbar-nav mr-auto">
@@ -55,24 +90,31 @@
         <a class="navbar-brand" href='{% url "buyer dashboard" %}'> Hello,{{ userdetails.firstname }} </a>
 
       </ul>
-      <span class="navbar-item">
-        <a class="nav-link text-black" href='{% url "seller info" %}'>Switch to Seller Account</a>
-      </span>
+
+        <span class="navbar-item button_zoom">
+        &emsp;  <button type="button" class="btn btn-light" onclick="location.href='{% url 'seller info' %}'" style="background: white">
+             Switch to Seller Account
+            </button>
+        </span>
+
+
     </div>
 
 
     </span>
 
 
-    <span class="navbar-item">
-        <button type="button" class="btn btn-light" onclick="location.href='{% url 'cart' %}'">
+    <span class="navbar-item button_zoom">
+        &emsp;<button type="button" class="btn btn-light" onclick="location.href='{% url 'cart' %}'" style="background: white">
   Cart <i class="fa fa-shopping-cart"></i> <span class="badge badge-light" id="top-bar-cart-items">Items: {{ cartItems }}</span>
 </button>
 
     </span>
-    <span class="navbar-item">
 
-      <button class="btn" onclick="location.href='{% url 'logout' %}'"><i class="fa fa-sign-out"></i>Logout</button>
+    <span class="navbar-item button_zoom">
+
+      &emsp;<button class="btn" onclick="location.href='{% url 'logout' %}'" style="background: white">
+          <i class="fa fa-sign-out"></i>Logout</button>
 
     </span>
     </div>
@@ -82,7 +124,6 @@
   <br>
 
   <div class="content">
-    <br>
 
     {% block content %}
     {% endblock %}

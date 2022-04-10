@@ -7,7 +7,7 @@
         <b>Edit Menu</b>
     </h1>
     <p style="font-family: Arial; font-size: 20px">
-        You can add items that the buyers can view and purchase from you.
+        You can add/edit/delete items you want like to sell to Share Eats buyers.
     </p>
     <div class="container-fluid card_container justify-content-center">
         <div class="card card_style mx-2 card_zoom" style="width: 8rem;">
@@ -40,9 +40,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-warning"   role="alert">
-                        **Please make sure your food item image is in a .png or .jpg format!
-                    </div>
                     <form enctype="multipart/form-data"
                           class='form-control '
                           action="{% url 'add product' %}"
@@ -58,55 +55,52 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid card_container justify-center card-group">
+    <div class="container-fluid card_container justify-center card-group ">
         <div class="row justify-content-left">
             {% for item in dishes %}
                 <div class="card-deck mx-2 mb-3">
-                    <div class="card_style mr-5 mt-5"  style="width: 15rem;">
+                    <div class="card card_style mr-5 mt-5"  style="width: 15rem;">
                         <img class="card-img-top card-img-new "
                              src="{{ item.image.url }}"
                              alt="Card image cap">
                         <div class="card-body">
                             <h5 class="card-title "style="color: #FBC226; font-weight: bold">{{ item.product }}</h5>
                             <p class="card-text">
-                              <i class="fa fa-money"></i>    Price : $ {{ item.price|floatformat:2 }}
-                            </p>
-                            <p class="card-text">
-                               <i class="fa fa-user"></i>   Servings : {{ item.servings }}
-                            </p>
-                            <p class="card-text">
-                              <i class="fa fa-filter"></i>    Category : {{ item.category }}
-                            </p>
-                            <p class="card-text">
-                                Availability :
-                                <label class="switch">
-                                    <input type="checkbox">
-                                    <span class="slider round"></span>
-                                </label>
-                            </p>
-                            <div style="padding:10px; position: relative; bottom: 0">
-                                <button type="button"
-                                        class="btn btn-warning get-food-item space"
-                                        data-toggle="modal"
-                                        data-productname="{{ item.product }} {{ item.servings }} {{ item.price }} {{ item.category }} {{ item.image.url }} {{ item.id }}"
-                                        data-target="#editItem">
-                                    Edit Item
-                                </button>
-                                <a class="btn btn-danger btn-sm space "
-                                   id="remove-item"
-                                   type="button"
-                                   data-toggle="tooltip"
-                                   data-placement="top"
-                                   title="Delete"
-                                   style="margin-right: 0; position: absolute;right:0"
-                                   href="{% url "delete food" item.id %}"><i class="fa fa-trash"></i></a>
-                            </div>
-                        </div>
-                    </div>
+                                <i class="fa fa-money"></i>    Price : $ {{ item.price|floatformat:2 }}
+                        </p>
+                        <p class="card-text">
+                            <i class="fa fa-user"></i>   Servings : {{ item.servings }}
+                    </p>
+                    <p class="card-text">
+                        <i class="fa fa-filter"></i>    Category : {{ item.category }}
+                </p>
+                <p class="card-text">
+                    Availability :
+                    <label class= "item-availability" data-productavl="{{ item.availability }}"></label>
+                </p>
+                <div style="padding:10px; position: relative; bottom: 0">
+                    <button type="button"
+                            class="btn btn-warning get-food-item space"
+                            data-toggle="modal"
+                            data-productname="{{ item.product }},{{ item.servings }},{{ item.price }},{{ item.category }},{{ item.image.url }},{{ item.id }},{{ item.availability }}"
+                            data-target="#editItem">
+                        Edit Item
+                    </button>
+                    <a class="btn btn-danger btn-sm space "
+                       id="remove-item"
+                       type="button"
+                       data-toggle="tooltip"
+                       data-placement="top"
+                       title="Delete"
+                       style="margin-right: 0; position: absolute;right:0"
+                       href="{% url "delete food" item.id %}"><i class="fa fa-trash"></i></a>
                 </div>
-            {% endfor %}
+            </div>
         </div>
     </div>
+{% endfor %}
+</div>
+</div>
 </div>
 <ul class= "nav justify-content-center">
     <!-- Modal -->
@@ -125,9 +119,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-warning"   role="alert">
-                        **Please make sure your food item image is in a .png or .jpg format!
-                    </div>
+
                     <form enctype="multipart/form-data"
                           class='form-control'
                           action="{% url 'item editing' %}"
@@ -155,6 +147,14 @@
                             <label for="{{ form.category.id_for_label }}"></label>
                             {{ editform.category | as_crispy_field   }}
                         </div>
+                        <div class="fieldWrapper" id = "availability">
+                            {{ editform.availability.errors }}
+                            <span class="help-block"><strong>Item will not be displayed to buyer if "No" is selected.</strong></span>
+                            <br>
+                            <label for="{{ form.availability.id_for_label }}">Availabile:&emsp;</label>
+                            {{ editform.availability }}
+
+                        </div>
                         <div class="fieldWrapper" id = "image">
                             {{ editform.image.errors }}
                             <label for="{{ form.image.id_for_label }}"></label>
@@ -163,13 +163,13 @@
                         <div class="fieldWrapper" id = "id">
                             {{ editform.id.errors }}
                             <label for="{{ form.image.id_for_label }}"></label>
-                            {{ editform.id.as_hidden  }}
+                            {{ editform.id.as_hidden }}
                         </div>
                         {% comment %} {{ addform | crispy  }} {% endcomment %}
                         {% comment %} <input class="btn btn-warning" type="submit" value="Edit Product"> {% endcomment %}
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <input type="submit" class="btn btn-warning" value = "Save"
+                            <input type="submit" class="btn btn-warning" value = "Save" >
                             </button>
                         </div>
                     </form>
