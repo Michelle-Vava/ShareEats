@@ -286,6 +286,7 @@ def item(request):
                 stripe_update = True
             dish.servings = filled_form.cleaned_data["servings"]
             dish.category = filled_form.cleaned_data["category"]
+            dish.availability = filled_form.cleaned_data["availability"]
             if dish.price != filled_form.cleaned_data["price"]:
                 dish.price = filled_form.cleaned_data["price"]
                 stripe_update = True

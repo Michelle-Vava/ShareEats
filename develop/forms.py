@@ -73,7 +73,7 @@ class EditDishInfoForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ["product", "servings", "price", "category", "image"]
+        fields = ["product", "servings", "price", "category", "availability", "image"]
 
     def __init__(self, *args, **kwargs):
         from django.forms.widgets import HiddenInput
