@@ -102,6 +102,7 @@ urlpatterns = [
     path("buyer/menu/", views.menu_page, name="menupage"),
     path("add-cart/", views.add_cart),
     path("delete-cart-item/<int:id>", views.delete_cart_item, name="cart-item-del"),
+    path("update-order-status/<int:id>", views.update_order_status, name="up-order-status"),
     path("delete-cart/", views.delete_cart),
     path("modify-item/", views.modify_cart),
     path("cart/", views.cart, name="cart"),
