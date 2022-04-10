@@ -29,7 +29,8 @@ from develop.forms import (
 )
 from develop.models import BuyerInfo, SellerInfo, Product, Order, Cart, Purchase
 from .forms import searching_restaurants, searching_dishes
-from .verify import send_message_to_seller, send_message_to_buyer
+from .verify import send_message_to_seller, send_message_to_buyer, send_message_to_seller_inprogress, \
+    send_message_to_buyer_inprogress, send_message_to_buyer_completed
 
 """
 """
@@ -250,7 +251,8 @@ def seller_dashboard(request):
     for productobject in products:
         purchase = Purchase.objects.filter(
             product_id=productobject.id
-        ).exclude(order_status="completed")  # all purchase objects with same product ids and is either "seller notified" or "in progress"
+        ).exclude(
+            order_status="completed")  # all purchase objects with same product ids and is either "seller notified" or "in progress"
         for i in purchase:
             purchase_obj.append(i)
             # only filtering completed purchases
@@ -282,7 +284,8 @@ def seller_dashboard(request):
     for order in order_obj:
         buyerinfo_obj.append(BuyerInfo.objects.get(id=order.buyer_id))
 
-    all_completed_orders_list = zip(completed_order_obj, completed_buyerinfo_obj, completed_purchase_obj, completed_product_obj)
+    all_completed_orders_list = zip(completed_order_obj, completed_buyerinfo_obj, completed_purchase_obj,
+                                    completed_product_obj)
     all_list = zip(order_obj, buyerinfo_obj, purchase_obj, product_obj)
     context = {
         "userdetails": user_details,
@@ -297,18 +300,26 @@ def seller_dashboard(request):
     return render(request, "seller/seller_dashboard.html", context)
 
 
-def update_order_status(request,id):
-    user_details = SellerInfo.objects.get(
-        user=request.user
-    )
-    #print(id)
+def send_message_to_seller_completed(to_seller):
+    pass
+
+
+def update_order_status(request, id):
+    user_details = SellerInfo.objects.get(user=request.user)
+    to_seller = user_details.business_phone_number.as_e164
+
     product = Purchase.objects.get(id=id)
     order_id = product.order_id
     if product.order_status == "seller notified":
-        Purchase.objects.filter(id=id).update(order_status = "In Progress")
+        Purchase.objects.filter(id=id).update(order_status="In Progress")
+
+        send_message_to_seller_inprogress(to_seller)
+        # send_message_to_buyer_inprogress(to_buyer)
     elif product.order_status == "In Progress":
-        Purchase.objects.filter(id=id).update(order_status = "completed")
-    
+        Purchase.objects.filter(id=id).update(order_status="completed")
+        send_message_to_seller_completed(to_seller)
+        # send_message_to_buyer_completed(to_buyer)
+
     product_list = Purchase.objects.filter(order_id=order_id)
     status = True
     for products in product_list:
@@ -316,8 +327,7 @@ def update_order_status(request,id):
             status = False
             break
     if status:
-        Order.objects.filter(id =order_id).update(status=True)
-
+        Order.objects.filter(id=order_id).update(status=True)
 
     return HttpResponseRedirect("/seller/dashboard")
 
