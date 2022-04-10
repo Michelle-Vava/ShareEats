@@ -19,43 +19,43 @@ def check(phone, code):
         return False
 
 
-def send_message_to_seller(to):
+def send_message_to_seller(to, name, businessname):
     # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     client.messages.create(
-        body='Hi,a ShareEats user has just purchased an item from you.',
+        body="Hi," + businessname + ',' + name + 'has just purchased an item from you.',
         to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
 
-def send_message_to_buyer(to):
+def send_message_to_buyer(to, name, business):
     # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     client.messages.create(
-        body='Thank you for purchasing an order on ShareEats,the vendor has been notified of your order',
+        body=" Hi," + name + ' ,Thank you for purchasing an order on ShareEats'  ',' + business + ' has been notified of your order.You will receive updates from' + business + ' when your order is ready',
         to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
 
-def send_message_to_seller_inprogress(to):
+def send_message_to_seller_inprogress(to, name):
     # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     client.messages.create(
-        body='Hi,a ShareEats user has been notified that order is in progress.',
+        body=" Hi," + name + ' the buyer has been notified that order is in progress.',
         to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
 
-def send_message_to_buyer_inprogress(to):
+def send_message_to_buyer_inprogress(to, name, bussinessname):
     # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     client.messages.create(
-        body='the vendor is now currently making your meal.Order status: in progress',
+        body=" Hi," + name + ',' + bussinessname + ' is now currently making your meal. Order status: "In Progress"',
         to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
 
-def send_message_to_seller_complete(to):
+def send_message_to_seller_completed(to, name, businessname):
     # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     client.messages.create(
-        body='Hi,a ShareEats user has been notified that order is completed.User should be on the way to pickup the order.',
+        body=" Hi," + businessname + "," + name + " has been notified that order is completed." + name + " should be on the way to pickup the order.",
         to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
 
-def send_message_to_buyer_completed(to):
+def send_message_to_buyer_completed(to, name, businessname):
     # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     client.messages.create(
-        body='the vendor is completed your order it is now ready for pickup',
+        body=" Hi," + name + ',' + businessname + ' has completed your order. It is now ready for pickup',
         to=to, from_=settings.TWILIO_PHONE_NUMBER)
