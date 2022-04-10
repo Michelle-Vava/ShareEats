@@ -90,14 +90,14 @@
         <a class="navbar-brand" href='{% url "buyer dashboard" %}'> Hello,{{ userdetails.firstname }} </a>
 
       </ul>
-      <span class=" button_zoom navbar-item">
-          <br>
-          <div style="background: white; width: 200px; height: 40px;  text-align: center;">
-            <a onclick="location.href='{% url 'seller info' %}'" ><b style="position: relative; top: 6px"> Switch to Seller Account</b></a>
-            </div>
-          <p></p>
-          <p></p>
-      </span>
+
+        <span class="navbar-item button_zoom">
+        &emsp;  <button type="button" class="btn btn-light" onclick="location.href='{% url 'seller info' %}'" style="background: white">
+             Switch to Seller Account
+            </button>
+        </span>
+
+
     </div>
 
 
