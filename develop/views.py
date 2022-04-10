@@ -306,14 +306,22 @@ def update_order_status(request,id):
     order_id = product.order_id
     if product.order_status == "seller notified":
         Purchase.objects.filter(id=id).update(order_status = "In Progress")
+        
+    elif product.order_status == "In Progress":
+        Purchase.objects.filter(id=id).update(order_status = "completed")
+    
+    status = True
+    product_list = Purchase.objects.filter(order_id=order_id)
+    for products in product_list:
+        if products.order_status == "seller notified":
+            status = False
+            break
+    if status:
         buyer_id = Order.objects.get(id=order_id).user_id
         userdetails = BuyerInfo.objects.get(user_id = buyer_id)
         phone = userdetails.user.phone.as_e164
         send_message_to_buyer_progress(phone)
-    elif product.order_status == "In Progress":
-        Purchase.objects.filter(id=id).update(order_status = "completed")
-    
-    product_list = Purchase.objects.filter(order_id=order_id)
+
     status = True
     for products in product_list:
         if products.order_status != "completed":
