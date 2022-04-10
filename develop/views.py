@@ -29,7 +29,7 @@ from develop.forms import (
 )
 from develop.models import BuyerInfo, SellerInfo, Product, Order, Cart, Purchase
 from .forms import searching_restaurants, searching_dishes
-from .verify import send_message_to_seller, send_message_to_buyer
+from .verify import send_message_to_buyer_complete, send_message_to_buyer_progress, send_message_to_seller, send_message_to_buyer
 
 """
 """
@@ -306,6 +306,10 @@ def update_order_status(request,id):
     order_id = product.order_id
     if product.order_status == "seller notified":
         Purchase.objects.filter(id=id).update(order_status = "In Progress")
+        buyer_id = Order.objects.get(id=order_id).user_id
+        userdetails = BuyerInfo.objects.get(user_id = buyer_id)
+        phone = userdetails.user.phone.as_e164
+        send_message_to_buyer_progress(phone)
     elif product.order_status == "In Progress":
         Purchase.objects.filter(id=id).update(order_status = "completed")
     
@@ -316,6 +320,10 @@ def update_order_status(request,id):
             status = False
             break
     if status:
+        buyer_id = Order.objects.get(id=order_id).user_id
+        userdetails = BuyerInfo.objects.get(user_id = buyer_id)
+        phone = userdetails.user.phone.as_e164
+        send_message_to_buyer_complete(phone)
         Order.objects.filter(id =order_id).update(status=True)
 
 

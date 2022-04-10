@@ -22,6 +22,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {% comment %} {% regroup all_completed by order.id as all_completed_list %} {% endcomment %}
                                 {% for order, buyer, purchase, product in all_completed %}
                                     <tr>
                                         <td scope="row">{{ order.id }}</td>

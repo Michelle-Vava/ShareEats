@@ -37,3 +37,17 @@ def send_message_to_buyer(to):
     client.messages.create(
         body='Thank you for purchasing an order on ShareEats,the vendor has been notified of your order',
         to=to, from_=settings.TWILIO_PHONE_NUMBER)
+
+def send_message_to_buyer_progress(to):
+    # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    client.messages.create(
+        body='Thank you for purchasing an order on ShareEats, Your order is now in progress',
+        to=to, from_=settings.TWILIO_PHONE_NUMBER)
+
+def send_message_to_buyer_complete(to):
+    # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    client.messages.create(
+        body='Thank you for purchasing an order on ShareEats, Your order is now completed. You can pick your order now. We would love to hear from you about our service.',
+        to=to, from_=settings.TWILIO_PHONE_NUMBER)
+
+
