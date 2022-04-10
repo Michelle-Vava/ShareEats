@@ -4,66 +4,66 @@
 <h1>Seller Dashboard</h1>
 <br>
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-lg-10">
-                <div class="border border-warning">
-      <br>
-      <h3>Completed Orders</h3>
-      <div class= "table-wrapper-scroll-y my-custom-scrollbar">
-        <table class="table table-striped">
-          <thead class = "table-dark">
-            <tr>
-              <th scope="col">OrderID #</th>
-              <th scope="col">Buyer Name</th>
-              <th scope="col">Ordered Item</th>
-              <th scope="col">Price</th>
-              <th scope="col">Order Date/Time</th>
-              <th scope="col">Order Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for order, buyer, purchase, product in all_completed %}
-            <tr>
-              <td scope="row">{{ order.id }}</td>
-              <td>{{buyer.firstname}} {{buyer.lastname}}</td>
-              <td>{{product.product}}</td>
-              <td>$ {{purchase.seller_price}}</td>
-              <td>{{order.timestamp}}</td>
-              <td>{{purchase.order_status}}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+  <div class="row">
+    <div class="col-lg-10">
+      <div class="border border-warning">
+        <br>
+        <h3>Completed Orders</h3>
+        <div class="table-wrapper-scroll-y my-custom-scrollbar">
+          <table class="table table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th scope="col">OrderID #</th>
+                <th scope="col">Buyer Name</th>
+                <th scope="col">Ordered Item</th>
+                <th scope="col">Price</th>
+                <th scope="col">Order Date/Time</th>
+                <th scope="col">Order Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order, buyer, purchase, product in all_completed %}
+              <tr>
+                <td scope="row">{{ order.id }}</td>
+                <td>{{buyer.firstname}} {{buyer.lastname}}</td>
+                <td>{{product.product}}</td>
+                <td>$ {{purchase.seller_price}}</td>
+                <td>{{order.timestamp}}</td>
+                <td>{{purchase.order_status}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-        </div>
-        <div class="col-lg-2">
-            <div class="border border-warning">
-      <br>
-      <h3>Seller Profile </h3>
-      <div class="justify-content-center card" style="width: 18rem;">
-           {% if userdetails.image %}
-                            <img class="card-img-top" src= "{{ userdetails.image.url }}">
-                        {% else %}
-                            {% load static %}
-                            <img class="card-img-top" src="../static/img/default_profile.png" %}>
-                        {% endif %}
-        <div class="card-body">
-          <h4 class="card-title">{{ userdetails.businessname }}</h4>
-          <h6 class="card-text">Description </h6>
-          <p class="card-text">{{ userdetails.description }}</p>
-          <h6 class="card-text">Business Number </h6>
-          <p class="card-text">{{ userdetails.business_phone_number }}</p>
-          <h6 class="card-text">Business Address </h6>
-          <p class="card-text">{{ userdetails.address }}</p>
-          <h6 class="card-text">Business Hours </h6>
-          <p class="card-text">Enter Business hours</p>
+    <div class="col-lg-2">
+      <div class="border border-warning">
+        <br>
+        <h3>Seller Profile </h3>
+        <div class="justify-content-center card" style="width: 18rem;">
+          {% if userdetails.image %}
+          <img class="card-img-top" src="{{ userdetails.image.url }}">
+          {% else %}
+          {% load static %}
+          <img class="card-img-top" src="../static/img/default_profile.png" %}>
+          {% endif %}
+          <div class="card-body">
+            <h4 class="card-title">{{ userdetails.businessname }}</h4>
+            <h6 class="card-text">Description </h6>
+            <p class="card-text">{{ userdetails.description }}</p>
+            <h6 class="card-text">Business Number </h6>
+            <p class="card-text">{{ userdetails.business_phone_number }}</p>
+            <h6 class="card-text">Business Address </h6>
+            <p class="card-text">{{ userdetails.address }}</p>
+            <h6 class="card-text">Business Hours </h6>
+            <p class="card-text">Enter Business hours</p>
 
+          </div>
         </div>
       </div>
     </div>
-        </div>
-    </div>
+  </div>
 </div>
 
 
@@ -71,31 +71,34 @@
 
 
 <div class="container-fluid border border-warning">
-<h3>Current Orders Made</h3>
+  <h3>Current Orders Made</h3>
   <div class="row mt-5 justify-content-center">
 
-    {% for pur in purchase %}
+    {% for orderid, purchaseobj in order_dict.items %}
 
-      <div class="card-deck mx-2 mb-3">
+    <div class="card-deck mx-2 mb-3">
       <div class="card card_style mb-3 card_zoom" style="width: 19rem;">
-      <div class="card-body">
-        <h4 class="card-title"  style="font-weight: bold; color: #FBC226">Order# {{ pur.order.id }}</h4>
-        <img class="card-img-top"
-                 src="{{ pur.product.image.url }}" alt="Card image cap">
-        <p class="card-text" ><strong>Buyer Name:</strong> {{ pur.order.buyer.firstname }} {{ pur.order.buyer.lastname }}</p>
-        <p class="card-text" ><strong>Product: </strong> {{ pur.product.product }}</p>
-        <p class="card-text" ><strong>Price:</strong><a style="font-weight: bold; color: #FBC226"> $ {{ pur.seller_price }}</a> </p>
-        <p class="card-text" ><strong>Qty:</strong> {{ pur.quantity }}</p>
-        <p class="card-text" ><strong>Status:</strong>  {{ pur.order_status }}</p>
+        <h4 class="card-title" style="font-weight: bold; color: #FBC226">Order# {{ orderid }}</h4>
 
-         <div class="dropdown">
-  <button type="button" class="btn btn-outline-warning">Update Order Status</button>
-</div>
-        </p>
-    </div>
-  </div>
+        <div class="card-body">
+          
+          {% for pur in purchaseobj %}
+          <img class="card-img-top" src="{{ pur.product.image.url }}" alt="Card image cap">
+          <p class="card-text"><strong>Buyer Name:</strong> {{ pur.order.buyer.firstname }} {{ pur.order.buyer.lastname }}</p>
+          <p class="card-text"><strong>Product: </strong> {{ pur.product.product }}</p>
+          <p class="card-text"><strong>Price:</strong><a style="font-weight: bold; color: #FBC226"> $ {{ pur.seller_price }}</a> </p>
+          <p class="card-text"><strong>Qty:</strong> {{ pur.quantity }}</p>
+          <p class="card-text"><strong>Status:</strong> {{ pur.order_status }}</p>
+          <div class="dropdown">
+            <button type="button" class="btn btn-outline-warning">Update Order Status</button>
+          </div>
+          </p>
+          {% endfor %}
+        </div>
+
       </div>
-  {% endfor %}
+    </div>
+    {% endfor %}
   </div>
 
 </div>

@@ -44,7 +44,7 @@ def CreateCheckoutSessionView(request):
             line_items_list.append(
                 {"price": i.product.stripe_price_id, "quantity": i.quantity}
             )
-        YOUR_DOMAIN = "http://127.0.0.1:7000"  # change in production #changes to 8000
+        YOUR_DOMAIN = "http://127.0.0.1:8000"  # change in production #changes to 8000
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=["card"],
             line_items=line_items_list,
@@ -270,17 +270,30 @@ def seller_dashboard(request):
     for order in order_obj:
         buyerinfo_obj.append(BuyerInfo.objects.get(id=order.buyer_id))
 
+
+    # filtering orders by orderid
+    order_dict = {}
+
+    for object in purchase_obj:
+        id = object.order
+        if id in order_dict.keys():
+            order_dict[id].append(object)
+        else:
+            order_dict[id] = [object]
+        
+
+    # zip of all list
     all_completed_orders_list = zip(order_obj, buyerinfo_obj, completed_purchase_obj, product_obj)
     all_list = zip(order_obj, buyerinfo_obj, purchase_obj, product_obj)
     context = {
-        "userdetails": user_details,
-        "purchase": purchase_obj,
-        "products": products,
-        "orders": order_obj,
-        "buyerinfo": buyerinfo_obj,
-        "all": all_list,
-        "all_completed": all_completed_orders_list
-        # "all_dict"      : seller_dict
+        "userdetails"   : user_details,
+        "purchase"      : purchase_obj,
+        "products"      : products,
+        "orders"        : order_obj,
+        "buyerinfo"     : buyerinfo_obj,
+        "all"           : all_list,
+        "all_completed" : all_completed_orders_list,
+        "order_dict"    : order_dict
     }
     return render(request, "seller/seller_dashboard.html", context)
 
