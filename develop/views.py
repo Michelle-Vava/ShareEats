@@ -1,5 +1,7 @@
 import datetime
 import json
+from math import prod
+from os import stat
 
 import stripe
 from django.conf import settings
@@ -283,6 +285,31 @@ def seller_dashboard(request):
         # "all_dict"      : seller_dict
     }
     return render(request, "seller/seller_dashboard.html", context)
+
+
+def update_order_status(request,id):
+    user_details = SellerInfo.objects.get(
+        user=request.user
+    )
+    #print(id)
+    product = Purchase.objects.get(id=id)
+    order_id = product.order_id
+    if product.order_status == "seller notified":
+        Purchase.objects.filter(id=id).update(order_status = "In Progress")
+    elif product.order_status == "In Progress":
+        Purchase.objects.filter(id=id).update(order_status = "completed")
+    
+    product_list = Purchase.objects.filter(order_id=order_id)
+    status = True
+    for products in product_list:
+        if products.order_status != "completed":
+            status = False
+            break
+    if status:
+        Order.objects.filter(id =order_id).update(status=True)
+
+
+    return HttpResponseRedirect("/seller/dashboard")
 
 
 # reports page
