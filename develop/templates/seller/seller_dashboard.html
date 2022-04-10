@@ -6,12 +6,12 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-9 " style="height: 550px; padding: 15px">
-                <div class="container" style="background: white; height: 500px">
+            <div class="col-9 " style="height: 650px; padding: 15px">
+                <div class="container" style="background: white; height: 615px">
                     <br><h3 style="font-weight: bold">Completed Orders</h3><br>
                     <div class="container border table-wrapper-scroll-y my-custom-scrollbar" >
                         <table class="table table-striped">
-                            <thead class="table-dark">
+                            <thead class="table" style="background: #FBC226; color: white">
                             <tr>
                                 <th scope="col">OrderID #</th>
                                 <th scope="col">Buyer Name</th>
@@ -26,8 +26,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col" style="height: 550px; padding: 10px">
-                <div class="justify-content-center card container border" style="width: 20rem;">
+            <div class="col" style="height: 650px; padding: 10px">
+                <div class="justify-content-center card container" style="width: 20rem; border: 0px;">
                       {% if userdetails.image %}
                       <img class="card-img-top" src="{{ userdetails.image.url }}">
                       {% else %}
@@ -36,19 +36,19 @@
                       {% endif %}
                       <div class="card-body">
                         <h4 class="card-title" style="text-align: center"><b>{{ userdetails.businessname }}</b></h4>
-                        <h6 class="card-text">Description</h6>
+                        <h6 class="card-text"><b>Description:</b></h6>
                         <p class="card-text">
                           {{ userdetails.description }}
                         </p>
-                        <h6 class="card-text">Business Number</h6>
+                          <h6 class="card-text"><b>Business Number:</b></h6>
                         <p class="card-text">
                           {{ userdetails.business_phone_number }}
                         </p>
-                        <h6 class="card-text">Business Address</h6>
+                          <h6 class="card-text"><b>Business Address:</b></h6>
                         <p class="card-text">
                           {{ userdetails.address }}
                         </p>
-                        <h6 class="card-text">Business Hours</h6>
+                          <h6 class="card-text"><b>Business Hours:</b></h6>
                         <p class="card-text">
                           Enter Business hours
                         </p>
@@ -59,18 +59,19 @@
         </div>
         <div class="row">
             <div class="col" style="padding: 15px">
-                <div class="container-fluid border" style="background: white">
+                <div class="container-fluid" style="background: white">
                     &emsp;<h3 style="font-weight: bold">Current Orders Made</h3>
                   <div class="row mt-5">
                     {% for orderid, purchaseobj in order_dict.items %}
                     <div class="card-deck mx-2 mb-3" >
                       <div class="card card_style mb-3 " style="width: 19rem;">
-                        <h4 class="card-title" style="font-weight: bold; color: #FBC226">Order# {{ orderid }}</h4>
                         <div class="card-body">
+                            <h5 class="card-title" style="font-weight: bold; color: #FBC226">Order# {{ orderid }}</h5>
                           {% for pur in purchaseobj %}
 
                             {% if pur.order_status != "completed" %}
                             <img class="card-img-top" src="{{ pur.product.image.url }}" alt="Card image cap">
+                                <p></p>
                             <p class="card-text">
                               <strong>Buyer Name:</strong> {{ pur.order.buyer.firstname }} {{ pur.order.buyer.lastname }}
                             </p>
@@ -78,7 +79,7 @@
                               <strong>Product:</strong> {{ pur.product.product }}
                             </p>
                             <p class="card-text">
-                              <strong>Price:</strong><a style="font-weight: bold; color: #FBC226">$ {{ pur.seller_price | floatformat:2 }}</a>
+                              <strong>Price:</strong><a> $ {{ pur.seller_price | floatformat:2 }}</a>
                             </p>
                             <p class="card-text">
                               <strong>Qty:</strong> {{ pur.quantity }}
@@ -89,14 +90,13 @@
 
                             {% if pur.order_status != "In Progress" %}
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                              aria-haspopup="true" aria-expanded="false">
-                              Update Order status
+                              aria-haspopup="true" aria-expanded="false" style="font-weight: bold; background: #FBC226; border: 1px solid #FBC226; float: right">
+                              Update Order Status
                             </button>
 
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                               <a class="dropdown-item" href="{% url 'up-order-status' pur.id %}">In Progress</a>
                             </div>
-                            <br>
 
                             {% else %}
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
@@ -107,15 +107,19 @@
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                               <a class="dropdown-item" href="{% url 'up-order-status' pur.id %}">Completed</a>
                             </div>
-                            <br>
                             {% endif %}
+                                <br>
                             {% endif %}
+                              <br>
+                              <hr style="border: 1px solid #FBC226">
 
                           {% endfor %}
+
                         </div>
                       </div>
                     </div>
                     {% endfor %}
+                            <hr style="border: 1px solid #FBC226">
                   </div>
                 </div>
             </div>
