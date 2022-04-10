@@ -262,6 +262,16 @@ def seller_dashboard(request):
         for i in purchase:
             completed_purchase_obj.append(i)
 
+    completed_order_obj = []
+    completed_product_obj = []
+    for obj in completed_purchase_obj:
+        completed_order_obj.append(Order.objects.get(id=obj.order_id))
+        completed_product_obj.append(Product.objects.get(id=obj.product_id))
+
+    completed_buyerinfo_obj = []
+    for order in completed_order_obj:
+        completed_buyerinfo_obj.append(BuyerInfo.objects.get(id=order.buyer_id))
+
     order_obj = []
     product_obj = []
     for obj in purchase_obj:
@@ -272,7 +282,7 @@ def seller_dashboard(request):
     for order in order_obj:
         buyerinfo_obj.append(BuyerInfo.objects.get(id=order.buyer_id))
 
-    all_completed_orders_list = zip(order_obj, buyerinfo_obj, completed_purchase_obj, product_obj)
+    all_completed_orders_list = zip(completed_order_obj, completed_buyerinfo_obj, completed_purchase_obj, completed_product_obj)
     all_list = zip(order_obj, buyerinfo_obj, purchase_obj, product_obj)
     context = {
         "userdetails": user_details,
