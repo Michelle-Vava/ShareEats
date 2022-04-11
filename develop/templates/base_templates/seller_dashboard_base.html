@@ -51,7 +51,8 @@
         </li>
     </div>
     <div class="container " style="padding: 18px">
-        <li {% if request.resolver_match.url_name == 'seller settings' %}class="active" style="color: white" {% endif %}>
+        <li {% if request.resolver_match.url_name == 'seller settings' %}class="active" style="color: white" {% endif %}
+            {% if request.resolver_match.url_name == 'seller personalsettings' %}class="active" style="color: white" {% endif %}>
             <a onclick="location.href='{% url 'seller settings' %}'" style="height: 50px;">
                 <i class="fa fa-gear" style="position: relative; top: -6px"></i>
                 <b style="position: relative; top: -5px">Settings</b></a>
