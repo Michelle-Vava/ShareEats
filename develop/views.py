@@ -44,7 +44,7 @@ def CreateCheckoutSessionView(request):
             line_items_list.append(
                 {"price": i.product.stripe_price_id, "quantity": i.quantity}
             )
-        YOUR_DOMAIN = "http://127.0.0.1:8000"  # change in production #changes to 8000
+        YOUR_DOMAIN = "http://127.0.0.1:7000"  # change in production #changes to 8000
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=["card"],
             line_items=line_items_list,
@@ -70,7 +70,7 @@ def Success(request):
     to_seller = cart.first().product.seller.business_phone_number.as_e164
     to_buyer = userdetails.user.phone.as_e164
     send_message_to_seller(to_seller, userdetails.firstname, cart.first().product.seller.businessname)
-    send_message_to_buyer(to_buyer, userdetails.firstname,cart.first().product.seller.businessname)
+    send_message_to_buyer(to_buyer, userdetails.firstname, cart.first().product.seller.businessname)
     for i in cart:
         Purchase.objects.create(
             quantity=i.quantity,
@@ -308,7 +308,6 @@ def seller_dashboard(request):
     return render(request, "seller/seller_dashboard.html", context)
 
 
-
 def update_order_status(request, id):
     user_details = SellerInfo.objects.get(user=request.user)
     to_seller = user_details.business_phone_number.as_e164
@@ -321,7 +320,6 @@ def update_order_status(request, id):
 
     elif product.order_status == "In Progress":
         Purchase.objects.filter(id=id).update(order_status="completed")
-
 
     product_list = Purchase.objects.filter(order_id=order_id)
     status = True
@@ -346,7 +344,7 @@ def update_order_status(request, id):
         userdetails = BuyerInfo.objects.get(user_id=buyer_id)
         to_buyer = userdetails.user.phone.as_e164
         send_message_to_buyer_completed(to_buyer, userdetails.firstname, user_details.businessname)
-        send_message_to_seller_completed(to_buyer, userdetails.firstname, user_details.businessname)
+        send_message_to_seller_completed(to_seller, userdetails.firstname, user_details.businessname)
 
         Order.objects.filter(id=order_id).update(status=True)
 

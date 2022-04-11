@@ -34,10 +34,10 @@
                     <div class="card-deck mx-2 mb-3">
                         <div class="card card_style mb-3 card_zoom" style="width: 19rem;">
                             {% if item.image %}
-                                <img src= "{{ item.image.url }}">
+                                <img class="card-img-new" src= "{{ item.image.url }}">
                             {% else %}
                                 {% load static %}
-                                <img src={% static 'img/Food Item Deafult.png' %}>
+                                <img class="card-img-new"src={% static 'img/Food Item Deafult.png' %}>
                             {% endif %}
                             <div class="card-body">
                                 <div class="row card-title">

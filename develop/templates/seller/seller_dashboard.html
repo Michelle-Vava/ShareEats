@@ -13,7 +13,7 @@
                 <div class="container" style="background: white; height: 615px">
                     <br><h3 style="font-weight: bold">Completed Orders</h3><br>
                     <div class="container border table-wrapper-scroll-y my-custom-scrollbar" >
-                        <table class="table table-striped">
+                        <table class="table-responsive-xl table-striped">
                             <thead class="table" style="background: #FBC226; color: white">
                             <tr>
                                 <th scope="col">OrderID #</th>
@@ -24,18 +24,30 @@
                                 <th scope="col">Order Status</th>
                             </tr>
                             </thead>
-                           <p></p>
+                               <tbody>
+                                {% for order, buyer, purchase, product in all_completed %}
+                                    <tr>
+                                        <td scope="row">{{ order.id }}</td>
+                                        <td>{{ buyer.firstname }} {{ buyer.lastname }}</td>
+                                        <td>{{ product.product }}</td>
+                                        <td>$ {{ purchase.seller_price }}</td>
+                                        <td>{{ order.timestamp }}</td>
+                                        <td style="text-transform: capitalize;">{{ purchase.order_status }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+
                         </table>
                     </div>
                 </div>
             </div>
             <div class="col" style="height: 650px; padding: 10px">
-                <div class="justify-content-center card container" style="width: 20rem; border: 0px;">
+                <div class="justify-content-center card container" style="width: 20rem; border: 0;">
                       {% if userdetails.image %}
                       <img class="card-img-top" src="{{ userdetails.image.url }}">
                       {% else %}
                       {% load static %}
-                      <img class="card-img-top" src="../static/img/default_profile.png" %}>
+                      <img class="card-img-top" src="../static/img/default_profile.png">
                       {% endif %}
                       <div class="card-body">
                         <h4 class="card-title" style="text-align: center"><b>{{ userdetails.businessname }}</b></h4>
@@ -91,6 +103,8 @@
                               <strong>Status:</strong> {{ pur.order_status }}
                             </p>
                             <div>
+                                <div>
+
                             {% if pur.order_status != "In Progress" %}
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
                               aria-haspopup="true" aria-expanded="false" style="font-weight: bold; background: #FBC226; border: 1px solid #FBC226; float: right">
@@ -122,9 +136,10 @@
                       </div>
                     </div>
                     {% endfor %}
-                            <hr style="border: 1px solid #FBC226">
+
                   </div>
                 </div>
+            </div>
             </div>
             </div>
 
