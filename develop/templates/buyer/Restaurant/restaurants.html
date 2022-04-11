@@ -32,10 +32,10 @@
                 <div class="card card_style mb-3 card_zoom" style="width: 19rem;">
 
                     {% if record.image and record.image != 'False' %}
-                        <img src= "{{record.image.url}}">
+                        <img class="card-img-new" src= "{{record.image.url}}">
                     {% else %}
                         {% load static %}
-                        <img src="{% static 'img/share-eats-logo----fffcef@1x.png' %}" alt="My image">
+                        <img class="card-img-new" src="{% static 'img/share-eats-logo----fffcef@1x.png' %}" alt="My image">
                     {% endif %}
         <div class="card-body">
             <h5  class="card-title">{{ record.businessname }}</h5>
