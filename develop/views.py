@@ -122,7 +122,7 @@ def sign_up(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            verify.send(form.cleaned_data.get("phone"))
+            verify.send(form.cleaned_data.get("phone").as_e164)
             login(request, user)
             return HttpResponseRedirect("verify")
         else:
@@ -466,7 +466,7 @@ def seller_settings(request):
             seller.businessname = filled_form.cleaned_data["businessname"]
             seller.business_phone_number = filled_form.cleaned_data[
                 "business_phone_number"
-            ]
+            ].as_e164
             seller.address = filled_form.cleaned_data["address"]
             seller.description = filled_form.cleaned_data["description"]
 
@@ -514,7 +514,7 @@ def seller_personalsettings(request):
         filled_form = UserCreationForm(request.POST)
         if filled_form.is_valid():
             user = filled_form.save()
-            verify.send(filled_form.cleaned_data.get('phone'))
+            verify.send(filled_form.cleaned_data.get('phone').as_e164)
             login(request, user)
             SellerInfo_obj = SellerInfo.objects.get(user=old_user)
             List = Product.objects.filter(seller=SellerInfo_obj)
@@ -746,7 +746,7 @@ def seller_form(request):
                 seller.businessname = filled_form.cleaned_data["businessname"]
                 seller.business_phone_number = filled_form.cleaned_data[
                     "business_phone_number"
-                ]
+                ].as_e164
                 seller.address = filled_form.cleaned_data["address"]
                 seller.description = filled_form.cleaned_data["description"]
                 seller.membership = True
