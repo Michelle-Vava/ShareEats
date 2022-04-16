@@ -14,7 +14,7 @@ from phonenumber_field.formfields import PhoneNumberField
 # Internally, PhoneNumberField is based upon CharField and by' \
 # default represents the number as a string of an international phonenumber in the database (e.g '+41524204242').
 
-#phone_regex = RegexValidator(regex=r"^\+?1?\d{9,15}$")
+# phone_regex = RegexValidator(regex=r"^\+?1?\d{9,15}$")
 
 
 class UserCreationForm(BaseUserCreationForm):
@@ -23,7 +23,7 @@ class UserCreationForm(BaseUserCreationForm):
         widget=PhoneNumberPrefixWidget(initial='CA'),
         required=True,
         help_text="Enter your 10 digit phone number",
-        
+
     )
 
     class Meta:
@@ -34,11 +34,11 @@ class UserCreationForm(BaseUserCreationForm):
 class SellerInfoForm(forms.ModelForm):
     business_phone_number = PhoneNumberField(
         max_length=15,
-        #validators=[phone_regex],
+        # validators=[phone_regex],
         widget=PhoneNumberPrefixWidget(initial="CA"),
         required=True,
         help_text="Enter your 10 digit phone number",
-        
+
     )
     description = forms.CharField(
         widget=forms.Textarea, help_text="Enter the description of the business"
@@ -128,13 +128,13 @@ class SellerSettings(forms.ModelForm):
     )
     business_phone_number = PhoneNumberField(
         max_length=15,
-        #validators=[phone_regex],
+        # validators=[phone_regex],
         widget=PhoneNumberPrefixWidget(initial='CA'),
         required=True,
         help_text="Enter your 10 digit phone number",
-        
+
     )
-    
+
     address = forms.CharField(
         label="Address",
         widget=TextInput(
@@ -156,6 +156,7 @@ class SellerSettings(forms.ModelForm):
         ),
     )
     image = forms.ImageField(help_text="Optional.", required=False)
+
     class Meta:
         model = SellerInfo
         fields = ["businessname", "business_phone_number", "address", "description", "image"]
