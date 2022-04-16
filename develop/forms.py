@@ -1,3 +1,4 @@
+from tkinter import Widget
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
 from django.core.validators import RegexValidator
 
@@ -6,20 +7,23 @@ from django import forms
 from django.forms import TextInput
 
 from develop.models import SellerInfo, BuyerInfo, Product
+from phonenumber_field.widgets import PhoneNumberPrefixWidget
+from phonenumber_field.formfields import PhoneNumberField
+
 
 # Internally, PhoneNumberField is based upon CharField and by' \
 # default represents the number as a string of an international phonenumber in the database (e.g '+41524204242').
 
-phone_regex = RegexValidator(regex=r"^\+?1?\d{9,15}$")
+# phone_regex = RegexValidator(regex=r"^\+?1?\d{9,15}$")
 
 
 class UserCreationForm(BaseUserCreationForm):
-    phone = forms.CharField(
-        max_length=20,
-        validators=[phone_regex],
+    phone = PhoneNumberField(
+        max_length=15,
+        widget=PhoneNumberPrefixWidget(initial='CA'),
         required=True,
-        help_text="Phone number must be entered in the format: "
-        "+999999999. Up to 15 digits is allowed.",
+        help_text="Enter your 10 digit phone number",
+
     )
 
     class Meta:
@@ -28,12 +32,13 @@ class UserCreationForm(BaseUserCreationForm):
 
 
 class SellerInfoForm(forms.ModelForm):
-    business_phone_number = forms.CharField(
-        max_length=20,
-        validators=[phone_regex],
+    business_phone_number = PhoneNumberField(
+        max_length=15,
+        # validators=[phone_regex],
+        widget=PhoneNumberPrefixWidget(initial="CA"),
         required=True,
-        help_text="Phone number must be entered in the format: "
-        "+999999999. Up to 15 digits is allowed.",
+        help_text="Enter your 10 digit phone number",
+
     )
     description = forms.CharField(
         widget=forms.Textarea, help_text="Enter the description of the business"
@@ -121,16 +126,15 @@ class SellerSettings(forms.ModelForm):
             }
         ),
     )
-    business_phone_number = forms.CharField(
-        label="Phone",
-        widget=TextInput(
-            attrs={
-                "class": "form-control",
-                "style": "max-width: 300px;",
-                "placeholder": "Phone",
-            }
-        ),
+    business_phone_number = PhoneNumberField(
+        max_length=15,
+        # validators=[phone_regex],
+        widget=PhoneNumberPrefixWidget(initial='CA'),
+        required=True,
+        help_text="Enter your 10 digit phone number",
+
     )
+
     address = forms.CharField(
         label="Address",
         widget=TextInput(
@@ -152,6 +156,7 @@ class SellerSettings(forms.ModelForm):
         ),
     )
     image = forms.ImageField(help_text="Optional.", required=False)
+
     class Meta:
         model = SellerInfo
         fields = ["businessname", "business_phone_number", "address", "description", "image"]
