@@ -29,7 +29,11 @@ def send_message_to_seller(to, name, businessname):
 def send_message_to_buyer(to, name, business):
     # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     client.messages.create(
-        body=" Hi," + name + ' ,Thank you for purchasing an order on ShareEats '  ',' + business + ' has been notified of your order.You will receive updates from ' + business + ' when your order is ready',
+        body=" Hi," + name + ' ,Thank you for purchasing an order on ShareEats '  ',' + business + 'has been notified '
+                                                                                                   'of your order.You'
+                                                                                                   ' will receive '
+                                                                                                   'updates from ' +
+             business + ' when your order is ready',
         to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
 
@@ -40,22 +44,29 @@ def send_message_to_seller_inprogress(to, name):
         to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
 
-def send_message_to_buyer_inprogress(to, name, bussinessname):
+def send_message_to_buyer_inprogress(to, name, bussinessname, businessphone):
     # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     client.messages.create(
-        body=" Hi," + name + ' , ' + bussinessname + ' is now currently making your meal. Order status: "In Progress " ',
+        body=" Hi," + name + ' , ' + bussinessname + 'is now currently making your meal. Order status: "In Progress" '
+                                                     '. You can contact ' + bussinessname + ' at ' + businessphone +
+             ' .Regards, ShareEats. ',
         to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
 
 def send_message_to_seller_completed(to, name, businessname):
     # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     client.messages.create(
-        body=" Hi ," + businessname + " , " + name + " has been notified that order is completed." + name + " should be on the way to pickup the order. ",
+        body=" Hi ," + businessname + " , " + name + " has been notified that order is completed. " + name + " should be on the way to pickup the order. ",
         to=to, from_=settings.TWILIO_PHONE_NUMBER)
 
 
-def send_message_to_buyer_completed(to, name, businessname):
+def send_message_to_buyer_completed(to, name, businessname, businessphone, location):
     # client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     client.messages.create(
-        body=" Hi," + name + ' , ' + businessname + ' has completed your order. It is now ready for pickup ',
+        body=" Hi," + name + ' , ' + businessname + 'has completed your order. It is now ready for pickup. You can '
+                                                    'contact ' + businessname + ' at ' + businessphone + '.Order can '
+                                                                                                         'be picked '
+                                                                                                         'at this '
+                                                                                                         'address ' +
+             location + ' .Regards, ShareEats',
         to=to, from_=settings.TWILIO_PHONE_NUMBER)

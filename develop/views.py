@@ -331,7 +331,7 @@ def update_order_status(request, id):
         buyer_id = Order.objects.get(id=order_id).user_id
         userdetails = BuyerInfo.objects.get(user_id=buyer_id)
         to_buyer = userdetails.user.phone.as_e164
-        send_message_to_buyer_inprogress(to_buyer, userdetails.firstname, user_details.businessname)
+        send_message_to_buyer_inprogress(to_buyer, userdetails.firstname, user_details.businessname,user_details.business_phone_number.as_e164)
         send_message_to_seller_inprogress(to_seller, user_details.businessname)
 
     status = True
@@ -343,7 +343,7 @@ def update_order_status(request, id):
         buyer_id = Order.objects.get(id=order_id).user_id
         userdetails = BuyerInfo.objects.get(user_id=buyer_id)
         to_buyer = userdetails.user.phone.as_e164
-        send_message_to_buyer_completed(to_buyer, userdetails.firstname, user_details.businessname)
+        send_message_to_buyer_completed(to_buyer, userdetails.firstname, user_details.businessname,user_details.business_phone_number.as_e164,user_details.address)
         send_message_to_seller_completed(to_seller, userdetails.firstname, user_details.businessname)
 
         Order.objects.filter(id=order_id).update(status=True)
