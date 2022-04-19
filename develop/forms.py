@@ -1,14 +1,11 @@
-from tkinter import Widget
-from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
-from django.core.validators import RegexValidator
-
-from develop.models import User
 from django import forms
+from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
 from django.forms import TextInput
+from phonenumber_field.formfields import PhoneNumberField
+from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
 from develop.models import SellerInfo, BuyerInfo, Product
-from phonenumber_field.widgets import PhoneNumberPrefixWidget
-from phonenumber_field.formfields import PhoneNumberField
+from develop.models import User
 
 
 # Internally, PhoneNumberField is based upon CharField and by' \
