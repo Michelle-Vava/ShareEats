@@ -783,7 +783,7 @@ def add_item(request):
             dish.image = filled_form.cleaned_data["image"]
             dish.servings = filled_form.cleaned_data["servings"]
             dish.category = filled_form.cleaned_data["category"]
-            product = stripe.Product.create(name=dish.product, images=[dish.image])
+            product = stripe.Product.create(name=dish.product)
             dish.stripe_product_id = product.id
             stripe_price = stripe.Price.create(
                 unit_amount=int(unit_price),
@@ -825,7 +825,7 @@ def edit_item(request):
             dish.image = filled_form.cleaned_data["image"]
             dish.servings = filled_form.cleaned_data["servings"]
             dish.category = filled_form.cleaned_data["category"]
-            product = stripe.Product.create(name=dish.product, images=[dish.image])
+            product = stripe.Product.create(name=dish.product)
             dish.stripe_product_id = product.id
             stripe_price = stripe.Price.create(
                 unit_amount=int(unit_price),
