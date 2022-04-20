@@ -1,90 +1,95 @@
-{% if False %}
+# Share Eats
 
-# Introduction
+## About ##
 
-The goal of this project is to provide minimalistic django project template that everyone can use, which _just works_ out of the box and has the basic setup you can expand on. 
+We have developed a web application called Share Eats which allows the Antigonish community to buy and sell food items.
 
-Template is written with django 1.11 and python 3 in mind.
+## Prerequisites ##
 
-![Default Home View](__screenshots/img.png?raw=true "Title")
+- Python 2.7, 3.4 recommended
+- pip
+- PyCharm/VS Code
+- Postgres
+- virtualenv (virtualenvwrapper is recommended for use during development)
+- 
+## Features
 
-### Main features
+- Django 3.0+
+- HTTPS and other security related settings on Staging and Production.
+- Procfile for running gunicorn with New Relic's Python agent.
+- Dockerfile and Docker-compose.yml
+- PostgreSQL database support with psycopg2.
 
-* Separated dev and production settings
+Migrations:
 
-* Example app with custom user model
+- Django built-in migrations
 
-* Bootstrap static files included
+## Setup
 
-* User registration and logging in as demo
+The first thing to do is to clone the repository:
 
-* Procfile for easy deployments
 
-* Separated requirements files
+```sh
+$ git clone https://groupf1-admin@bitbucket.org/groupf1/shareeats.git
 
-* SQLite by default if no env variable is set
+```
 
-# Usage
+Create a virtual environment to install dependencies in and activate it:
 
-To use this template to start your own project:
+```sh
+$ virtualenv2 --no-site-packages env
+$ source env/bin/activate
+```
 
-### Existing virtualenv
+Then install the dependencies:
 
-If your project is already in an existing python3 virtualenv first install django by running
+```sh
+(env)$ pip install -r requirements.txt
+```
+Note the `(env)` in front of the prompt. This indicates that this terminal
+session operates in a virtual environment set up by `virtualenv2`.
 
-    $ pip install django
-    
-And then run the `django-admin.py` command to start the new project:
+Once `pip` has finished downloading the dependencies:
+```sh
+(env)$ cd shareeats
+(env)$ python manage.py runserver
+```
+And navigate to `http://127.0.0.1:7000/`.
 
-    $ django-admin.py startproject \
-      --template=https://github.com/nikola-k/django-template/zipball/master \
-      --extension=py,md \
-      <project_name>
-      
-### No virtualenv
+## Deployment
 
-This assumes that `python3` is linked to valid installation of python 3 and that `pip` is installed and `pip3`is valid
-for installing python 3 packages.
+It is possible to deploy to Heroku or to your own server.
 
-Installing inside virtualenv is recommended, however you can start your project without virtualenv too.
+### Heroku
 
-If you don't have django installed for python 3 then run:
+```bash
+$ heroku create
+$ heroku addons:add heroku-postgresql:hobby-dev
+$ heroku pg:promote DATABASE_URL
+$ heroku config:set ENVIRONMENT=PRODUCTION
+$ heroku config:set DJANGO_SECRET_KEY=`./manage.py generate_secret_key`
+```
 
-    $ pip3 install django
-    
-And then:
 
-    $ python3 -m django startproject \
-      --template=https://github.com/nikola-k/django-template/zipball/master \
-      --extension=py,md \
-      <project_name>
-      
-      
-After that just install the local dependencies, run migrations, and start the server.
 
-{% endif %}
 
-# {{ project_name|title }}
+## Docker images
 
-# Getting Started
+Share Ears uses images for CI runs.The image is python based and contain python3, pip and some support
+packages. The images are published to  [docker hub](https://hub.docker.com/repository/docker/mimivava26/share-eats).
 
-First clone the repository from Github and switch to the new directory:
+The images are built in CI (from main branches only) and also updated every day via schedules.
 
-    $ git clone git@github.com/USERNAME/{{ project_name }}.git
-    $ cd {{ project_name }}
-    
-Activate the virtualenv for your project.
-    
-Install project dependencies:
+You can pull the image from docker hub using the following prompt onto your local :
+```sh
+docker pull mimivava26/share-eats: latest
+```
 
-    $ pip install -r requirements/local.txt
-    
-    
-Then simply apply the migrations:
+Once successful then you can run the image :
+```sh
+docker run --publish 7000:7000 shareeats-dev
+```
 
-    $ python manage.py migrate
-    
-
-You can now run the development server:
-
-    $ python manage.py runserver
+On your browser run enter this URL :
+```sh
+localhost:7000
