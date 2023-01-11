@@ -1,4 +1,10 @@
 # Share Eats
+## Project completed by : 
+###Kweku Amankwah-Poku - x2019ekw@stfx.ca
+###Vineeth Parsi - x2020ezg@stfx.ca
+###Shubham Poriya - x2020fem@stfx.ca
+###Michelle Vava - x2018uxm@stfx.ca
+###Vijay Pereira - x2020fyf@stfx.ca
 
 ## About ##
 
