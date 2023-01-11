@@ -80,33 +80,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ShareEats.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-#
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'shareeats',
-#         'USER': 'postgres',
-#         'PASSWORD': '123123',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
+
 
 if 'test' in sys.argv:
     # config for testing
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'd34ha0e6ht7p1u',
-            'USER': 'ddxtulbyilnnvs',
-            'PASSWORD': '39bcd63cceebe99e93924eb0098206ed701f19e540af3abcc7ee082ff904f011',
-            'HOST': 'ec2-52-71-161-140.compute-1.amazonaws.com',
+            'NAME': '********',
+            'USER': '********',
+            'PASSWORD': '*************',
+            'HOST': '*************',
             'PORT': '5432'
             ,
             'TEST': {
-                'NAME': 'd34ha0e6ht7p1u',  # This is an important entry
+                'NAME': '******',  # This is an important entry
             }
         }
     }
@@ -115,10 +103,9 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'd7v8j1gf1115uk',
-            'USER': 'cauikhfxvaggth',
-            'PASSWORD': '3442684880261bc35b6f69efe8337896b0d9437b8f892f4349ef427e3b3b3be1',
-            'HOST': 'ec2-34-230-110-100.compute-1.amazonaws.com',
+            'USER': '***********',
+            'PASSWORD': '***********',
+            'HOST': '*********',
             'PORT': '5432',
         }
     }
@@ -163,10 +150,10 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, '/develop/static')
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / 'develop/static/'
 
-AWS_STORAGE_BUCKET_NAME = 'shareeats-storage-bucket'
+AWS_STORAGE_BUCKET_NAME = '***********'
 AWS_S3_REGION_NAME = 'us-east-1'  # e.g. us-east-2
-AWS_ACCESS_KEY_ID = 'AKIA5GS4IHOTZBGIYTDA'
-AWS_SECRET_ACCESS_KEY = 'vpun0x8v1W38bgIZ76YqFIbjPoZamV9H+o3AHU0j'
+AWS_ACCESS_KEY_ID = '***********'
+AWS_SECRET_ACCESS_KEY ='***********'
 
 # Tell django-storages the domain to use to refer to static files.
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
@@ -176,13 +163,13 @@ STATICFILES_STORAGE = 'custom_storages.StaticStorage'
 MEDIAFILES_LOCATION ='media/'
 DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
 # stripe
-STRIPE_PUBLIC_KEY = 'pk_test_51KLzyLC6KJdG6nXQ5xuYYYKndAYSYW9mSc9SFDTglJaxbJfizQ8xG1m3n2jT9VaiXKFOI8FpuseEFvdyLAphuFS600UjVEBK4b'
-STRIPE_SECRET_KEY = 'sk_test_51KLzyLC6KJdG6nXQ5nPCdw37zF1BY7YzzQsDLsOjKTSVT0DtkXg3FSX3L9UGeQfMTbLxsIxjcBHoZs1N8ZN5N3tD00wVwOEHRE'
+STRIPE_PUBLIC_KEY = '***********'
+STRIPE_SECRET_KEY = '***********'
 STRIPE_WEBHOOK_SECRET = ''
 
-TWILIO_ACCOUNT_SID = 'ACf91579ced56697582b00416541947683'
-TWILIO_AUTH_TOKEN = '9f804956b82692527867903ebf02c692'
-TWILIO_PHONE_NUMBER = '+15134343957'
+TWILIO_ACCOUNT_SID = '***********'
+TWILIO_AUTH_TOKEN = '***********'
+TWILIO_PHONE_NUMBER = '***********'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -200,5 +187,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'shareeats88@gmail.com'
-EMAIL_HOST_PASSWORD = 'jinja@348'
+EMAIL_HOST_USER = '***********'
+EMAIL_HOST_PASSWORD = '***********'

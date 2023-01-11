@@ -4,7 +4,7 @@ from twilio.rest import Client
 from ShareEats import settings
 
 client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-verify = client.verify.services('VA0c501788f7b23295ea6c712bf03bc607')
+verify = client.verify.services('********************')
 
 
 def send(phone):
