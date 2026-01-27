@@ -32,7 +32,7 @@ Currently, ShareEats is designed for local deployment. See [Local Setup](#-local
 **Infrastructure & DevOps:**
 - Docker & Docker Compose for containerization
 - Heroku deployment support with django-heroku
-- CI/CD pipeline with Bitbucket Pipelines
+- CI/CD configuration (originally Bitbucket Pipelines)
 
 **Third-Party Integrations:**
 - Stripe for payment processing
